@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>resume</title>
+  <title>{{.Title}}</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -250,114 +250,57 @@
   <link rel="stylesheet" href="resume.css" />
 </head>
 <body>
-<h1 id="sarah-johnson">Sarah Johnson</h1>
-<p><strong>Senior Software Engineer</strong> | <strong>Full Stack
-Developer</strong></p>
-<p>📧 sarah.johnson@email.com | 📱 (555) 123-4567<br />
-🌍 San Francisco, CA | 💼 <a
-href="https://linkedin.com/in/sarahjohnson">LinkedIn</a> | 🔗 <a
-href="https://github.com/sarahjohnson">GitHub</a></p>
-<hr />
-<h2 id="professional-summary">Professional Summary</h2>
-<p>Experienced software engineer with 8+ years in full-stack
-development, specializing in React, Node.js, and cloud architecture.
-Proven track record of leading teams, optimizing system performance, and
-delivering scalable solutions for fintech and e-commerce platforms.</p>
-<hr />
-<h2 id="technical-skills">Technical Skills</h2>
-<p><strong>Languages:</strong> JavaScript, TypeScript, Python, Java,
-SQL<br />
-<strong>Frontend:</strong> React, Vue.js, Angular, HTML5, CSS3,
-Sass<br />
-<strong>Backend:</strong> Node.js, Express, Django, Spring Boot<br />
-<strong>Databases:</strong> PostgreSQL, MongoDB, Redis, MySQL<br />
-<strong>Cloud &amp; DevOps:</strong> AWS, Docker, Kubernetes, CI/CD,
-Terraform<br />
-<strong>Tools:</strong> Git, Jenkins, Jira, Figma, Postman</p>
-<hr />
-<h2 id="professional-experience">Professional Experience</h2>
-<h3
-id="senior-software-engineer-techflow-inc.-2020---present"><strong>Senior
-Software Engineer</strong> | <em>TechFlow Inc.</em> | <em>2020 -
-Present</em></h3>
-<ul>
-<li>Led a team of 5 developers in rebuilding the company’s core payment
-processing system, improving transaction speed by 40%</li>
-<li>Architected and implemented microservices infrastructure on AWS,
-reducing system downtime by 75%</li>
-<li>Mentored junior developers and established code review processes
-that improved code quality metrics by 30%</li>
-<li>Collaborated with product managers to define technical requirements
-for new features serving 2M+ users</li>
-</ul>
-<h3 id="full-stack-developer-startupx-2018---2020"><strong>Full Stack
-Developer</strong> | <em>StartupX</em> | <em>2018 - 2020</em></h3>
-<ul>
-<li>Developed and maintained React-based web applications with Node.js
-backends</li>
-<li>Implemented automated testing strategies, achieving 90% code
-coverage</li>
-<li>Optimized database queries and API endpoints, reducing average
-response time by 50%</li>
-<li>Built responsive user interfaces following accessibility guidelines
-(WCAG 2.1)</li>
-</ul>
-<h3
-id="software-developer-digital-solutions-ltd.-2016---2018"><strong>Software
-Developer</strong> | <em>Digital Solutions Ltd.</em> | <em>2016 -
-2018</em></h3>
-<ul>
-<li>Created RESTful APIs using Express.js and integrated with
-third-party services</li>
-<li>Developed data visualization dashboards using D3.js and
-Chart.js</li>
-<li>Participated in agile development processes and sprint planning</li>
-<li>Contributed to open-source projects and internal tool
-development</li>
-</ul>
-<hr />
-<h2 id="education">Education</h2>
-<h3
-id="bachelor-of-science-in-computer-science-university-of-california-berkeley-2012---2016"><strong>Bachelor
-of Science in Computer Science</strong> | <em>University of California,
-Berkeley</em> | <em>2012 - 2016</em></h3>
-<ul>
-<li><strong>Relevant Coursework:</strong> Data Structures, Algorithms,
-Database Systems, Web Development</li>
-<li><strong>GPA:</strong> 3.8/4.0</li>
-</ul>
-<hr />
-<h2 id="certifications">Certifications</h2>
-<ul>
-<li><strong>AWS Certified Solutions Architect</strong> (2022)</li>
-<li><strong>Certified Kubernetes Administrator</strong> (2021)</li>
-<li><strong>Google Cloud Professional Developer</strong> (2020)</li>
-</ul>
-<hr />
-<h2 id="notable-projects">Notable Projects</h2>
-<h3 id="e-commerce-platform-redesign"><strong>E-commerce Platform
-Redesign</strong></h3>
-<p>Spearheaded the complete redesign of an e-commerce platform serving
-500K+ monthly users. Implemented modern React architecture with
-TypeScript, resulting in 60% faster page load times and 25% increase in
-conversion rates.</p>
-<h3 id="real-time-analytics-dashboard"><strong>Real-time Analytics
-Dashboard</strong></h3>
-<p>Built a real-time analytics dashboard using React, D3.js, and
-WebSocket connections. Enabled stakeholders to monitor key business
-metrics with live updates, improving decision-making speed by 40%.</p>
-<h3 id="open-source-contribution---react-component-library"><strong>Open
-Source Contribution - React Component Library</strong></h3>
-<p>Contributed to a popular React component library with over 10K GitHub
-stars. Developed accessible components following WAI-ARIA guidelines and
-comprehensive documentation.</p>
-<hr />
-<h2 id="awards-recognition">Awards &amp; Recognition</h2>
-<ul>
-<li><strong>Employee of the Year</strong> - TechFlow Inc. (2023)</li>
-<li><strong>Innovation Award</strong> - StartupX Internal Hackathon
-(2019)</li>
-<li><strong>Dean’s List</strong> - UC Berkeley (2014-2016)</li>
-</ul>
+  <h1 id="name">{{.PersonalInfo.Name}}</h1>
+  <p><strong>Senior Frontend Developer</strong></p>
+  <p>📧 {{.PersonalInfo.Email}}{{if .PersonalInfo.LinkedIn}}<br />
+  💼 <a href="{{.PersonalInfo.LinkedIn}}">LinkedIn</a>{{end}}{{if .PersonalInfo.Github}} | 🔗 <a href="{{.PersonalInfo.Github}}">GitHub</a>{{end}}{{if .PersonalInfo.Portfolio}} | 🌐 <a href="{{.PersonalInfo.Portfolio}}">Portfolio</a>{{end}}</p>
+  <hr />
+
+  <h2 id="professional-summary">Professional Summary</h2>
+  <p>{{.Summary}}</p>
+  <hr />
+
+  <h2 id="technical-skills">Technical Skills</h2>
+  <p>{{if .TechnicalSkills.Languages}}<strong>Languages:</strong> {{range $i, $lang := .TechnicalSkills.Languages}}{{if $i}}, {{end}}{{$lang}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.FrontendFrameworks}}<strong>Frontend Frameworks:</strong> {{range $i, $framework := .TechnicalSkills.FrontendFrameworks}}{{if $i}}, {{end}}{{$framework}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.Styling}}<strong>Styling:</strong> {{range $i, $style := .TechnicalSkills.Styling}}{{if $i}}, {{end}}{{$style}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.ToolsAndLibraries}}<strong>Tools & Libraries:</strong> {{range $i, $tool := .TechnicalSkills.ToolsAndLibraries}}{{if $i}}, {{end}}{{$tool}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.Testing}}<strong>Testing:</strong> {{range $i, $test := .TechnicalSkills.Testing}}{{if $i}}, {{end}}{{$test}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.StateManagement}}<strong>State Management:</strong> {{range $i, $state := .TechnicalSkills.StateManagement}}{{if $i}}, {{end}}{{$state}}{{end}}<br />{{end}}
+  {{if .TechnicalSkills.ApiIntegration}}<strong>API Integration:</strong> {{range $i, $api := .TechnicalSkills.ApiIntegration}}{{if $i}}, {{end}}{{$api}}{{end}}{{end}}</p>
+  <hr />
+
+  <h2 id="professional-experience">Professional Experience</h2>
+  {{range $index, $exp := .Experience}}
+  <h3 id="experience-{{$index}}"><strong>{{$exp.Title}}</strong> | <em>{{$exp.Company}}</em> | <em>{{$exp.Duration}}</em></h3>
+  <ul>
+  {{range $exp.Responsibilities}}
+  <li>{{.}}</li>
+  {{end}}
+  </ul>
+  {{end}}
+  <hr />
+
+  <h2 id="education">Education</h2>
+  {{range $index, $edu := .Education}}
+  <h3 id="education-{{$index}}"><strong>{{$edu.Degree}}</strong>{{if $edu.Institution}} | <em>{{$edu.Institution}}</em>{{end}}{{if $edu.Duration}} | <em>{{$edu.Duration}}</em>{{end}}</h3>
+  {{if or $edu.GPA $edu.RelevantCoursework $edu.Focus}}
+  <ul>
+  {{if $edu.RelevantCoursework}}<li><strong>Relevant Coursework:</strong> {{range $i, $course := $edu.RelevantCoursework}}{{if $i}}, {{end}}{{$course}}{{end}}</li>{{end}}
+  {{if $edu.Focus}}<li><strong>Focus:</strong> {{$edu.Focus}}</li>{{end}}
+  {{if $edu.GPA}}<li><strong>GPA:</strong> {{$edu.GPA}}</li>{{end}}
+  </ul>
+  {{end}}
+  {{end}}
+  <hr />
+
+  <h2 id="notable-projects">Notable Projects</h2>
+  {{range $index, $project := .Projects}}
+  <h3 id="project-{{$index}}"><strong>{{$project.Name}}</strong></h3>
+  <p>{{$project.Description}}</p>
+  {{if or $project.Technologies $project.Github $project.Demo $project.Npm}}
+  <p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
+  {{end}}
+  {{end}}
 </body>
 </html>

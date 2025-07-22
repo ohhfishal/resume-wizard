@@ -6,11 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/goccy/go-yaml"
 	"html/template"
 	"io"
 	"os"
 	"path/filepath"
-	"github.com/goccy/go-yaml"
 )
 
 //go:embed html.template
@@ -18,13 +18,55 @@ var rawTemplateHTML string
 var htmlTemplate = template.Must(template.New("html").Parse(rawTemplateHTML))
 
 const (
-	JSON string = ".json"
-	YAML = ".yaml"
-	STDIN_BASE = "stdin"
-	STDIN_EXT = ""
+	JSON       string = ".json"
+	YAML              = ".yaml"
+	STDIN_BASE        = "stdin"
+	STDIN_EXT         = ""
 )
 
 type Resume struct {
+	Title           string              `yaml:"title"`
+	Summary         string              `yaml:"summary"`
+	PersonalInfo    PersonalInfo        `yaml:"personalInfo"`
+	Experience      []Experience        `yaml:"experience"`
+	Education       []Education         `yaml:"education"`
+	TechnicalSkills map[string][]string `yaml:"technicalSkills"`
+	Projects        []Project           `yaml:"projects"`
+}
+
+type PersonalInfo struct {
+	Name      string `yaml:"name"`
+	Email     string `yaml:"email"`
+	// Links map[string]string `yaml:"linksi"`
+	LinkedIn  string `yaml:"linkedin"`
+	Github    string `yaml:"github"`
+	Portfolio string `yaml:"portfolio"`
+}
+
+type Experience struct {
+	Title            string   `yaml:"title"`
+	Company          string   `yaml:"company"`
+	Duration         string   `yaml:"duration"`
+	Responsibilities []string `yaml:"responsibilities"`
+}
+
+type Education struct {
+	Degree             string   `yaml:"degree"`
+	Institution        string   `yaml:"institution"`
+	Location           string   `yaml:"location"`
+	Duration           string   `yaml:"duration"`
+	GPA                string   `yaml:"gpa"`
+	Focus              string   `yaml:"focus"`
+	RelevantCoursework []string `yaml:"relevantCoursework"`
+}
+
+type Project struct {
+	Name         string   `yaml:"name"`
+	Description  string   `yaml:"description"`
+	Technologies []string `yaml:"technologies"`
+	Github       string   `yaml:"github"`
+	Demo         string   `yaml:"demo"`
+	Npm          string   `yaml:"npm"`
 }
 
 // TODO: Optional stylesheets??
@@ -39,7 +81,7 @@ func FromFile(file *os.File) (Resume, error) {
 	}
 
 	base := filepath.Base(info.Name())
-	extension := filepath.Ext(info.Name()) 
+	extension := filepath.Ext(info.Name())
 
 	switch {
 	case extension == YAML:
@@ -64,7 +106,7 @@ func FromFile(file *os.File) (Resume, error) {
 		return Resume{}, fmt.Errorf(
 			"failed to parse from stdin: %s", errors.Join(err, err2),
 		)
-	default: 
+	default:
 		return Resume{}, fmt.Errorf("unknown file type: %s %s", base, extension)
 	}
 }

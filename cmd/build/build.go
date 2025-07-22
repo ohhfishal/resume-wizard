@@ -2,9 +2,9 @@ package build
 
 import (
 	"fmt"
+	"github.com/ohhfishal/resume-wizard/ir"
 	"log/slog"
 	"os"
-	"github.com/ohhfishal/resume-wizard/ir"
 )
 
 type Cmd struct {
@@ -12,7 +12,6 @@ type Cmd struct {
 	// TODO: Implement this instead of defaulting to os.Stdout
 	// Output io.Writer
 }
-
 
 // TODO: Careful where we log to since this can emit to stdout
 func (cmd *Cmd) Run(logger *slog.Logger) error {
