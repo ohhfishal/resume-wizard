@@ -1,0 +1,27 @@
+package ir
+
+// @ProfessionalSummary(data.Summary)
+// @TechnicalSkillsSection(data.TechnicalSkills)
+// @ProfessionalExperience(data.Experience)
+// @EducationSection(data.Education)
+// @NotableProjects(data.Projects)
+
+templ ResumePage(resume Resume) {
+	<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="generator" content="templ"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+			<title>{ resume.Title }</title>
+			<!-- @ResumeStyles() -->
+		</head>
+		<body>
+			@Header(resume.PersonalInfo)
+		</body>
+	</html>
+}
+
+templ Header(info PersonalInfo) {
+  <p>TEMP</p>
+}

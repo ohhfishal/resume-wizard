@@ -2,6 +2,7 @@ package ir
 
 import (
 	"bytes"
+	"context"
 	_ "embed"
 	"encoding/json"
 	"errors"
@@ -71,7 +72,8 @@ type Project struct {
 
 // TODO: Optional stylesheets??
 func (resume Resume) ToHTML(w io.Writer) error {
-	return htmlTemplate.Execute(w, resume)
+	return ResumePage(resume).Render(context.TODO(), w)
+	// return htmlTemplate.Execute(w, resume)
 }
 
 func FromFile(file *os.File) (Resume, error) {

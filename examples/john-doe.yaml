@@ -7,10 +7,9 @@ summary: >
 personalInfo:
   name: "John Doe"
   email: "johndoe@email.com"
-  links:
-    - linkedin: "https://www.linkedin.com/in/john-doe-dev"
-    - github: "https://github.com/johndoe-dev"
-    - portfolio: "https://johndoe.dev"
+  linkedin: "https://www.linkedin.com/in/john-doe-dev"
+  github: "https://github.com/johndoe-dev"
+  portfolio: "https://johndoe.dev"
 
 experience:
   - title: "Senior Frontend Developer"
