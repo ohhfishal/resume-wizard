@@ -21,9 +21,6 @@ const (
 type Resume struct {
 }
 
-var validMappings = map[string] func(io.Reader) (Resume, error) {
-}
-
 func FromFile(file *os.File) (Resume, error) {
 	info, err := file.Stat()
 	if err != nil {
