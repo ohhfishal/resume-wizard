@@ -6,10 +6,10 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 - [ ] Create a CLI proof of concept
     - [ ] Take in YAML and and output a resume PDF.
     - [ ] Wizard Command (Magic? Init?) 
-            - [ ] What job is this for?
-            - [ ] `$EDITOR copy_of_resume.yaml` (User deletes what they don't want
-            - [ ] Which template (with default)
-            - [ ] Done! New resume is saved. (Maybe update a spreadsheet with which resume used too?
+        - [ ] What job is this for?
+        - [ ] `$EDITOR copy_of_resume.yaml` (User deletes what they don't want
+        - [ ] Which template (with default)
+        - [ ] Done! New resume is saved. (Maybe update a spreadsheet with which resume used too?
 
 - [ ] Move to a web-based application if the complexity gets there
 
