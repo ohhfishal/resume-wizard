@@ -4,7 +4,8 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 
 ## Design
 - [ ] Create a CLI proof of concept
-    - [ ] Take in YAML and and output a resume PDF.
+    - [X] Parse YAML/JSON into an IR
+    - [ ] Convert the IR to HTML
     - [ ] Wizard Command (Magic? Init?) 
         - [ ] What job is this for?
         - [ ] `$EDITOR copy_of_resume.yaml` (User deletes what they don't want
