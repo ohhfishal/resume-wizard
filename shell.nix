@@ -3,6 +3,8 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     yamllint
+    pandoc
+    wkhtmltopdf
 
     # TODO: Add go
   ];
