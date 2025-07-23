@@ -27,6 +27,12 @@ const (
 	SectionTypeProjects               = "projects"
 )
 
+var redactedPersonalInfo = PersonalInfo{
+	Name:   "REDACTED NAME",
+	Email:  "email@email.com",
+	Github: "https://github.com/",
+}
+
 const (
 	JSON       string = ".json"
 	YAML              = ".yaml"
@@ -212,4 +218,17 @@ func decode[T any](input any, output *T) error {
 
 func FromJSON(reader io.Reader) (Resume, error) {
 	return Resume{}, errors.New("not implemented")
+}
+
+func (resume *Resume) HidePersonalInfo() {
+	resume.PersonalInfo = redactedPersonalInfo
+
+	for i, section := range resume.Sections {
+		for j, _ := range section.education {
+			resume.Sections[i].education[j].Institution = "REDACTED INSTITUTION"
+		}
+		for j, _ := range section.experience {
+			resume.Sections[i].experience[j].Company = "REDACTED COMPANY"
+		}
+	}
 }

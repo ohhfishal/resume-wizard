@@ -43,21 +43,21 @@ templ Header(resume Resume) {
       <strong>{ resume.Title }</strong>
       <br/>
     }
-    // TODO: Make more generic
+    // TODO: Make more generic and formatted better
     // TODO: Center elements in this ddiv
     if resume.PersonalInfo.Email != ""  {
-      📧 { resume.PersonalInfo.Email } |
+      📧 { resume.PersonalInfo.Email }
     }
     if link := resume.PersonalInfo.LinkedIn; link != ""  {
-      💼 <a href={ link }>LinkedIn</a> |
+      | 💼 <a href={ link }>LinkedIn</a>
     }
 
     if link := resume.PersonalInfo.Github; link != ""  {
-      🔗 <a href={ link }>GitHub</a> |
+      | 🔗 <a href={ link }>GitHub</a>
     }
 
     if link := resume.PersonalInfo.Portfolio; link != ""  {
-      🌐 <a href={ link }>Portfolio</a>
+      | 🌐 <a href={ link }>Portfolio</a>
     }
     </p>
 

@@ -8,7 +8,8 @@ import (
 )
 
 type Cmd struct {
-	Input *os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	Input            *os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	HidePersonalInfo bool     `short:"q" help:"Hide personal info"`
 	// TODO: Implement this instead of defaulting to os.Stdout
 	// Output io.Writer
 }
@@ -21,9 +22,9 @@ func (cmd *Cmd) Run(logger *slog.Logger) error {
 		return fmt.Errorf("creating resume from input: %w", err)
 	}
 
-	// TODO: REMOVE DEBUG
-	//logger.Info("created", "resume", entry)
-	//return nil
+	if cmd.HidePersonalInfo {
+		entry.HidePersonalInfo()
+	}
 
 	if err := entry.ToHTML(os.Stdout); err != nil {
 		return fmt.Errorf("converting to HTML: %w", err)
