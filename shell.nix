@@ -4,7 +4,7 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     yamllint
     gnumake
-    # TODO: Add go
+    go
   ];
 
   shellHook = ''
