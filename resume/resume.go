@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/goccy/go-yaml"
@@ -18,6 +17,16 @@ import (
 var rawTemplateHTML string
 var htmlTemplate = template.Must(template.New("html").Parse(rawTemplateHTML))
 
+type SectionType string
+
+const (
+	SectionTypeDefault    SectionType = ""
+	SectionTypeExperience             = "experience"
+	SectionTypeEducation              = "education"
+	SectionTypeSkills                 = "skills"
+	SectionTypeProjects               = "projects"
+)
+
 const (
 	JSON       string = ".json"
 	YAML              = ".yaml"
@@ -25,33 +34,12 @@ const (
 	STDIN_EXT         = ""
 )
 
-type V2Resume struct {
+type Resume struct {
 	Version      string       `yaml:"version"`
 	Title        string       `yaml:"title"`
 	Summary      string       `yaml:"summary"`
 	PersonalInfo PersonalInfo `yaml:"personalInfo"`
-	Sections     []Sections   `yaml:"sections"`
-}
-
-type Sections struct {
-	Title string         `yaml:"title"`
-	Data  map[string]any `yaml:"-"`
-
-	// Experience      []Experience        `yaml:"experience"`
-	// Experience      []Experience        `yaml:"experience"`
-	// Education       []Education         `yaml:"education"`
-	// TechnicalSkills map[string][]string `yaml:"technicalSkills"`
-	// Projects        []Project           `yaml:"projects"`
-}
-
-type Resume struct {
-	Title           string              `yaml:"title"`
-	Summary         string              `yaml:"summary"`
-	PersonalInfo    PersonalInfo        `yaml:"personalInfo"`
-	Experience      []Experience        `yaml:"experience"`
-	Education       []Education         `yaml:"education"`
-	TechnicalSkills map[string][]string `yaml:"technicalSkills"`
-	Projects        []Project           `yaml:"projects"`
+	Sections     []Section    `yaml:"sections"`
 }
 
 type PersonalInfo struct {
@@ -61,6 +49,51 @@ type PersonalInfo struct {
 	Github    string `yaml:"github"`
 	Portfolio string `yaml:"portfolio"`
 	// Links map[string]string `yaml:"linksi"`
+}
+
+type Section struct {
+	Title      string              `yaml:"title"`
+	data       map[string]any      `yaml:"-"`
+	experience []Experience        `yaml:"experience"`
+	education  []Education         `yaml:"education"`
+	skills     map[string][]string `yaml:"skills"`
+	projects   []Project           `yaml:"projects"`
+}
+
+func (section Section) Education() ([]Education, bool) {
+	_, ok := section.data[SectionTypeEducation]
+	return section.education, ok
+}
+
+func (section Section) Experience() ([]Experience, bool) {
+	_, ok := section.data[SectionTypeExperience]
+	return section.experience, ok
+}
+
+func (section Section) Projects() ([]Project, bool) {
+	_, ok := section.data[SectionTypeProjects]
+	return section.projects, ok
+}
+
+func (section Section) Skills() (map[string][]string, bool) {
+	_, ok := section.data[SectionTypeSkills]
+	return section.skills, ok
+}
+
+func (section Section) Type() SectionType {
+	if _, ok := section.data[SectionTypeExperience]; ok {
+		return SectionTypeExperience
+	}
+	if _, ok := section.data[SectionTypeEducation]; ok {
+		return SectionTypeEducation
+	}
+	if _, ok := section.data[SectionTypeSkills]; ok {
+		return SectionTypeSkills
+	}
+	if _, ok := section.data[SectionTypeProjects]; ok {
+		return SectionTypeProjects
+	}
+	return SectionTypeDefault
 }
 
 type Experience struct {
@@ -136,17 +169,42 @@ func FromYAML(reader io.Reader) (Resume, error) {
 	var resume Resume
 	if err := yaml.NewDecoder(
 		reader,
-		yaml.CustomUnmarshaler[Sections](func(target *Sections, input []byte) error {
-			target.Data = map[string]any{}
-			if err := yaml.Unmarshal(input, &target.Data); err != nil {
+		yaml.CustomUnmarshaler[Section](func(target *Section, input []byte) error {
+			target.data = map[string]any{}
+			if err := yaml.Unmarshal(input, &target.data); err != nil {
 				return fmt.Errorf(`failed to parse: %w`, err)
 			}
 
 			// Extract common fields
-			if title, ok := target.Data["title"].(string); ok {
+			if title, ok := target.data["title"].(string); ok {
 				target.Title = title
-				delete(target.Data, "title")
+				delete(target.data, "title")
 			}
+			// Extract known fields
+			if experience, ok := target.data[SectionTypeExperience]; ok {
+				if err := decode(experience, &target.experience); err != nil {
+					return fmt.Errorf("parsing experience: %w", err)
+				}
+			}
+
+			if education, ok := target.data[SectionTypeEducation]; ok {
+				if err := decode(education, &target.education); err != nil {
+					return fmt.Errorf("parsing education: %w", err)
+				}
+			}
+
+			if skills, ok := target.data[SectionTypeSkills]; ok {
+				if err := decode(skills, &target.skills); err != nil {
+					return fmt.Errorf("parsing skills: %w", err)
+				}
+			}
+
+			if projects, ok := target.data[SectionTypeProjects]; ok {
+				if err := decode(projects, &target.projects); err != nil {
+					return fmt.Errorf("parsing projects: %w", err)
+				}
+			}
+
 			return nil
 		}),
 	).Decode(&resume); err != nil {
@@ -155,10 +213,19 @@ func FromYAML(reader io.Reader) (Resume, error) {
 	return resume, nil
 }
 
-func FromJSON(reader io.Reader) (Resume, error) {
-	var resume Resume
-	if err := json.NewDecoder(reader).Decode(&resume); err != nil {
-		return resume, fmt.Errorf("parsing json: %w", err)
+func decode[T any](input any, output *T) error {
+	data, err := yaml.Marshal(input)
+	if err != nil {
+		return err
 	}
-	return resume, nil
+
+	if err := yaml.Unmarshal(data, output); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func FromJSON(reader io.Reader) (Resume, error) {
+	return Resume{}, errors.New("not implemented")
 }

@@ -22,13 +22,22 @@ templ ResumePage(resume Resume) {
 			@DefaultStyle()
 		</head>
 		<body>
-			@Header(resume)
-      @Summary(resume)
-      @Skills(resume.TechnicalSkills)
-      @ExperienceSection(resume.Experience)
+      @ResumeHTML(resume)
 		</body>
 	</html>
 }
+
+
+templ ResumeHTML(resume Resume) {
+  <div class="resume">
+    @Header(resume)
+    @Summary(resume.Summary)
+    for _, section := range resume.Sections {
+      @ResumeSection(section)
+    }
+  </div>
+}
+
 
 templ Header(resume Resume) {
   <div class="header">
@@ -59,16 +68,34 @@ templ Header(resume Resume) {
   </div>
 
 }
-templ Summary(resume Resume) {
+templ Summary(summary string) {
   <h2 id="professional-summary">Professional Summary</h2>
-  <p>{ resume.Summary }</p>
+  <p>{ summary }</p>
 }
 
-templ ExperienceSection(positions []Experience) {
-  if len(positions) > 0 {
-    <div>
-    <h2 id="professional-experience">Professional Experience</h2>
+templ ResumeSection(section Section) {
+  <div>
+    <h2>{ section.Title }</h2>
+    switch section.Type() {
+      case SectionTypeEducation:
+        @EducationSection(section.Education())
+      case SectionTypeExperience:
+        @ExperienceSection(section.Experience())
+      case SectionTypeSkills:
+        @SkillsSection(section.Skills())
+      case SectionTypeProjects:
+        @ProjectsSection(section.Projects())
+      default:
+        <span>UNKNOWN SECTION</span>
+    }
 
+  </div>
+
+}
+
+templ ExperienceSection(positions []Experience, render bool) {
+  <div>
+  if len(positions) > 0 && render {
     for index, position := range positions {
       <h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
       <ul>
@@ -77,16 +104,15 @@ templ ExperienceSection(positions []Experience) {
         }
       </ul>
     }
-
-    </div>
+  } else {
+    <span>No experience</span>
   }
+  </div>
 }
 
-templ Skills(allSkills map[string][]string) {
-  if len(allSkills) > 0 {
-    <div>
-      <h2 id="technical-skills">Technical Skills</h2>
-
+templ SkillsSection(allSkills map[string][]string, render bool) {
+  <div>
+  if len(allSkills) > 0  && render {
       <p>
         for category, skills := range allSkills {
           if len(skills) > 0 {
@@ -94,10 +120,30 @@ templ Skills(allSkills map[string][]string) {
           }
         }
       </p>
-
-    </div>
+  } else {
+    <span>No skills</span>
   }
+</div>
+}
 
+templ ProjectsSection(projects []Project, render bool) {
+  <div>
+    if len(projects) > 0 && render {
+      <span>No projects</span>
+    } else {
+      <span>No projects</span>
+    }
+  </div>
+}
+
+templ EducationSection(educations []Education, render bool) {
+  <div>
+    if len(educations) > 0 && render {
+      <span>No education</span>
+    } else {
+      <span>No education</span>
+    }
+  </div>
 }
 
 templ DefaultStyle() {

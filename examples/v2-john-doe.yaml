@@ -1,11 +1,9 @@
----
 title: "Senior Frontend Developer"
 version: "testing"
 summary: >
   Experienced frontend developer specializing in React and Vue.js with 5+ years
   of building scalable web applications and mentoring development teams.
 
----
 personalInfo:
   name: "John Doe"
   email: "johndoe@email.com"
@@ -102,55 +100,55 @@ sections:
 
   - title: "TECHNICAL SKILLS"
     skills:
-    "Frontend Frameworks":
-      - "React"
-      - "Vue.js"
-      - "Next.js"
-      - "Nuxt.js"
+      "Frontend Frameworks":
+        - "React"
+        - "Vue.js"
+        - "Next.js"
+        - "Nuxt.js"
 
-    "Languages":
-      - "JavaScript (ES6+)"
-      - "TypeScript"
-      - "HTML5"
-      - "CSS3/SCSS"
-      - "Python"
-      - "SQL"
+      "Languages":
+        - "JavaScript (ES6+)"
+        - "TypeScript"
+        - "HTML5"
+        - "CSS3/SCSS"
+        - "Python"
+        - "SQL"
 
-    "Styling":
-      - "Tailwind CSS"
-      - "Bootstrap"
-      - "Material-UI"
-      - "Styled Components"
-      - "CSS Grid"
-      - "Flexbox"
+      "Styling":
+        - "Tailwind CSS"
+        - "Bootstrap"
+        - "Material-UI"
+        - "Styled Components"
+        - "CSS Grid"
+        - "Flexbox"
 
-    "Tools and Libraries":
-      - "Git/GitHub"
-      - "Webpack"
-      - "Vite"
-      - "npm/Yarn"
-      - "ESLint/Prettier"
-      - "Storybook"
+      "Tools and Libraries":
+        - "Git/GitHub"
+        - "Webpack"
+        - "Vite"
+        - "npm/Yarn"
+        - "ESLint/Prettier"
+        - "Storybook"
 
-    "Testing Frameworks":
-      - "Jest"
-      - "React Testing Library"
-      - "Vue Test Utils"
-      - "Cypress"
-      - "Playwright"
+      "Testing Frameworks":
+        - "Jest"
+        - "React Testing Library"
+        - "Vue Test Utils"
+        - "Cypress"
+        - "Playwright"
 
-    "State Management":
-      - "Redux Toolkit"
-      - "Vuex"
-      - "Context API"
-      - "Zustand"
+      "State Management":
+        - "Redux Toolkit"
+        - "Vuex"
+        - "Context API"
+        - "Zustand"
 
-    "API Integration":
-      - "REST APIs"
-      - "GraphQL"
-      - "Apollo Client"
-      - "Axios"
-      - "Fetch API"
+      "API Integration":
+        - "REST APIs"
+        - "GraphQL"
+        - "Apollo Client"
+        - "Axios"
+        - "Fetch API"
 
   - title: "NOTEABLE PROJECTS"
     projects:

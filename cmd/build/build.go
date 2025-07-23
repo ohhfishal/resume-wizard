@@ -20,9 +20,11 @@ func (cmd *Cmd) Run(logger *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("creating resume from input: %w", err)
 	}
-	// TODO: REMOVE DEBUG CODE
-	logger.Info("made", "resume", entry)
-	return nil
+
+	// TODO: REMOVE DEBUG
+	//logger.Info("created", "resume", entry)
+	//return nil
+
 	if err := entry.ToHTML(os.Stdout); err != nil {
 		return fmt.Errorf("converting to HTML: %w", err)
 	}
