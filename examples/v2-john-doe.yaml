@@ -5,6 +5,7 @@ summary: >
   Experienced frontend developer specializing in React and Vue.js with 5+ years
   of building scalable web applications and mentoring development teams.
 
+---
 personalInfo:
   name: "John Doe"
   email: "johndoe@email.com"
@@ -12,156 +13,173 @@ personalInfo:
   github: "https://github.com/johndoe-dev"
   portfolio: "https://johndoe.dev"
 
-experience:
-  - title: "Senior Frontend Developer"
-    company: "TechFlow Solutions"
-    duration: "2022 - Present"
-    responsibilities:
-      - >
-        Led development of responsive web applications using React and
-        TypeScript, serving 50,000+ daily active users with 99.9% uptime.
-      - >
-        Architected and implemented component library with Storybook,
-        reducing development time by 30% across 5 product teams.
-      - >
-        Optimized application performance through code splitting and lazy
-        loading, improving page load times by 40% and Core Web Vitals scores.
-      - >
-        Mentored junior developers and conducted code reviews, establishing
-        best practices for React hooks, state management, and testing.
-      - >
-        Collaborated with UX/UI designers to implement pixel-perfect designs
-        using Tailwind CSS and modern CSS Grid layouts.
+# options:
+#   sectionOrder:
+#     - "PROFESSIONAL EXPERIENCE"
+#     - "SKILLS"
+#     - "*"
 
-  - title: "Frontend Developer"
-    company: "Digital Innovations Inc"
-    duration: "2020 - 2022"
-    responsibilities:
-      - >
-        Built and maintained multiple client-facing web applications using
-        React, Vue.js, and vanilla JavaScript, delivering projects on time.
-      - >
-        Integrated REST APIs and GraphQL endpoints with Apollo Client,
-        implementing efficient data fetching and caching strategies.
-      - >
-        Developed responsive designs that work seamlessly across desktop,
-        tablet, and mobile devices using CSS Grid, Flexbox, and media queries.
-      - >
-        Implemented comprehensive testing suite using Jest, React Testing
-        Library, and Cypress, achieving 85% code coverage.
-      - >
-        Participated in Agile development process with daily standups, sprint
-        planning, and retrospectives to ensure continuous delivery.
+sections:
+  - type: "experience"
+    title: "PROFESSIONAL EXPERIENCE"
+    experience:
+      - title: "Senior Frontend Developer"
+        company: "TechFlow Solutions"
+        duration: "2022 - Present"
+        responsibilities:
+          - >
+            Led development of responsive web applications using React and
+            TypeScript, serving 50,000+ daily active users with 99.9% uptime.
+          - >
+            Architected and implemented component library with Storybook,
+            reducing development time by 30% across 5 product teams.
+          - >
+            Optimized application performance through code splitting and lazy
+            loading, improving page load times by 40% and Core Web Vitals
+            scores.
+          - >
+            Mentored junior developers and conducted code reviews, establishing
+            best practices for React hooks, state management, and testing.
+          - >
+            Collaborated with UX/UI designers to implement pixel-perfect
+            designs using Tailwind CSS and modern CSS Grid layouts.
 
-  - title: "Junior Web Developer"
-    company: "StartupLab"
-    duration: "2019 - 2020"
-    responsibilities:
-      - >
-        Developed interactive web pages using HTML5, CSS3, and JavaScript
-        ES6+, focusing on cross-browser compatibility and accessibility.
-      - >
-        Built Vue.js components for e-commerce platform, implementing
-        shopping cart functionality and payment processing integration.
-      - >
-        Collaborated with backend team to consume APIs and handle data
-        validation on the frontend using form libraries and custom logic.
-      - >
-        Maintained and updated legacy jQuery applications while gradually
-        migrating components to modern Vue.js framework.
+      - title: "Frontend Developer"
+        company: "Digital Innovations Inc"
+        duration: "2020 - 2022"
+        responsibilities:
+          - >
+            Built and maintained multiple client-facing web applications using
+            React, Vue.js, and vanilla JavaScript, delivering projects on time.
+          - >
+            Integrated REST APIs and GraphQL endpoints with Apollo Client,
+            implementing efficient data fetching and caching strategies.
+          - >
+            Developed responsive designs that work seamlessly across desktop,
+            tablet, and mobile devices using CSS Grid, Flexbox, and media
+            queries.
+          - >
+            Implemented comprehensive testing suite using Jest, React Testing
+            Library, and Cypress, achieving 85% code coverage.
+          - >
+            Participated in Agile development process with daily standups,
+            sprint planning, and retrospectives to ensure continuous delivery.
 
-education:
-  - degree: "B.S. in Computer Science"
-    institution: "State University"
-    location: "Anytown, ST"
-    duration: "2015-2019"
-    gpa: "3.7/4.0"
-    relevantCoursework:
-      - "Web Development"
-      - "Database Systems"
-      - "Software Engineering"
-      - "Algorithms & Data Structures"
+      - title: "Junior Web Developer"
+        company: "StartupLab"
+        duration: "2019 - 2020"
+        responsibilities:
+          - >
+            Developed interactive web pages using HTML5, CSS3, and JavaScript
+            ES6+, focusing on cross-browser compatibility and accessibility.
+          - >
+            Built Vue.js components for e-commerce platform, implementing
+            shopping cart functionality and payment processing integration.
+          - >
+            Collaborated with backend team to consume APIs and handle data
+            validation on the frontend using form libraries and custom logic.
+          - >
+            Maintained and updated legacy jQuery applications while gradually
+            migrating components to modern Vue.js framework.
 
-  - degree: "Frontend Development Bootcamp"
-    institution: "CodeAcademy Pro"
-    location: "Online"
-    duration: "2019"
-    focus: "Modern JavaScript, React, and Web Technologies"
+  - type: "education"
+    title: "EDUCATION"
+    education:
+      - degree: "B.S. in Computer Science"
+        institution: "State University"
+        location: "Anytown, ST"
+        duration: "2015-2019"
+        gpa: "3.7/4.0"
+        relevantCoursework:
+          - "Web Development"
+          - "Database Systems"
+          - "Software Engineering"
+          - "Algorithms & Data Structures"
 
-technicalSkills:
-  "Frontend Frameworks":
-    - "React"
-    - "Vue.js"
-    - "Next.js"
-    - "Nuxt.js"
+      - degree: "Frontend Development Bootcamp"
+        institution: "CodeAcademy Pro"
+        location: "Online"
+        duration: "2019"
+        focus: "Modern JavaScript, React, and Web Technologies"
 
-  Languages:
-    - "JavaScript (ES6+)"
-    - "TypeScript"
-    - "HTML5"
-    - "CSS3/SCSS"
-    - "Python"
-    - "SQL"
+  - type: "skills"
+    title: "TECHNICAL SKILLS"
+    skills:
+    "Frontend Frameworks":
+      - "React"
+      - "Vue.js"
+      - "Next.js"
+      - "Nuxt.js"
 
-  Styling:
-    - "Tailwind CSS"
-    - "Bootstrap"
-    - "Material-UI"
-    - "Styled Components"
-    - "CSS Grid"
-    - "Flexbox"
+    "Languages":
+      - "JavaScript (ES6+)"
+      - "TypeScript"
+      - "HTML5"
+      - "CSS3/SCSS"
+      - "Python"
+      - "SQL"
 
-  "Tools and Libraries":
-    - "Git/GitHub"
-    - "Webpack"
-    - "Vite"
-    - "npm/Yarn"
-    - "ESLint/Prettier"
-    - "Storybook"
+    "Styling":
+      - "Tailwind CSS"
+      - "Bootstrap"
+      - "Material-UI"
+      - "Styled Components"
+      - "CSS Grid"
+      - "Flexbox"
 
-  "Testing Frameworks":
-    - "Jest"
-    - "React Testing Library"
-    - "Vue Test Utils"
-    - "Cypress"
-    - "Playwright"
+    "Tools and Libraries":
+      - "Git/GitHub"
+      - "Webpack"
+      - "Vite"
+      - "npm/Yarn"
+      - "ESLint/Prettier"
+      - "Storybook"
 
-  "State Management":
-    - "Redux Toolkit"
-    - "Vuex"
-    - "Context API"
-    - "Zustand"
+    "Testing Frameworks":
+      - "Jest"
+      - "React Testing Library"
+      - "Vue Test Utils"
+      - "Cypress"
+      - "Playwright"
 
-  "API Integration":
-    - "REST APIs"
-    - "GraphQL"
-    - "Apollo Client"
-    - "Axios"
-    - "Fetch API"
+    "State Management":
+      - "Redux Toolkit"
+      - "Vuex"
+      - "Context API"
+      - "Zustand"
 
-projects:
-  - name: "E-commerce Dashboard"
-    description: >
-      Full-featured admin dashboard for e-commerce platform built with React,
-      TypeScript, and Material-UI. Features real-time analytics, inventory
-      management, and order tracking.
-    technologies: ["React", "TypeScript", "Material-UI", "Chart.js"]
-    github: "https://github.com/johndoe-dev/ecommerce-dashboard"
-    demo: "https://ecommerce-dashboard-demo.netlify.app"
+    "API Integration":
+      - "REST APIs"
+      - "GraphQL"
+      - "Apollo Client"
+      - "Axios"
+      - "Fetch API"
 
-  - name: "Task Management App"
-    description: >
-      Collaborative task management application with drag-and-drop
-      functionality, real-time updates, and team collaboration features
-      built using Vue.js.
-    technologies: ["Vue.js", "Vue Draggable", "Firebase", "Tailwind CSS"]
-    github: "https://github.com/johndoe-dev/task-manager-vue"
-    demo: "https://vue-task-manager.herokuapp.com"
+  - type: "projects"
+    title: "NOTEABLE PROJECTS"
+    projects:
+      - name: "E-commerce Dashboard"
+        description: >
+          Full-featured admin dashboard for e-commerce platform built with
+          React, TypeScript, and Material-UI. Features real-time analytics,
+          inventory management, and order tracking.
+        technologies: ["React", "TypeScript", "Material-UI", "Chart.js"]
+        github: "https://github.com/johndoe-dev/ecommerce-dashboard"
+        demo: "https://ecommerce-dashboard-demo.netlify.app"
 
-  - name: "Weather Forecast Widget"
-    description: >
-      Responsive weather widget component library with customizable themes and
-      multiple data visualization options. Published as npm package.
-    technologies: ["React", "TypeScript", "Rollup", "OpenWeather API"]
-    github: "https://github.com/johndoe-dev/weather-widget"
-    npm: "https://www.npmjs.com/package/@johndoe/weather-widget"
+      - name: "Task Management App"
+        description: >
+          Collaborative task management application with drag-and-drop
+          functionality, real-time updates, and team collaboration features
+          built using Vue.js.
+        technologies: ["Vue.js", "Vue Draggable", "Firebase", "Tailwind CSS"]
+        github: "https://github.com/johndoe-dev/task-manager-vue"
+        demo: "https://vue-task-manager.herokuapp.com"
+
+      - name: "Weather Forecast Widget"
+        description: >
+          Responsive weather widget component library with customizable themes
+          and multiple data visualization options. Published as npm package.
+        technologies: ["React", "TypeScript", "Rollup", "OpenWeather API"]
+        github: "https://github.com/johndoe-dev/weather-widget"
+        npm: "https://www.npmjs.com/package/@johndoe/weather-widget"
