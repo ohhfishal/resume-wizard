@@ -1,5 +1,10 @@
 package ir
 
+import (
+  "fmt"
+  "strings"
+)
+
 // @ProfessionalSummary(data.Summary)
 // @TechnicalSkillsSection(data.TechnicalSkills)
 // @ProfessionalExperience(data.Experience)
@@ -13,15 +18,328 @@ templ ResumePage(resume Resume) {
 			<meta charset="utf-8"/>
 			<meta name="generator" content="templ"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-			<title>{ resume.Title }</title>
-			<!-- @ResumeStyles() -->
+			<title>{ resume.PersonalInfo.Name } - { resume.Title }</title>
+			@DefaultStyle()
 		</head>
 		<body>
-			@Header(resume.PersonalInfo)
+			@Header(resume)
+      @Summary(resume)
+      @Skills(resume.TechnicalSkills)
+      @ExperienceSection(resume.Experience)
 		</body>
 	</html>
 }
 
-templ Header(info PersonalInfo) {
-  <p>TEMP</p>
+templ Header(resume Resume) {
+  <div class="header">
+    <h1 id="name">{ resume.PersonalInfo.Name }</h1>
+    <p>
+    if title := resume.Title; title != "" {
+      <strong>{ resume.Title }</strong>
+      <br/>
+    }
+    // TODO: Make more generic
+    // TODO: Center elements in this ddiv
+    if resume.PersonalInfo.Email != ""  {
+      📧 { resume.PersonalInfo.Email } |
+    }
+    if link := resume.PersonalInfo.LinkedIn; link != ""  {
+      💼 <a href={ link }>LinkedIn</a> |
+    }
+
+    if link := resume.PersonalInfo.Github; link != ""  {
+      🔗 <a href={ link }>GitHub</a> |
+    }
+
+    if link := resume.PersonalInfo.Portfolio; link != ""  {
+      🌐 <a href={ link }>Portfolio</a>
+    }
+    </p>
+
+  </div>
+
+}
+templ Summary(resume Resume) {
+  <h2 id="professional-summary">Professional Summary</h2>
+  <p>{ resume.Summary }</p>
+}
+
+templ ExperienceSection(positions []Experience) {
+  if len(positions) > 0 {
+    <div>
+    <h2 id="professional-experience">Professional Experience</h2>
+
+    for index, position := range positions {
+      <h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
+      <ul>
+        for _, description := range position.Responsibilities {
+          <li>{ description }</li>
+        }
+      </ul>
+    }
+
+    </div>
+  }
+}
+
+templ Skills(allSkills map[string][]string) {
+  if len(allSkills) > 0 {
+    <div>
+      <h2 id="technical-skills">Technical Skills</h2>
+
+      <p>
+        for category, skills := range allSkills {
+          if len(skills) > 0 {
+            <strong>{ category }:</strong> { strings.Join(skills, ",") } <br />
+          }
+        }
+      </p>
+
+    </div>
+  }
+
+}
+
+templ DefaultStyle() {
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style>
+  /* Resume CSS Stylesheet */
+
+  /* Page setup for PDF */
+  @page {
+    size: A4;
+    margin: 0.5in;
+  }
+
+  /* Reset and base styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #333;
+    max-width: 8.5in;
+    margin: 0 auto;
+    background: white;
+  }
+
+  /* Typography hierarchy */
+  h1 {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #34495e;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+    padding-bottom: 4pt;
+    border-bottom: 2px solid #3498db;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  h3 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+  }
+
+  /* Contact information styling */
+  h1 + p {
+    text-align: center;
+    font-size: 10pt;
+    color: #7f8c8d;
+    margin-bottom: 6pt;
+    font-weight: 500;
+  }
+
+  /* Professional summary and other paragraphs */
+  p {
+    margin-bottom: 8pt;
+    text-align: justify;
+  }
+
+  /* Horizontal rule styling */
+  hr {
+    border: none;
+    border-top: 1px solid #bdc3c7;
+    margin: 15pt 0;
+    width: 100%;
+  }
+
+  /* Lists */
+  ul {
+    margin: 8pt 0;
+    padding-left: 20pt;
+  }
+
+  li {
+    margin-bottom: 4pt;
+    line-height: 1.3;
+  }
+
+  /* Strong text styling */
+  strong {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+
+  /* Links */
+  a {
+    color: #3498db;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Experience section specific styling */
+  h3 + p {
+    font-style: italic;
+    color: #7f8c8d;
+    font-size: 10pt;
+    margin-top: -4pt;
+    margin-bottom: 8pt;
+  }
+
+  /* Skills section formatting */
+  h2:nth-of-type(2) + p {
+    font-size: 10pt;
+    line-height: 1.6;
+  }
+
+  /* Technical skills with better spacing */
+  p:has(strong) {
+    margin-bottom: 4pt;
+  }
+
+  /* Project titles in Notable Projects section */
+  h3:has(+ p:not([style])) {
+    color: #3498db;
+    font-size: 11pt;
+  }
+
+  /* Education section formatting */
+  h3 + p + ul {
+    margin-top: 6pt;
+  }
+
+  /* Certification and awards spacing */
+  ul:has(strong) li {
+    font-weight: 500;
+  }
+
+  /* Page break controls */
+  .page-break {
+    page-break-before: always;
+  }
+
+  .no-break {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure sections don't break poorly */
+  h2 {
+    page-break-after: avoid;
+  }
+
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* Print-specific adjustments */
+  @media print {
+    body {
+      font-size: 10pt;
+      line-height: 1.3;
+    }
+    
+    h1 {
+      font-size: 24pt;
+    }
+    
+    h2 {
+      font-size: 12pt;
+      margin-top: 16pt;
+    }
+    
+    /* Ensure good contrast for printing */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+  }
+
+  /* Responsive adjustments for different page sizes */
+  @media (max-width: 8.5in) {
+    body {
+      margin: 0.25in;
+      max-width: none;
+    }
+    
+    h1 {
+      font-size: 22pt;
+    }
+    
+    h2 {
+      font-size: 12pt;
+    }
+  }
+
+  /* Fine-tuning for professional appearance */
+  em {
+    font-style: italic;
+    color: #555;
+  }
+
+  /* Contact icons and special characters */
+  p:first-of-type strong {
+    font-size: 12pt;
+    color: #34495e;
+  }
+
+  /* Bullet point alternatives for clean look */
+  ul.no-bullets {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul.no-bullets li:before {
+    content: "▸ ";
+    color: #3498db;
+    font-weight: bold;
+    margin-right: 8pt;
+  }
+
+  </style>
 }

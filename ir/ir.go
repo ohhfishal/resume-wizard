@@ -38,10 +38,10 @@ type Resume struct {
 type PersonalInfo struct {
 	Name      string `yaml:"name"`
 	Email     string `yaml:"email"`
-	// Links map[string]string `yaml:"linksi"`
 	LinkedIn  string `yaml:"linkedin"`
 	Github    string `yaml:"github"`
 	Portfolio string `yaml:"portfolio"`
+	// Links map[string]string `yaml:"linksi"`
 }
 
 type Experience struct {

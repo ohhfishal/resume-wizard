@@ -1,5 +1,5 @@
 ---
-title: "John Doe - Senior Frontend Developer Resume"
+title: "Senior Frontend Developer"
 summary: >
   Experienced frontend developer specializing in React and Vue.js with 5+ years
   of building scalable web applications and mentoring development teams.
@@ -88,13 +88,13 @@ education:
     focus: "Modern JavaScript, React, and Web Technologies"
 
 technicalSkills:
-  frontendFrameworks:
+  "Frontend Frameworks":
     - "React"
     - "Vue.js"
     - "Next.js"
     - "Nuxt.js"
 
-  languages:
+  Languages:
     - "JavaScript (ES6+)"
     - "TypeScript"
     - "HTML5"
@@ -102,7 +102,7 @@ technicalSkills:
     - "Python"
     - "SQL"
 
-  styling:
+  Styling:
     - "Tailwind CSS"
     - "Bootstrap"
     - "Material-UI"
@@ -110,7 +110,7 @@ technicalSkills:
     - "CSS Grid"
     - "Flexbox"
 
-  toolsAndLibraries:
+  "Tools and Libraries":
     - "Git/GitHub"
     - "Webpack"
     - "Vite"
@@ -118,20 +118,20 @@ technicalSkills:
     - "ESLint/Prettier"
     - "Storybook"
 
-  testing:
+  "Testing Frameworks":
     - "Jest"
     - "React Testing Library"
     - "Vue Test Utils"
     - "Cypress"
     - "Playwright"
 
-  stateManagement:
+  "State Management":
     - "Redux Toolkit"
     - "Vuex"
     - "Context API"
     - "Zustand"
 
-  apiIntegration:
+  "API Integration":
     - "REST APIs"
     - "GraphQL"
     - "Apollo Client"
