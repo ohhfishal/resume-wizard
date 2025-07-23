@@ -6,17 +6,12 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"html/template"
 	"io"
 	"os"
 	"path/filepath"
 
 	"github.com/goccy/go-yaml"
 )
-
-//go:embed html.template
-var rawTemplateHTML string
-var htmlTemplate = template.Must(template.New("html").Parse(rawTemplateHTML))
 
 type SectionType string
 
