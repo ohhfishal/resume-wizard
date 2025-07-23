@@ -1,4 +1,4 @@
-package ir
+package resume
 
 import (
 	"bytes"
@@ -24,6 +24,25 @@ const (
 	STDIN_BASE        = "stdin"
 	STDIN_EXT         = ""
 )
+
+type V2Resume struct {
+	Version      string       `yaml:"version"`
+	Title        string       `yaml:"title"`
+	Summary      string       `yaml:"summary"`
+	PersonalInfo PersonalInfo `yaml:"personalInfo"`
+	Sections     []Sections   `yaml:"sections"`
+}
+
+type Sections struct {
+	Title string         `yaml:"title"`
+	Data  map[string]any `yaml:"-"`
+
+	// Experience      []Experience        `yaml:"experience"`
+	// Experience      []Experience        `yaml:"experience"`
+	// Education       []Education         `yaml:"education"`
+	// TechnicalSkills map[string][]string `yaml:"technicalSkills"`
+	// Projects        []Project           `yaml:"projects"`
+}
 
 type Resume struct {
 	Title           string              `yaml:"title"`
@@ -115,7 +134,22 @@ func FromFile(file *os.File) (Resume, error) {
 
 func FromYAML(reader io.Reader) (Resume, error) {
 	var resume Resume
-	if err := yaml.NewDecoder(reader).Decode(&resume); err != nil {
+	if err := yaml.NewDecoder(
+		reader,
+		yaml.CustomUnmarshaler[Sections](func(target *Sections, input []byte) error {
+			target.Data = map[string]any{}
+			if err := yaml.Unmarshal(input, &target.Data); err != nil {
+				return fmt.Errorf(`failed to parse: %w`, err)
+			}
+
+			// Extract common fields
+			if title, ok := target.Data["title"].(string); ok {
+				target.Title = title
+				delete(target.Data, "title")
+			}
+			return nil
+		}),
+	).Decode(&resume); err != nil {
 		return resume, fmt.Errorf("parsing yaml: %w", err)
 	}
 	return resume, nil

@@ -20,8 +20,7 @@ personalInfo:
 #     - "*"
 
 sections:
-  - type: "experience"
-    title: "PROFESSIONAL EXPERIENCE"
+  - title: "PROFESSIONAL EXPERIENCE"
     experience:
       - title: "Senior Frontend Developer"
         company: "TechFlow Solutions"
@@ -82,8 +81,7 @@ sections:
             Maintained and updated legacy jQuery applications while gradually
             migrating components to modern Vue.js framework.
 
-  - type: "education"
-    title: "EDUCATION"
+  - title: "EDUCATION"
     education:
       - degree: "B.S. in Computer Science"
         institution: "State University"
@@ -102,8 +100,7 @@ sections:
         duration: "2019"
         focus: "Modern JavaScript, React, and Web Technologies"
 
-  - type: "skills"
-    title: "TECHNICAL SKILLS"
+  - title: "TECHNICAL SKILLS"
     skills:
     "Frontend Frameworks":
       - "React"
@@ -155,8 +152,7 @@ sections:
       - "Axios"
       - "Fetch API"
 
-  - type: "projects"
-    title: "NOTEABLE PROJECTS"
+  - title: "NOTEABLE PROJECTS"
     projects:
       - name: "E-commerce Dashboard"
         description: >
