@@ -14,6 +14,7 @@ templ ResumePage(resume Resume) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 			<title>{ resume.PersonalInfo.Name } - { resume.Title }</title>
 			@DefaultStyle()
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		</head>
 		<body>
       @ResumeHTML(resume)
@@ -46,18 +47,18 @@ templ Header(resume Resume) {
     // TODO: Make more generic and formatted better
     // TODO: Center elements in this ddiv
     if resume.PersonalInfo.Email != ""  {
-      📧 { resume.PersonalInfo.Email }
+      <i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
     }
     if link := resume.PersonalInfo.LinkedIn; link != ""  {
-      | 💼 <a href={ link }>LinkedIn</a>
+      | <i class="fa fa-linkedin"></i> <a href={ link }>LinkedIn</a>
     }
 
     if link := resume.PersonalInfo.Github; link != ""  {
-      | 🔗 <a href={ link }>GitHub</a>
+      | <i class="fa fa-github"></i> <a href={ link }>GitHub</a>
     }
 
     if link := resume.PersonalInfo.Portfolio; link != ""  {
-      | 🌐 <a href={ link }>Portfolio</a>
+      | <i class="fa fa-globe"></i> <a href={ link }>Portfolio</a>
     }
     </p>
 
