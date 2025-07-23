@@ -13,11 +13,6 @@ import (
 	"strings"
 )
 
-// @ProfessionalSummary(data.Summary)
-// @TechnicalSkillsSection(data.TechnicalSkills)
-// @ProfessionalExperience(data.Experience)
-// @EducationSection(data.Education)
-// @NotableProjects(data.Projects)
 func ResumePage(resume Resume) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -46,7 +41,7 @@ func ResumePage(resume Resume) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(resume.PersonalInfo.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 21, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 15, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -59,7 +54,7 @@ func ResumePage(resume Resume) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(resume.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 21, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 15, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -164,7 +159,7 @@ func Header(resume Resume) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(resume.PersonalInfo.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 44, Col: 44}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 38, Col: 44}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -182,7 +177,7 @@ func Header(resume Resume) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(resume.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 47, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 41, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -201,7 +196,7 @@ func Header(resume Resume) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(resume.PersonalInfo.Email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 53, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 47, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -220,7 +215,7 @@ func Header(resume Resume) templ.Component {
 			var templ_7745c5c3_Var9 templ.SafeURL
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(link)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 56, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 50, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -239,7 +234,7 @@ func Header(resume Resume) templ.Component {
 			var templ_7745c5c3_Var10 templ.SafeURL
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(link)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 60, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 54, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -258,7 +253,7 @@ func Header(resume Resume) templ.Component {
 			var templ_7745c5c3_Var11 templ.SafeURL
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(link)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 64, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 58, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -305,7 +300,7 @@ func Summary(summary string) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(summary)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 73, Col: 14}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 67, Col: 14}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -347,7 +342,7 @@ func ResumeSection(section Section) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(section.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 78, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 72, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -357,28 +352,27 @@ func ResumeSection(section Section) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		switch section.Type() {
-		case SectionTypeEducation:
-			templ_7745c5c3_Err = EducationSection(section.Education()).Render(ctx, templ_7745c5c3_Buffer)
+		if education, ok := section.Education(); ok {
+			templ_7745c5c3_Err = EducationSection(education).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case SectionTypeExperience:
-			templ_7745c5c3_Err = ExperienceSection(section.Experience()).Render(ctx, templ_7745c5c3_Buffer)
+		} else if experience, ok := section.Experience(); ok {
+			templ_7745c5c3_Err = ExperienceSection(experience).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case SectionTypeSkills:
-			templ_7745c5c3_Err = SkillsSection(section.Skills()).Render(ctx, templ_7745c5c3_Buffer)
+		} else if skills, ok := section.Skills(); ok {
+			templ_7745c5c3_Err = SkillsSection(skills).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case SectionTypeProjects:
-			templ_7745c5c3_Err = ProjectsSection(section.Projects()).Render(ctx, templ_7745c5c3_Buffer)
+		} else if projects, ok := section.Projects(); ok {
+			templ_7745c5c3_Err = ProjectsSection(projects).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		default:
+		} else {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<span>UNKNOWN SECTION</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -392,7 +386,7 @@ func ResumeSection(section Section) templ.Component {
 	})
 }
 
-func ExperienceSection(positions []Experience, render bool) templ.Component {
+func ExperienceSection(positions []Experience) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -417,7 +411,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(positions) > 0 && render {
+		if len(positions) > 0 {
 			for index, position := range positions {
 				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<h3 id=\"")
 				if templ_7745c5c3_Err != nil {
@@ -426,7 +420,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("experience-%d", index))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 100, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 92, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -439,7 +433,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(position.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 100, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 92, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -452,7 +446,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(position.Company)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 100, Col: 113}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 92, Col: 113}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
@@ -465,7 +459,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 				var templ_7745c5c3_Var20 string
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(position.Duration)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 100, Col: 146}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 92, Col: 146}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
@@ -483,7 +477,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 					var templ_7745c5c3_Var21 string
 					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 103, Col: 27}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 95, Col: 27}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 					if templ_7745c5c3_Err != nil {
@@ -513,7 +507,7 @@ func ExperienceSection(positions []Experience, render bool) templ.Component {
 	})
 }
 
-func SkillsSection(allSkills map[string][]string, render bool) templ.Component {
+func SkillsSection(allSkills map[string][]string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -538,7 +532,7 @@ func SkillsSection(allSkills map[string][]string, render bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(allSkills) > 0 && render {
+		if len(allSkills) > 0 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -552,7 +546,7 @@ func SkillsSection(allSkills map[string][]string, render bool) templ.Component {
 					var templ_7745c5c3_Var23 string
 					templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(category)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 119, Col: 30}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 111, Col: 30}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 					if templ_7745c5c3_Err != nil {
@@ -563,9 +557,9 @@ func SkillsSection(allSkills map[string][]string, render bool) templ.Component {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var24 string
-					templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(skills, ","))
+					templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(skills, ", "))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 119, Col: 70}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 111, Col: 71}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 					if templ_7745c5c3_Err != nil {
@@ -595,7 +589,7 @@ func SkillsSection(allSkills map[string][]string, render bool) templ.Component {
 	})
 }
 
-func ProjectsSection(projects []Project, render bool) templ.Component {
+func ProjectsSection(projects []Project) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -620,18 +614,86 @@ func ProjectsSection(projects []Project, render bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(projects) > 0 && render {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<span>No projects</span>")
+		if len(projects) > 0 {
+			for index, project := range projects {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<h3 id=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var26 string
+				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("projects-%d", index))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 125, Col: 50}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\"><strong>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var27 string
+				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(project.Name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 126, Col: 32}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</strong></h3><p>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var28 string
+				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(project.Description)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 128, Col: 32}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</p><ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if len(project.Technologies) > 0 {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<li><strong>Technologies: </strong> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var29 string
+					templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(project.Technologies, ", "))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 132, Col: 88}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<span>No projects</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<span>No projects</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -639,7 +701,7 @@ func ProjectsSection(projects []Project, render bool) templ.Component {
 	})
 }
 
-func EducationSection(educations []Education, render bool) templ.Component {
+func EducationSection(educations []Education) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -655,27 +717,142 @@ func EducationSection(educations []Education, render bool) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var26 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var26 == nil {
-			templ_7745c5c3_Var26 = templ.NopComponent
+		templ_7745c5c3_Var30 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var30 == nil {
+			templ_7745c5c3_Var30 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(educations) > 0 && render {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span>No education</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
+		if len(educations) > 0 {
+			for index, education := range educations {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<h3 id=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var31 string
+				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("education-%w", index))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 148, Col: 50}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\"><strong>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var32 string
+				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(education.Degree)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 149, Col: 36}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</strong> |  <em>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var33 string
+				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(education.Institution)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 150, Col: 37}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</em> |  <em>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var34 string
+				templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(education.Duration)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 151, Col: 34}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</em></h3><ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if education.GPA != "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<li><strong>GPA: </strong> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var35 string
+					templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(education.GPA)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 156, Col: 52}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if len(education.RelevantCoursework) > 0 {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<li><strong>Relevant Coursework: </strong> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var36 string
+					templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(education.RelevantCoursework, ", "))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 163, Col: 64}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if education.Focus != "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<li><strong>Focus: </strong> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var37 string
+					templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(education.Focus)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 169, Col: 56}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<span>No education</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<span>No education</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -699,12 +876,12 @@ func DefaultStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var27 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var27 == nil {
-			templ_7745c5c3_Var27 = templ.NopComponent
+		templ_7745c5c3_Var38 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var38 == nil {
+			templ_7745c5c3_Var38 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<style>\n    code{white-space: pre-wrap;}\n    span.smallcaps{font-variant: small-caps;}\n    div.columns{display: flex; gap: min(4vw, 1.5em);}\n    div.column{flex: auto; overflow-x: auto;}\n    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}\n    /* The extra [class] is a hack that increases specificity enough to\n       override a similar rule in reveal.js */\n    ul.task-list[class]{list-style: none;}\n    ul.task-list li input[type=\"checkbox\"] {\n      font-size: inherit;\n      width: 0.8em;\n      margin: 0 0.8em 0.2em -1.6em;\n      vertical-align: middle;\n    }\n    .display.math{display: block; text-align: center; margin: 0.5rem auto;}\n  </style><style>\n  /* Resume CSS Stylesheet */\n\n  /* Page setup for PDF */\n  @page {\n    size: A4;\n    margin: 0.5in;\n  }\n\n  /* Reset and base styles */\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  body {\n    font-family: 'Georgia', 'Times New Roman', serif;\n    font-size: 11pt;\n    line-height: 1.4;\n    color: #333;\n    max-width: 8.5in;\n    margin: 0 auto;\n    background: white;\n  }\n\n  /* Typography hierarchy */\n  h1 {\n    font-size: 28pt;\n    font-weight: 700;\n    color: #2c3e50;\n    text-align: center;\n    letter-spacing: 1px;\n  }\n\n  h2 {\n    font-size: 14pt;\n    font-weight: 600;\n    color: #34495e;\n    margin-top: 20pt;\n    margin-bottom: 10pt;\n    padding-bottom: 4pt;\n    border-bottom: 2px solid #3498db;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n  }\n\n  h3 {\n    font-size: 12pt;\n    font-weight: 600;\n    color: #2c3e50;\n    margin-top: 12pt;\n    margin-bottom: 6pt;\n  }\n\n  /* Contact information styling */\n  h1 + p {\n    text-align: center;\n    font-size: 10pt;\n    color: #7f8c8d;\n    margin-bottom: 6pt;\n    font-weight: 500;\n  }\n\n  /* Professional summary and other paragraphs */\n  p {\n    margin-bottom: 8pt;\n    text-align: justify;\n  }\n\n  /* Horizontal rule styling */\n  hr {\n    border: none;\n    border-top: 1px solid #bdc3c7;\n    margin: 15pt 0;\n    width: 100%;\n  }\n\n  /* Lists */\n  ul {\n    margin: 8pt 0;\n    padding-left: 20pt;\n  }\n\n  li {\n    margin-bottom: 4pt;\n    line-height: 1.3;\n  }\n\n  /* Strong text styling */\n  strong {\n    color: #2c3e50;\n    font-weight: 600;\n  }\n\n  /* Links */\n  a {\n    color: #3498db;\n    text-decoration: none;\n  }\n\n  a:hover {\n    text-decoration: underline;\n  }\n\n  /* Experience section specific styling */\n  h3 + p {\n    font-style: italic;\n    color: #7f8c8d;\n    font-size: 10pt;\n    margin-top: -4pt;\n    margin-bottom: 8pt;\n  }\n\n  /* Skills section formatting */\n  h2:nth-of-type(2) + p {\n    font-size: 10pt;\n    line-height: 1.6;\n  }\n\n  /* Technical skills with better spacing */\n  p:has(strong) {\n    margin-bottom: 4pt;\n  }\n\n  /* Project titles in Notable Projects section */\n  h3:has(+ p:not([style])) {\n    color: #3498db;\n    font-size: 11pt;\n  }\n\n  /* Education section formatting */\n  h3 + p + ul {\n    margin-top: 6pt;\n  }\n\n  /* Certification and awards spacing */\n  ul:has(strong) li {\n    font-weight: 500;\n  }\n\n  /* Page break controls */\n  .page-break {\n    page-break-before: always;\n  }\n\n  .no-break {\n    page-break-inside: avoid;\n  }\n\n  /* Ensure sections don't break poorly */\n  h2 {\n    page-break-after: avoid;\n  }\n\n  h3 {\n    page-break-after: avoid;\n  }\n\n  /* Print-specific adjustments */\n  @media print {\n    body {\n      font-size: 10pt;\n      line-height: 1.3;\n    }\n    \n    h1 {\n      font-size: 24pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n      margin-top: 16pt;\n    }\n    \n    /* Ensure good contrast for printing */\n    * {\n      -webkit-print-color-adjust: exact !important;\n      color-adjust: exact !important;\n    }\n  }\n\n  /* Responsive adjustments for different page sizes */\n  @media (max-width: 8.5in) {\n    body {\n      margin: 0.25in;\n      max-width: none;\n    }\n    \n    h1 {\n      font-size: 22pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n    }\n  }\n\n  /* Fine-tuning for professional appearance */\n  em {\n    font-style: italic;\n    color: #555;\n  }\n\n  /* Contact icons and special characters */\n  p:first-of-type strong {\n    font-size: 12pt;\n    color: #34495e;\n  }\n\n  /* Bullet point alternatives for clean look */\n  ul.no-bullets {\n    list-style: none;\n    padding-left: 0;\n  }\n\n  ul.no-bullets li:before {\n    content: \"▸ \";\n    color: #3498db;\n    font-weight: bold;\n    margin-right: 8pt;\n  }\n\n  </style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<style>\n    code{white-space: pre-wrap;}\n    span.smallcaps{font-variant: small-caps;}\n    div.columns{display: flex; gap: min(4vw, 1.5em);}\n    div.column{flex: auto; overflow-x: auto;}\n    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}\n    /* The extra [class] is a hack that increases specificity enough to\n       override a similar rule in reveal.js */\n    ul.task-list[class]{list-style: none;}\n    ul.task-list li input[type=\"checkbox\"] {\n      font-size: inherit;\n      width: 0.8em;\n      margin: 0 0.8em 0.2em -1.6em;\n      vertical-align: middle;\n    }\n    .display.math{display: block; text-align: center; margin: 0.5rem auto;}\n  </style><style>\n  /* Resume CSS Stylesheet */\n\n  /* Page setup for PDF */\n  @page {\n    size: A4;\n    margin: 0.5in;\n  }\n\n  /* Reset and base styles */\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  body {\n    font-family: 'Georgia', 'Times New Roman', serif;\n    font-size: 11pt;\n    line-height: 1.4;\n    color: #333;\n    max-width: 8.5in;\n    margin: 0 auto;\n    background: white;\n  }\n\n  /* Typography hierarchy */\n  h1 {\n    font-size: 28pt;\n    font-weight: 700;\n    color: #2c3e50;\n    text-align: center;\n    letter-spacing: 1px;\n  }\n\n  h2 {\n    font-size: 14pt;\n    font-weight: 600;\n    color: #34495e;\n    margin-top: 20pt;\n    margin-bottom: 10pt;\n    padding-bottom: 4pt;\n    border-bottom: 2px solid #3498db;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n  }\n\n  h3 {\n    font-size: 12pt;\n    font-weight: 600;\n    color: #2c3e50;\n    margin-top: 12pt;\n    margin-bottom: 6pt;\n  }\n\n  /* Contact information styling */\n  h1 + p {\n    text-align: center;\n    font-size: 10pt;\n    color: #7f8c8d;\n    margin-bottom: 6pt;\n    font-weight: 500;\n  }\n\n  /* Professional summary and other paragraphs */\n  p {\n    margin-bottom: 8pt;\n    text-align: justify;\n  }\n\n  /* Horizontal rule styling */\n  hr {\n    border: none;\n    border-top: 1px solid #bdc3c7;\n    margin: 15pt 0;\n    width: 100%;\n  }\n\n  /* Lists */\n  ul {\n    margin: 8pt 0;\n    padding-left: 20pt;\n  }\n\n  li {\n    margin-bottom: 4pt;\n    line-height: 1.3;\n  }\n\n  /* Strong text styling */\n  strong {\n    color: #2c3e50;\n    font-weight: 600;\n  }\n\n  /* Links */\n  a {\n    color: #3498db;\n    text-decoration: none;\n  }\n\n  a:hover {\n    text-decoration: underline;\n  }\n\n  /* Experience section specific styling */\n  h3 + p {\n    font-style: italic;\n    color: #7f8c8d;\n    font-size: 10pt;\n    margin-top: -4pt;\n    margin-bottom: 8pt;\n  }\n\n  /* Skills section formatting */\n  h2:nth-of-type(2) + p {\n    font-size: 10pt;\n    line-height: 1.6;\n  }\n\n  /* Technical skills with better spacing */\n  p:has(strong) {\n    margin-bottom: 4pt;\n  }\n\n  /* Project titles in Notable Projects section */\n  h3:has(+ p:not([style])) {\n    color: #3498db;\n    font-size: 11pt;\n  }\n\n  /* Education section formatting */\n  h3 + p + ul {\n    margin-top: 6pt;\n  }\n\n  /* Certification and awards spacing */\n  ul:has(strong) li {\n    font-weight: 500;\n  }\n\n  /* Page break controls */\n  .page-break {\n    page-break-before: always;\n  }\n\n  .no-break {\n    page-break-inside: avoid;\n  }\n\n  /* Ensure sections don't break poorly */\n  h2 {\n    page-break-after: avoid;\n  }\n\n  h3 {\n    page-break-after: avoid;\n  }\n\n  /* Print-specific adjustments */\n  @media print {\n    body {\n      font-size: 10pt;\n      line-height: 1.3;\n    }\n    \n    h1 {\n      font-size: 24pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n      margin-top: 16pt;\n    }\n    \n    /* Ensure good contrast for printing */\n    * {\n      -webkit-print-color-adjust: exact !important;\n      color-adjust: exact !important;\n    }\n  }\n\n  /* Responsive adjustments for different page sizes */\n  @media (max-width: 8.5in) {\n    body {\n      margin: 0.25in;\n      max-width: none;\n    }\n    \n    h1 {\n      font-size: 22pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n    }\n  }\n\n  /* Fine-tuning for professional appearance */\n  em {\n    font-style: italic;\n    color: #555;\n  }\n\n  /* Contact icons and special characters */\n  p:first-of-type strong {\n    font-size: 12pt;\n    color: #34495e;\n  }\n\n  /* Bullet point alternatives for clean look */\n  ul.no-bullets {\n    list-style: none;\n    padding-left: 0;\n  }\n\n  ul.no-bullets li:before {\n    content: \"▸ \";\n    color: #3498db;\n    font-weight: bold;\n    margin-right: 8pt;\n  }\n\n  </style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

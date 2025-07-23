@@ -5,12 +5,6 @@ import (
   "strings"
 )
 
-// @ProfessionalSummary(data.Summary)
-// @TechnicalSkillsSection(data.TechnicalSkills)
-// @ProfessionalExperience(data.Experience)
-// @EducationSection(data.Education)
-// @NotableProjects(data.Projects)
-
 templ ResumePage(resume Resume) {
 	<!DOCTYPE html>
 	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -76,26 +70,24 @@ templ Summary(summary string) {
 templ ResumeSection(section Section) {
   <div>
     <h2>{ section.Title }</h2>
-    switch section.Type() {
-      case SectionTypeEducation:
-        @EducationSection(section.Education())
-      case SectionTypeExperience:
-        @ExperienceSection(section.Experience())
-      case SectionTypeSkills:
-        @SkillsSection(section.Skills())
-      case SectionTypeProjects:
-        @ProjectsSection(section.Projects())
-      default:
-        <span>UNKNOWN SECTION</span>
+    if education, ok := section.Education(); ok {
+      @EducationSection(education)
+    } else if experience, ok := section.Experience(); ok {
+      @ExperienceSection(experience)
+    } else if skills, ok := section.Skills(); ok {
+      @SkillsSection(skills)
+    } else if projects, ok := section.Projects(); ok {
+      @ProjectsSection(projects)
+    } else {
+      <span>UNKNOWN SECTION</span>
     }
-
   </div>
 
 }
 
-templ ExperienceSection(positions []Experience, render bool) {
+templ ExperienceSection(positions []Experience) {
   <div>
-  if len(positions) > 0 && render {
+  if len(positions) > 0 {
     for index, position := range positions {
       <h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
       <ul>
@@ -110,13 +102,13 @@ templ ExperienceSection(positions []Experience, render bool) {
   </div>
 }
 
-templ SkillsSection(allSkills map[string][]string, render bool) {
+templ SkillsSection(allSkills map[string][]string) {
   <div>
-  if len(allSkills) > 0  && render {
+  if len(allSkills) > 0 {
       <p>
         for category, skills := range allSkills {
           if len(skills) > 0 {
-            <strong>{ category }:</strong> { strings.Join(skills, ",") } <br />
+            <strong>{ category }:</strong> { strings.Join(skills, ", ") } <br />
           }
         }
       </p>
@@ -126,20 +118,59 @@ templ SkillsSection(allSkills map[string][]string, render bool) {
 </div>
 }
 
-templ ProjectsSection(projects []Project, render bool) {
+templ ProjectsSection(projects []Project) {
   <div>
-    if len(projects) > 0 && render {
-      <span>No projects</span>
+    if len(projects) > 0 {
+      for index, project := range projects {
+        <h3 id={ fmt.Sprintf("projects-%d", index)}>
+          <strong>{ project.Name }</strong>
+        </h3>
+        <p>{ project.Description }</p>
+        <ul>
+          if len(project.Technologies) > 0{
+            <li>
+              <strong>Technologies: </strong> { strings.Join(project.Technologies, ", ") }
+            </li>
+          }
+        </ul>
+      }
+  //<p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
     } else {
       <span>No projects</span>
     }
   </div>
 }
 
-templ EducationSection(educations []Education, render bool) {
+templ EducationSection(educations []Education) {
   <div>
-    if len(educations) > 0 && render {
-      <span>No education</span>
+    if len(educations) > 0 {
+      for index, education := range educations {
+        <h3 id={fmt.Sprintf("education-%w", index)}>
+          <strong>{ education.Degree }</strong> | 
+          <em>{ education.Institution }</em> | 
+          <em>{ education.Duration }</em>
+        </h3>
+        <ul>
+          if education.GPA != "" {
+            <li>
+              <strong>GPA: </strong> { education.GPA }
+            </li>
+          }
+
+          if len(education.RelevantCoursework) > 0 {
+            <li>
+              <strong>Relevant Coursework: </strong>
+              { strings.Join(education.RelevantCoursework, ", ") }
+            </li>
+          }
+
+          if education.Focus != "" {
+            <li>
+              <strong>Focus: </strong> { education.Focus }
+            </li>
+          }
+        </ul>
+      }
     } else {
       <span>No education</span>
     }

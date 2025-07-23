@@ -60,42 +60,6 @@ type Section struct {
 	projects   []Project           `yaml:"projects"`
 }
 
-func (section Section) Education() ([]Education, bool) {
-	_, ok := section.data[SectionTypeEducation]
-	return section.education, ok
-}
-
-func (section Section) Experience() ([]Experience, bool) {
-	_, ok := section.data[SectionTypeExperience]
-	return section.experience, ok
-}
-
-func (section Section) Projects() ([]Project, bool) {
-	_, ok := section.data[SectionTypeProjects]
-	return section.projects, ok
-}
-
-func (section Section) Skills() (map[string][]string, bool) {
-	_, ok := section.data[SectionTypeSkills]
-	return section.skills, ok
-}
-
-func (section Section) Type() SectionType {
-	if _, ok := section.data[SectionTypeExperience]; ok {
-		return SectionTypeExperience
-	}
-	if _, ok := section.data[SectionTypeEducation]; ok {
-		return SectionTypeEducation
-	}
-	if _, ok := section.data[SectionTypeSkills]; ok {
-		return SectionTypeSkills
-	}
-	if _, ok := section.data[SectionTypeProjects]; ok {
-		return SectionTypeProjects
-	}
-	return SectionTypeDefault
-}
-
 type Experience struct {
 	Title            string   `yaml:"title"`
 	Company          string   `yaml:"company"`
@@ -120,6 +84,26 @@ type Project struct {
 	Github       string   `yaml:"github"`
 	Demo         string   `yaml:"demo"`
 	Npm          string   `yaml:"npm"`
+}
+
+func (section Section) Education() ([]Education, bool) {
+	_, ok := section.data[SectionTypeEducation]
+	return section.education, ok
+}
+
+func (section Section) Experience() ([]Experience, bool) {
+	_, ok := section.data[SectionTypeExperience]
+	return section.experience, ok
+}
+
+func (section Section) Projects() ([]Project, bool) {
+	_, ok := section.data[SectionTypeProjects]
+	return section.projects, ok
+}
+
+func (section Section) Skills() (map[string][]string, bool) {
+	_, ok := section.data[SectionTypeSkills]
+	return section.skills, ok
 }
 
 // TODO: Optional stylesheets??
