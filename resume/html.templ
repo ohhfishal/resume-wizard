@@ -25,7 +25,9 @@ templ ResumePage(resume Resume) {
 templ ResumeHTML(resume Resume) {
   <div class="resume">
     @Header(resume)
-    @Summary(resume.Summary)
+    if resume.Summary != "" {
+      @Summary(resume.Summary)
+    }
     for _, section := range resume.Sections {
       @ResumeSection(section)
     }
