@@ -6,11 +6,12 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"github.com/goccy/go-yaml"
 	"html/template"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/goccy/go-yaml"
 )
 
 //go:embed html.template
@@ -118,10 +119,28 @@ func (resume Resume) ToHTML(w io.Writer) error {
 	// return htmlTemplate.Execute(w, resume)
 }
 
-func FromFile(file *os.File) (Resume, error) {
+func FromFiles(files []*os.File) (Resume, error) {
+	if len(files) == 0 {
+		return Resume{}, errors.New("must include at least one file")
+	}
+	var resume Resume
+	for _, file := range files {
+		if file == nil {
+			return Resume{}, errors.New("provided nil file")
+		}
+
+		if err := fromFile(file, &resume); err != nil {
+			return Resume{}, fmt.Errorf(`applying file "%s": %w`, file.Name(), err)
+		}
+	}
+
+	return resume, nil
+}
+
+func fromFile(file *os.File, resume *Resume) error {
 	info, err := file.Stat()
 	if err != nil {
-		return Resume{}, fmt.Errorf("getting file info: %w", err)
+		return fmt.Errorf("getting file info: %w", err)
 	}
 
 	base := filepath.Base(info.Name())
@@ -129,34 +148,25 @@ func FromFile(file *os.File) (Resume, error) {
 
 	switch {
 	case extension == YAML:
-		return FromYAML(file)
-	case extension == JSON:
-		return FromJSON(file)
+		if err := FromYAML(file, resume); err != nil {
+			return fmt.Errorf("converting from yaml: %w", err)
+		}
 	case base == STDIN_BASE && extension == STDIN_EXT:
 		data, err := io.ReadAll(file)
 		if err != nil {
-			return Resume{}, fmt.Errorf("reading from stdin: %s", err)
+			return fmt.Errorf("reading from stdin: %s", err)
 		}
 
-		resume1, err := FromYAML(bytes.NewReader(data))
-		if err == nil {
-			return resume1, nil
+		if err := FromYAML(bytes.NewReader(data), resume); err != nil {
+			return fmt.Errorf("converting from yaml: %w", err)
 		}
-
-		resume2, err2 := FromJSON(bytes.NewReader(data))
-		if err2 == nil {
-			return resume2, nil
-		}
-		return Resume{}, fmt.Errorf(
-			"failed to parse from stdin: %s", errors.Join(err, err2),
-		)
 	default:
-		return Resume{}, fmt.Errorf("unknown file type: %s %s", base, extension)
+		return fmt.Errorf("unknown file type: %s %s", base, extension)
 	}
+	return nil
 }
 
-func FromYAML(reader io.Reader) (Resume, error) {
-	var resume Resume
+func FromYAML(reader io.Reader, resume *Resume) error {
 	if err := yaml.NewDecoder(
 		reader,
 		yaml.CustomUnmarshaler[Section](func(target *Section, input []byte) error {
@@ -197,10 +207,10 @@ func FromYAML(reader io.Reader) (Resume, error) {
 
 			return nil
 		}),
-	).Decode(&resume); err != nil {
-		return resume, fmt.Errorf("parsing yaml: %w", err)
+	).Decode(resume); err != nil {
+		return fmt.Errorf("parsing yaml: %w", err)
 	}
-	return resume, nil
+	return nil
 }
 
 func decode[T any](input any, output *T) error {
@@ -214,10 +224,6 @@ func decode[T any](input any, output *T) error {
 	}
 
 	return nil
-}
-
-func FromJSON(reader io.Reader) (Resume, error) {
-	return Resume{}, errors.New("not implemented")
 }
 
 func (resume *Resume) HidePersonalInfo() {
