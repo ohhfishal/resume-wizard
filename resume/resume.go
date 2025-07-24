@@ -80,9 +80,10 @@ type Education struct {
 }
 
 type Project struct {
-	Name         string   `yaml:"name"`
-	Description  string   `yaml:"description"`
+	Name         string   `yaml:"title"`
 	Technologies []string `yaml:"technologies"`
+	Duration           string   `yaml:"duration"`
+	Description  string   `yaml:"description"`
 	Github       string   `yaml:"github"`
 	Demo         string   `yaml:"demo"`
 	Npm          string   `yaml:"npm"`
@@ -136,6 +137,10 @@ func fromFile(file *os.File, resume *Resume) error {
 	extension := filepath.Ext(info.Name())
 
 	switch {
+	case extension == JSON:
+		if err := FromJSON(file, resume); err != nil {
+			return fmt.Errorf("converting from yaml: %w", err)
+		}
 	case extension == YAML:
 		if err := FromYAML(file, resume); err != nil {
 			return fmt.Errorf("converting from yaml: %w", err)
@@ -151,6 +156,15 @@ func fromFile(file *os.File, resume *Resume) error {
 		}
 	default:
 		return fmt.Errorf("unknown file type: %s %s", base, extension)
+	}
+	return nil
+}
+
+func FromJSON(reader io.Reader, resume *Resume) error {
+	if err := json.NewDecoder(
+		reader,
+	).Decode(resume); err != nil {
+		return fmt.Errorf("parsing json: %w", err)
 	}
 	return nil
 }
