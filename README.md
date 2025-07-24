@@ -11,11 +11,11 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
         - [ ] `$EDITOR copy_of_resume.yaml` (User deletes what they don't want
         - [ ] Which template (with default)
         - [ ] Done! New resume is saved. (Maybe update a spreadsheet with which resume used too?
-
+        - [ ] Include a way to prune automatically?
 - [ ] Move to a web-based application if the complexity gets there
 
 ## Roadmap
 - [ ] Support for JSON/TOML inputs and HTML/Markdown/PDF Outputs (QoL)
-- [ ] Way to use secrets. Maybe outline.yaml and secret.yaml? With secret last thing added. Return a script or set of commands to populate secrets locally? 
 - [ ] Prune YAML to allow tailoring of resume's to job descriptions and website scrapping (Killer Feature)
 - [ ] Create YAML by parsing existing resumes (Easy onboarding)
+- [ ] Make the resume style customizable or add custom themes
