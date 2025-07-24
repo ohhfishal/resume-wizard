@@ -354,23 +354,23 @@ func ResumeSection(section Section) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if education, ok := section.Education(); ok {
-			templ_7745c5c3_Err = EducationSection(education).Render(ctx, templ_7745c5c3_Buffer)
+		if section.Education != nil {
+			templ_7745c5c3_Err = EducationSection(section.Education).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if experience, ok := section.Experience(); ok {
-			templ_7745c5c3_Err = ExperienceSection(experience).Render(ctx, templ_7745c5c3_Buffer)
+		} else if section.Experience != nil {
+			templ_7745c5c3_Err = ExperienceSection(section.Experience).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if skills, ok := section.Skills(); ok {
-			templ_7745c5c3_Err = SkillsSection(skills).Render(ctx, templ_7745c5c3_Buffer)
+		} else if section.Skills != nil {
+			templ_7745c5c3_Err = SkillsSection(section.Skills).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if projects, ok := section.Projects(); ok {
-			templ_7745c5c3_Err = ProjectsSection(projects).Render(ctx, templ_7745c5c3_Buffer)
+		} else if section.Projects != nil {
+			templ_7745c5c3_Err = ProjectsSection(section.Projects).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -55,11 +56,10 @@ type PersonalInfo struct {
 
 type Section struct {
 	Title      string              `yaml:"title"`
-	data       map[string]any      `yaml:"-"`
-	experience []Experience        `yaml:"experience"`
-	education  []Education         `yaml:"education"`
-	skills     map[string][]string `yaml:"skills"`
-	projects   []Project           `yaml:"projects"`
+	Experience []Experience        `yaml:"experience,omitempty"`
+	Education  []Education         `yaml:"education,omitempty"`
+	Skills     map[string][]string `yaml:"skills,omitempty"`
+	Projects   []Project           `yaml:"projects,omitempty"`
 }
 
 type Experience struct {
@@ -88,30 +88,24 @@ type Project struct {
 	Npm          string   `yaml:"npm"`
 }
 
-func (section Section) Education() ([]Education, bool) {
-	_, ok := section.data[SectionTypeEducation]
-	return section.education, ok
-}
-
-func (section Section) Experience() ([]Experience, bool) {
-	_, ok := section.data[SectionTypeExperience]
-	return section.experience, ok
-}
-
-func (section Section) Projects() ([]Project, bool) {
-	_, ok := section.data[SectionTypeProjects]
-	return section.projects, ok
-}
-
-func (section Section) Skills() (map[string][]string, bool) {
-	_, ok := section.data[SectionTypeSkills]
-	return section.skills, ok
-}
-
 // TODO: Optional stylesheets??
 func (resume Resume) ToHTML(w io.Writer) error {
 	return ResumePage(resume).Render(context.TODO(), w)
 	// return htmlTemplate.Execute(w, resume)
+}
+
+func (resume Resume) ToYAML(w io.Writer) error {
+	encoder := yaml.NewEncoder(
+		w,
+	)
+	defer encoder.Close()
+	return encoder.Encode(resume)
+}
+
+func (resume Resume) ToJSON(w io.Writer) error {
+	return json.NewEncoder(
+		w,
+	).Encode(resume)
 }
 
 func FromFiles(files []*os.File) (Resume, error) {
@@ -164,44 +158,6 @@ func fromFile(file *os.File, resume *Resume) error {
 func FromYAML(reader io.Reader, resume *Resume) error {
 	if err := yaml.NewDecoder(
 		reader,
-		yaml.CustomUnmarshaler[Section](func(target *Section, input []byte) error {
-			target.data = map[string]any{}
-			if err := yaml.Unmarshal(input, &target.data); err != nil {
-				return fmt.Errorf(`failed to parse: %w`, err)
-			}
-
-			// Extract common fields
-			if title, ok := target.data["title"].(string); ok {
-				target.Title = title
-				delete(target.data, "title")
-			}
-			// Extract known fields
-			if experience, ok := target.data[SectionTypeExperience]; ok {
-				if err := decode(experience, &target.experience); err != nil {
-					return fmt.Errorf("parsing experience: %w", err)
-				}
-			}
-
-			if education, ok := target.data[SectionTypeEducation]; ok {
-				if err := decode(education, &target.education); err != nil {
-					return fmt.Errorf("parsing education: %w", err)
-				}
-			}
-
-			if skills, ok := target.data[SectionTypeSkills]; ok {
-				if err := decode(skills, &target.skills); err != nil {
-					return fmt.Errorf("parsing skills: %w", err)
-				}
-			}
-
-			if projects, ok := target.data[SectionTypeProjects]; ok {
-				if err := decode(projects, &target.projects); err != nil {
-					return fmt.Errorf("parsing projects: %w", err)
-				}
-			}
-
-			return nil
-		}),
 	).Decode(resume); err != nil {
 		return fmt.Errorf("parsing yaml: %w", err)
 	}
@@ -225,11 +181,11 @@ func (resume *Resume) HidePersonalInfo() {
 	resume.PersonalInfo = redactedPersonalInfo
 
 	for i, section := range resume.Sections {
-		for j, _ := range section.education {
-			resume.Sections[i].education[j].Institution = "REDACTED INSTITUTION"
+		for j, _ := range section.Education {
+			resume.Sections[i].Education[j].Institution = "REDACTED INSTITUTION"
 		}
-		for j, _ := range section.experience {
-			resume.Sections[i].experience[j].Company = "REDACTED COMPANY"
+		for j, _ := range section.Experience {
+			resume.Sections[i].Experience[j].Company = "REDACTED COMPANY"
 		}
 	}
 }

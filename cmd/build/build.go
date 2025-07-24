@@ -9,6 +9,7 @@ import (
 
 type Cmd struct {
 	Inputs           []*os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	Output           string     `short:"o" optional:"" enum:"html,yaml,json" default:"html" help:"Output format (\"html\",\"yaml\",\"json\")"`
 	HidePersonalInfo bool       `short:"q" help:"Hide personal info"`
 	// TODO: Implement this instead of defaulting to os.Stdout
 	// Output io.Writer
@@ -29,8 +30,22 @@ func (cmd *Cmd) Run(logger *slog.Logger) error {
 		entry.HidePersonalInfo()
 	}
 
-	if err := entry.ToHTML(os.Stdout); err != nil {
-		return fmt.Errorf("converting to HTML: %w", err)
+	switch cmd.Output {
+	case "html":
+		if err := entry.ToHTML(os.Stdout); err != nil {
+			return fmt.Errorf("converting to HTML: %w", err)
+		}
+	case "yaml":
+		if err := entry.ToYAML(os.Stdout); err != nil {
+			return fmt.Errorf("converting to YAML: %w", err)
+		}
+	case "json":
+		if err := entry.ToJSON(os.Stdout); err != nil {
+			return fmt.Errorf("converting to YAML: %w", err)
+		}
+	default:
+		return fmt.Errorf("unknown output format: %s", cmd.Output)
 	}
+
 	return nil
 }

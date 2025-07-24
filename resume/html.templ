@@ -73,14 +73,14 @@ templ Summary(summary string) {
 templ ResumeSection(section Section) {
   <div>
     <h2>{ section.Title }</h2>
-    if education, ok := section.Education(); ok {
-      @EducationSection(education)
-    } else if experience, ok := section.Experience(); ok {
-      @ExperienceSection(experience)
-    } else if skills, ok := section.Skills(); ok {
-      @SkillsSection(skills)
-    } else if projects, ok := section.Projects(); ok {
-      @ProjectsSection(projects)
+    if section.Education != nil {
+      @EducationSection(section.Education)
+    } else if section.Experience != nil {
+      @ExperienceSection(section.Experience)
+    } else if section.Skills != nil {
+      @SkillsSection(section.Skills)
+    } else if section.Projects != nil {
+      @ProjectsSection(section.Projects)
     } else {
       <span>UNKNOWN SECTION</span>
     }
