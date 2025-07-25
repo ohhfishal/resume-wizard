@@ -82,7 +82,7 @@ type Education struct {
 type Project struct {
 	Name         string   `yaml:"title"`
 	Technologies []string `yaml:"technologies"`
-	Duration           string   `yaml:"duration"`
+	Duration     string   `yaml:"duration"`
 	Description  string   `yaml:"description"`
 	Github       string   `yaml:"github"`
 	Demo         string   `yaml:"demo"`

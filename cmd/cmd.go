@@ -7,10 +7,12 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/ohhfishal/resume-wizard/cmd/build"
+	"github.com/ohhfishal/resume-wizard/cmd/wizard"
 )
 
 type RootCmd struct {
-	Build build.Cmd `cmd:"" help:"Compile a resume from a input file."`
+	Build  build.Cmd  `cmd:"" help:"Compile a resume from a input file."`
+	Wizard wizard.Cmd `cmd:"" help:"Do some magic"`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {
