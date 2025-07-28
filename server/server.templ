@@ -1,0 +1,50 @@
+package server
+
+const (
+  UploadFileKey = "file"
+)
+
+templ MainPage() {
+	<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="generator" content="templ"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+			<title>Main Page</title>
+			@DefaultStyle()
+      <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
+      <script>
+          htmx.on('#form', 'htmx:xhr:progress', function(evt) {
+            htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+          });
+      </script>
+		</head>
+		<body>
+      @UploadFile()
+      @Form()
+		</body>
+	</html>
+}
+
+templ UploadFile() {
+  <div>
+    <form id='form' hx-encoding='multipart/form-data' hx-post='/resume'>
+      <input type='file' name={ UploadFileKey }>
+      <button>
+          Upload
+      </button>
+      <progress id='progress' value='0' max='100'></progress>
+    </form>
+  </div>
+}
+
+templ Form() {
+  <form>
+    <button>Submit</button>
+  </form>
+}
+
+templ DefaultStyle() {
+  // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
