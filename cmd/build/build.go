@@ -10,8 +10,8 @@ import (
 type Cmd struct {
 	Inputs            []*os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
 	Output            string     `short:"o" optional:"" enum:"html,yaml,json" default:"html" help:"Output format (\"html\",\"yaml\",\"json\")"`
-	ApplyPersonalInfo *os.File   `short:"p" help:"Apply personal info from a file to remove redactions."`
-	HidePersonalInfo  bool       `short:"q" help:"Hide personal info"`
+	ApplyPersonalInfo *os.File   `short:"p" group:"Personal Info" placeholder:"FILE" help:"Apply personal info from a file to remove redactions."`
+	HidePersonalInfo  bool       `short:"q" group:"Personal Info" help:"Hide personal info"`
 	// TODO: Implement this instead of defaulting to os.Stdout
 	// Output io.Writer
 }
