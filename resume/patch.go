@@ -8,7 +8,6 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
-
 type Patch struct {
 	PersonalInfo PersonalInfo      `yaml:"personalInfo"`
 	Override     map[string]string `yaml:"override"`
@@ -28,7 +27,7 @@ func (resume *Resume) ApplyPatch(reader io.Reader) error {
 
 	content := buffer.String()
 	for key, value := range patch.Override {
-		content = strings.ReplaceAll(content, "$" + key, value)
+		content = strings.ReplaceAll(content, "$"+key, value)
 	}
 
 	if err := FromYAML(strings.NewReader(content), resume); err != nil {
@@ -36,4 +35,3 @@ func (resume *Resume) ApplyPatch(reader io.Reader) error {
 	}
 	return nil
 }
-

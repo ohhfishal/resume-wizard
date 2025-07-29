@@ -30,7 +30,8 @@ templ MainPage() {
 templ UploadFile() {
   <div>
     <form id='form' hx-encoding='multipart/form-data' hx-post='/resume'>
-      <input type='file' name={ UploadFileKey }>
+      <input type='text' name="name" required>
+      <input type='file' name={ UploadFileKey } required>
       <button>
           Upload
       </button>

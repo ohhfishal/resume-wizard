@@ -6,6 +6,7 @@ pkgs.mkShell {
     go
     jq
     yamllint
+    sqlc
   ];
 
   shellHook = ''
