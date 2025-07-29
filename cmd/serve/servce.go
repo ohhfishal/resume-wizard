@@ -3,16 +3,24 @@ package serve
 import (
 	"context"
 	"fmt"
-	"github.com/ohhfishal/resume-wizard/server"
 	"log/slog"
+
+	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/server"
 )
 
 type Cmd struct {
 	// TODO: Add port
+	DatabaseSource string `short:"s" default:":memory:" help:"Database connection string (sqlite)."`
 }
 
 func (cmd *Cmd) Run(ctx context.Context, logger *slog.Logger) error {
-	s, err := server.New(logger)
+	database, err := db.Open(ctx, "sqlite3", cmd.DatabaseSource)
+	if err != nil {
+		return fmt.Errorf("connecting to database: %w", err)
+	}
+
+	s, err := server.New(logger, database)
 	if err != nil {
 		return fmt.Errorf("creating server: %w", err)
 	}

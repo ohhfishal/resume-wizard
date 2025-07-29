@@ -3,6 +3,7 @@ package resume
 import (
 	"bytes"
 	"context"
+	"database/sql/driver"
 	_ "embed"
 	"encoding/json"
 	"errors"
@@ -38,55 +39,55 @@ const (
 )
 
 type Resume struct {
-	Version      string       `yaml:"version"`
-	Title        string       `yaml:"title"`
-	Summary      string       `yaml:"summary"`
-	PersonalInfo PersonalInfo `yaml:"personalInfo"`
-	Sections     []Section    `yaml:"sections"`
+	Version      string       `json:"version" yaml:"version"`
+	Title        string       `json:"title" yaml:"title"`
+	Summary      string       `json:"summary" yaml:"summary"`
+	PersonalInfo PersonalInfo `json:"personalInfo" yaml:"personalInfo"`
+	Sections     []Section    `json:"sections" yaml:"sections"`
 }
 
 type PersonalInfo struct {
-	Name      string `yaml:"name"`
-	Email     string `yaml:"email"`
-	LinkedIn  string `yaml:"linkedin"`
-	Github    string `yaml:"github"`
-	Portfolio string `yaml:"portfolio"`
+	Name      string `json:"name" yaml:"name"`
+	Email     string `json:"email" yaml:"email"`
+	LinkedIn  string `json:"linkedin" yaml:"linkedin"`
+	Github    string `json:"github" yaml:"github"`
+	Portfolio string `json:"portfolio" yaml:"portfolio"`
 	// Links map[string]string `yaml:"linksi"`
 }
 
 type Section struct {
-	Title      string              `yaml:"title"`
-	Experience []Experience        `yaml:"experience,omitempty"`
-	Education  []Education         `yaml:"education,omitempty"`
-	Skills     map[string][]string `yaml:"skills,omitempty"`
-	Projects   []Project           `yaml:"projects,omitempty"`
+	Title      string              `json:"title" yaml:"title"`
+	Experience []Experience        `json:"experience,omitempty" yaml:"experience,omitempty"`
+	Education  []Education         `json:"education,omitempty" yaml:"education,omitempty"`
+	Skills     map[string][]string `json:"skills,omitempty" yaml:"skills,omitempty"`
+	Projects   []Project           `json:"projects,omitempty" yaml:"projects,omitempty"`
 }
 
 type Experience struct {
-	Title            string   `yaml:"title"`
-	Company          string   `yaml:"company"`
-	Duration         string   `yaml:"duration"`
-	Responsibilities []string `yaml:"responsibilities"`
+	Title            string   `yaml:"title" json:"title"`
+	Company          string   `yaml:"company" json:"company"`
+	Duration         string   `yaml:"duration" json:"duration"`
+	Responsibilities []string `yaml:"responsibilities" json:"responsibilities"`
 }
 
 type Education struct {
-	Degree             string   `yaml:"degree"`
-	Institution        string   `yaml:"institution"`
-	Location           string   `yaml:"location"`
-	Duration           string   `yaml:"duration"`
-	GPA                string   `yaml:"gpa"`
-	Focus              string   `yaml:"focus"`
-	RelevantCoursework []string `yaml:"relevantCoursework"`
+	Degree             string   `yaml:"degree" json:"degree"`
+	Institution        string   `yaml:"institution" json:"institution"`
+	Location           string   `yaml:"location" json:"location"`
+	Duration           string   `yaml:"duration" json:"duration"`
+	GPA                string   `yaml:"gpa" json:"gpa"`
+	Focus              string   `yaml:"focus" json:"focus"`
+	RelevantCoursework []string `yaml:"relevantCoursework" json:"relevantCoursework"`
 }
 
 type Project struct {
-	Name         string   `yaml:"title"`
-	Technologies []string `yaml:"technologies"`
-	Duration     string   `yaml:"duration"`
-	Description  string   `yaml:"description"`
-	Github       string   `yaml:"github"`
-	Demo         string   `yaml:"demo"`
-	Npm          string   `yaml:"npm"`
+	Name         string   `yaml:"title" json:"name"`
+	Technologies []string `yaml:"technologies" json:"technologies"`
+	Duration     string   `yaml:"duration" json:"duration"`
+	Description  string   `yaml:"description" json:"description"`
+	Github       string   `yaml:"github" json:"github"`
+	Demo         string   `yaml:"demo" json:"demo"`
+	Npm          string   `yaml:"npm" json:"npm"`
 }
 
 // TODO: Optional stylesheets??
@@ -202,4 +203,27 @@ func (resume *Resume) HidePersonalInfo() {
 			resume.Sections[i].Experience[j].Company = fmt.Sprintf("$REDACTED_COMPANY_%d", j)
 		}
 	}
+}
+
+// Implement methods to be used in a database
+func (r Resume) Value() (driver.Value, error) {
+	return json.Marshal(r)
+}
+
+func (r *Resume) Scan(value interface{}) error {
+	if value == nil {
+		return nil
+	}
+
+	var bytes []byte
+	switch v := value.(type) {
+	case []byte:
+		bytes = v
+	case string:
+		bytes = []byte(v)
+	default:
+		return fmt.Errorf("cannot scan %T into Resume", value)
+	}
+
+	return json.Unmarshal(bytes, r)
 }

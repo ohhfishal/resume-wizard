@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -10,18 +11,20 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
+	"github.com/ohhfishal/resume-wizard/db"
 )
 
 type Server struct {
-	logger *slog.Logger
-	port   string
+	logger   *slog.Logger
+	database *db.Queries
+	port     string
 }
 
-func New(logger *slog.Logger) (*Server, error) {
+func New(logger *slog.Logger, database *db.Queries) (*Server, error) {
 	return &Server{
-		logger: logger,
-		// TODO: Fix hardcoding
-		port: "8080",
+		database: database,
+		logger:   logger,
+		port:     "8080", // TODO: Fix hardcoding
 	}, nil
 }
 
@@ -37,11 +40,20 @@ func (server *Server) Run(ctx context.Context) error {
 	)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		names, err := server.database.GetNames(r.Context())
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		server.logger.Info("got from db", "names", names)
 		// TODO: Implement
-		MainPage().Render(r.Context(), w)
+		MainPage(names).Render(r.Context(), w)
 	})
 
-	r.Post("/resume", NewUploadHandler(server.logger))
+	r.Post("/resume", NewUploadHandler(server.logger, server.database))
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

@@ -2,9 +2,10 @@ package server
 
 const (
   UploadFileKey = "file"
+  NameKey = "name"
 )
 
-templ MainPage() {
+templ MainPage(names []string) {
 	<!DOCTYPE html>
 	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 		<head>
@@ -22,7 +23,7 @@ templ MainPage() {
 		</head>
 		<body>
       @UploadFile()
-      @Form()
+      @ResumeSelector(names)
 		</body>
 	</html>
 }
@@ -30,7 +31,7 @@ templ MainPage() {
 templ UploadFile() {
   <div>
     <form id='form' hx-encoding='multipart/form-data' hx-post='/resume'>
-      <input type='text' name="name" required>
+      <input type='text' name={ NameKey } required>
       <input type='file' name={ UploadFileKey } required>
       <button>
           Upload
@@ -40,10 +41,16 @@ templ UploadFile() {
   </div>
 }
 
-templ Form() {
-  <form>
-    <button>Submit</button>
-  </form>
+templ ResumeSelector(names []string) {
+  // TODO: Implement the rest of this!
+  <div>
+  <label for="resumes">Choose a resume:</label>
+  <select id="resumes" name="resumename">
+  for _, name := range names {
+    <option value="name">{ name }</option>
+  }
+  </select>
+  </div>
 }
 
 templ DefaultStyle() {

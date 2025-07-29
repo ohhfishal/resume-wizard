@@ -5,10 +5,10 @@
 package db
 
 import (
-	"database/sql"
+	"github.com/ohhfishal/resume-wizard/resume"
 )
 
 type Resume struct {
-	Name string
-	Body sql.NullString
+	Name string         `json:"name"`
+	Body *resume.Resume `json:"body"`
 }

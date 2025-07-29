@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/ohhfishal/resume-wizard/resume"
 )
 
 const getNames = `-- name: GetNames :many
@@ -20,7 +22,7 @@ func (q *Queries) GetNames(ctx context.Context) ([]string, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	items := []string{}
 	for rows.Next() {
 		var name string
 		if err := rows.Scan(&name); err != nil {
@@ -48,7 +50,7 @@ func (q *Queries) GetRows(ctx context.Context) ([]Resume, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Resume
+	items := []Resume{}
 	for rows.Next() {
 		var i Resume
 		if err := rows.Scan(&i.Name, &i.Body); err != nil {
@@ -63,4 +65,22 @@ func (q *Queries) GetRows(ctx context.Context) ([]Resume, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertResume = `-- name: InsertResume :one
+INSERT INTO resumes (name, body)
+VALUES (?, ?)
+RETURNING name, body
+`
+
+type InsertResumeParams struct {
+	Name string         `json:"name"`
+	Body *resume.Resume `json:"body"`
+}
+
+func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (Resume, error) {
+	row := q.db.QueryRowContext(ctx, insertResume, arg.Name, arg.Body)
+	var i Resume
+	err := row.Scan(&i.Name, &i.Body)
+	return i, err
 }

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
 	"log/slog"
 	"net/http"
@@ -14,8 +15,17 @@ var UploadFileTypes = []string{
 	"application/json",
 }
 
-func NewUploadHandler(logger *slog.Logger) http.HandlerFunc {
+func NewUploadHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		name := r.FormValue(NameKey)
+		if name == "" {
+			http.Error(w,
+				"missing field: name",
+				http.StatusBadRequest,
+			)
+			return
+		}
+
 		file, header, err := r.FormFile(UploadFileKey)
 		if err != nil {
 			http.Error(w,
@@ -65,6 +75,17 @@ func NewUploadHandler(logger *slog.Logger) http.HandlerFunc {
 					UploadFileTypes,
 				),
 				http.StatusBadRequest,
+			)
+			return
+		}
+
+		if _, err := database.InsertResume(r.Context(), db.InsertResumeParams{
+			Name: name,
+			Body: &newResume,
+		}); err != nil {
+			http.Error(w,
+				fmt.Sprintf("could not insert into database: %s", err.Error()),
+				http.StatusInternalServerError,
 			)
 			return
 		}

@@ -1,5 +1,5 @@
 
-CREATE TABLE resumes (
+CREATE TABLE IF NOT EXISTS resumes (
   name TEXT PRIMARY KEY NOT NULL,
-  body TEXT
+  body TEXT NOT NULL
 );
