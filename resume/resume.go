@@ -25,7 +25,7 @@ const (
 )
 
 var redactedPersonalInfo = PersonalInfo{
-	Name:   "REDACTED NAME",
+	Name:   "REDACTED_NAME",
 	Email:  "email@email.com",
 	Github: "https://github.com/",
 }
@@ -196,10 +196,10 @@ func (resume *Resume) HidePersonalInfo() {
 
 	for i, section := range resume.Sections {
 		for j, _ := range section.Education {
-			resume.Sections[i].Education[j].Institution = "REDACTED INSTITUTION"
+			resume.Sections[i].Education[j].Institution = fmt.Sprintf("$REDACTED_INSTITUTION_%d", j)
 		}
 		for j, _ := range section.Experience {
-			resume.Sections[i].Experience[j].Company = "REDACTED COMPANY"
+			resume.Sections[i].Experience[j].Company = fmt.Sprintf("$REDACTED_COMPANY_%d", j)
 		}
 	}
 }

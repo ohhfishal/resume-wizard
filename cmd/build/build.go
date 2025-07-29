@@ -8,9 +8,10 @@ import (
 )
 
 type Cmd struct {
-	Inputs           []*os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
-	Output           string     `short:"o" optional:"" enum:"html,yaml,json" default:"html" help:"Output format (\"html\",\"yaml\",\"json\")"`
-	HidePersonalInfo bool       `short:"q" help:"Hide personal info"`
+	Inputs            []*os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	Output            string     `short:"o" optional:"" enum:"html,yaml,json" default:"html" help:"Output format (\"html\",\"yaml\",\"json\")"`
+	ApplyPersonalInfo *os.File   `short:"p" help:"Apply personal info from a file to remove redactions."`
+	HidePersonalInfo  bool       `short:"q" help:"Hide personal info"`
 	// TODO: Implement this instead of defaulting to os.Stdout
 	// Output io.Writer
 }
@@ -24,6 +25,13 @@ func (cmd *Cmd) Run(logger *slog.Logger) error {
 	entry, err := resume.FromFiles(cmd.Inputs)
 	if err != nil {
 		return fmt.Errorf("creating resume from input: %w", err)
+	}
+
+	if cmd.ApplyPersonalInfo != nil {
+		err := entry.ApplyPatch(cmd.ApplyPersonalInfo)
+		if err != nil {
+			return fmt.Errorf("applying personal info patch: %w", err)
+		}
 	}
 
 	if cmd.HidePersonalInfo {

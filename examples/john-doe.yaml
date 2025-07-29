@@ -4,18 +4,13 @@ summary: >
   Experienced frontend developer specializing in React and Vue.js with 5+ years
   of building scalable web applications and mentoring development teams.
 
+# NOTE: This can be removed if you are going to redact then apply a patch
 personalInfo:
   name: "John Doe"
   email: "johndoe@email.com"
   linkedin: "https://www.linkedin.com/in/john-doe-dev"
   github: "https://github.com/johndoe-dev"
   portfolio: "https://johndoe.dev"
-
-# options:
-#   sectionOrder:
-#     - "PROFESSIONAL EXPERIENCE"
-#     - "SKILLS"
-#     - "*"
 
 sections:
   - title: "PROFESSIONAL EXPERIENCE"

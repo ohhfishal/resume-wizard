@@ -26,7 +26,7 @@ func NewUploadHandler(logger *slog.Logger) http.HandlerFunc {
 		}
 
 		if header.Size >= MaxFileSize {
-			http.Error( w,
+			http.Error(w,
 				fmt.Sprintf("file too big: %s", err.Error()),
 				http.StatusBadRequest,
 			)

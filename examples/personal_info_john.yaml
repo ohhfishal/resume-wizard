@@ -1,0 +1,14 @@
+
+personalInfo:
+  name: "John Doe"
+  email: "johndoe@email.com"
+  linkedin: "https://www.linkedin.com/in/john-doe-dev"
+  github: "https://github.com/johndoe-dev"
+  portfolio: "https://johndoe.dev"
+
+override:
+  "REDACTED_COMPANY_0": "TechFlow Solutions"
+  "REDACTED_COMPANY_1": "Digital Innovations Inc"
+  "REDACTED_COMPANY_2": "StartupLab"
+  "REDACTED_INSTITUTION_0": "State University"
+  "REDACTED_INSTITUTION_1": "CodeAcademy Pro"
