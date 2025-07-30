@@ -10,6 +10,7 @@ import (
 
 type RootCmd struct {
 	Build  BuildCmd  `cmd:"" help:"Compile a resume from a input file."`
+	Log    LogCmd    `cmd:"" help:"Log usuage of resumes."`
 	Serve  ServeCmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve"`
 	Wizard WizardCmd `cmd:"" help:"Do some magic"`
 }
