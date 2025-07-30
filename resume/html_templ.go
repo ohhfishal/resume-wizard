@@ -644,58 +644,64 @@ func ProjectsSection(projects []Project) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</strong></h3><p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</strong></h3> <ul>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var28 string
-				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(project.Description)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 131, Col: 32}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</p><ul>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				for _, bullet := range strings.Split(project.Description, ". ") {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var28 string
+					templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(strings.TrimSuffix(bullet, "."))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 135, Col: 47}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, ".</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 				if len(project.Technologies) > 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<li><strong>Technologies: </strong> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<li>Technologies: ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var29 string
 					templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(project.Technologies, ", "))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 135, Col: 88}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 140, Col: 70}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</li>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</li>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</ul>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</ul>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<span>No projects</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<span>No projects</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -724,137 +730,153 @@ func EducationSection(educations []Education) templ.Component {
 			templ_7745c5c3_Var30 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(educations) > 0 {
 			for index, education := range educations {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<h3 id=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<h3 id=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var31 string
-				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("education-%w", index))
+				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("education-%d", index))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 151, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 156, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\"><strong>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\"><strong>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var32 string
 				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(education.Degree)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 152, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 157, Col: 36}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</strong> |  <em>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</strong> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var33 string
-				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(education.Institution)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 153, Col: 37}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</em> |  <em>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var34 string
-				templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(education.Duration)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 154, Col: 34}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</em></h3><ul>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				if education.Institution != "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "| <em>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var33 string
+					templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(education.Institution)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 160, Col: 41}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</em> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 				if education.GPA != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<li><strong>GPA: </strong> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "| <em>GPA: ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var34 string
+					templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(education.GPA)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 164, Col: 38}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</em> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if education.Duration != "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "| <em>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var35 string
-					templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(education.GPA)
+					templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(education.Duration)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 159, Col: 52}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 168, Col: 38}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</li>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</em>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</h3><ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
 				if len(education.RelevantCoursework) > 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<li><strong>Relevant Coursework: </strong> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<li><strong>Relevant Coursework: </strong> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var36 string
 					templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(education.RelevantCoursework, ", "))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 166, Col: 64}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 176, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</li>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</li>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 				if education.Focus != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<li><strong>Focus: </strong> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "<li><strong>Focus: </strong> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var37 string
 					templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(education.Focus)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 172, Col: 56}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `resume/html.templ`, Line: 182, Col: 56}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</li>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</li>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</ul>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</ul>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<span>No education</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<span>No education</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -883,7 +905,7 @@ func DefaultStyle() templ.Component {
 			templ_7745c5c3_Var38 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<style>\n    code{white-space: pre-wrap;}\n    span.smallcaps{font-variant: small-caps;}\n    div.columns{display: flex; gap: min(4vw, 1.5em);}\n    div.column{flex: auto; overflow-x: auto;}\n    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}\n    /* The extra [class] is a hack that increases specificity enough to\n       override a similar rule in reveal.js */\n    ul.task-list[class]{list-style: none;}\n    ul.task-list li input[type=\"checkbox\"] {\n      font-size: inherit;\n      width: 0.8em;\n      margin: 0 0.8em 0.2em -1.6em;\n      vertical-align: middle;\n    }\n    .display.math{display: block; text-align: center; margin: 0.5rem auto;}\n  </style><style>\n  /* Resume CSS Stylesheet */\n\n  /* Page setup for PDF */\n  @page {\n    size: A4;\n    margin: 0.5in;\n  }\n\n  /* Reset and base styles */\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  body {\n    font-family: 'Georgia', 'Times New Roman', serif;\n    font-size: 11pt;\n    line-height: 1.4;\n    color: #333;\n    max-width: 8.5in;\n    margin: 0 auto;\n    background: white;\n  }\n\n  /* Typography hierarchy */\n  h1 {\n    font-size: 28pt;\n    font-weight: 700;\n    color: #2c3e50;\n    text-align: center;\n    letter-spacing: 1px;\n  }\n\n  h2 {\n    font-size: 14pt;\n    font-weight: 600;\n    color: #34495e;\n    margin-top: 20pt;\n    margin-bottom: 10pt;\n    padding-bottom: 4pt;\n    border-bottom: 2px solid #3498db;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n  }\n\n  h3 {\n    font-size: 12pt;\n    font-weight: 600;\n    color: #2c3e50;\n    margin-top: 12pt;\n    margin-bottom: 6pt;\n  }\n\n  /* Contact information styling */\n  h1 + p {\n    text-align: center;\n    font-size: 10pt;\n    color: #7f8c8d;\n    margin-bottom: 6pt;\n    font-weight: 500;\n  }\n\n  /* Professional summary and other paragraphs */\n  p {\n    margin-bottom: 8pt;\n    text-align: justify;\n  }\n\n  /* Horizontal rule styling */\n  hr {\n    border: none;\n    border-top: 1px solid #bdc3c7;\n    margin: 15pt 0;\n    width: 100%;\n  }\n\n  /* Lists */\n  ul {\n    margin: 8pt 0;\n    padding-left: 20pt;\n  }\n\n  li {\n    margin-bottom: 4pt;\n    line-height: 1.3;\n  }\n\n  /* Strong text styling */\n  strong {\n    color: #2c3e50;\n    font-weight: 600;\n  }\n\n  /* Links */\n  a {\n    color: #3498db;\n    text-decoration: none;\n  }\n\n  a:hover {\n    text-decoration: underline;\n  }\n\n  /* Experience section specific styling */\n  h3 + p {\n    font-style: italic;\n    color: #7f8c8d;\n    font-size: 10pt;\n    margin-top: -4pt;\n    margin-bottom: 8pt;\n  }\n\n  /* Skills section formatting */\n  h2:nth-of-type(2) + p {\n    font-size: 10pt;\n    line-height: 1.6;\n  }\n\n  /* Technical skills with better spacing */\n  p:has(strong) {\n    margin-bottom: 4pt;\n  }\n\n  /* Project titles in Notable Projects section */\n  h3:has(+ p:not([style])) {\n    color: #3498db;\n    font-size: 11pt;\n  }\n\n  /* Education section formatting */\n  h3 + p + ul {\n    margin-top: 6pt;\n  }\n\n  /* Certification and awards spacing */\n  ul:has(strong) li {\n    font-weight: 500;\n  }\n\n  /* Page break controls */\n  .page-break {\n    page-break-before: always;\n  }\n\n  .no-break {\n    page-break-inside: avoid;\n  }\n\n  /* Ensure sections don't break poorly */\n  h2 {\n    page-break-after: avoid;\n  }\n\n  h3 {\n    page-break-after: avoid;\n  }\n\n  /* Print-specific adjustments */\n  @media print {\n    body {\n      font-size: 10pt;\n      line-height: 1.3;\n    }\n    \n    h1 {\n      font-size: 24pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n      margin-top: 16pt;\n    }\n    \n    /* Ensure good contrast for printing */\n    * {\n      -webkit-print-color-adjust: exact !important;\n      color-adjust: exact !important;\n    }\n  }\n\n  /* Responsive adjustments for different page sizes */\n  @media (max-width: 8.5in) {\n    body {\n      margin: 0.25in;\n      max-width: none;\n    }\n    \n    h1 {\n      font-size: 22pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n    }\n  }\n\n  /* Fine-tuning for professional appearance */\n  em {\n    font-style: italic;\n    color: #555;\n  }\n\n  /* Contact icons and special characters */\n  p:first-of-type strong {\n    font-size: 12pt;\n    color: #34495e;\n  }\n\n  /* Bullet point alternatives for clean look */\n  ul.no-bullets {\n    list-style: none;\n    padding-left: 0;\n  }\n\n  ul.no-bullets li:before {\n    content: \"▸ \";\n    color: #3498db;\n    font-weight: bold;\n    margin-right: 8pt;\n  }\n\n  </style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<style>\n    code{white-space: pre-wrap;}\n    span.smallcaps{font-variant: small-caps;}\n    div.columns{display: flex; gap: min(4vw, 1.5em);}\n    div.column{flex: auto; overflow-x: auto;}\n    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}\n    /* The extra [class] is a hack that increases specificity enough to\n       override a similar rule in reveal.js */\n    ul.task-list[class]{list-style: none;}\n    ul.task-list li input[type=\"checkbox\"] {\n      font-size: inherit;\n      width: 0.8em;\n      margin: 0 0.8em 0.2em -1.6em;\n      vertical-align: middle;\n    }\n    .display.math{display: block; text-align: center; margin: 0.5rem auto;}\n  </style><style>\n  /* Resume CSS Stylesheet */\n\n  /* Page setup for PDF */\n  @page {\n    size: A4;\n    margin: 0.5in;\n  }\n\n  /* Reset and base styles */\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  body {\n    font-family: 'Georgia', 'Times New Roman', serif;\n    font-size: 11pt;\n    line-height: 1.4;\n    color: #333;\n    max-width: 8.5in;\n    margin: 0 auto;\n    background: white;\n  }\n\n  /* Typography hierarchy */\n  h1 {\n    font-size: 28pt;\n    font-weight: 700;\n    color: #2c3e50;\n    text-align: center;\n    letter-spacing: 1px;\n  }\n\n  h2 {\n    font-size: 14pt;\n    font-weight: 600;\n    color: #34495e;\n    margin-top: 20pt;\n    margin-bottom: 10pt;\n    padding-bottom: 4pt;\n    border-bottom: 2px solid #3498db;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n  }\n\n  h3 {\n    font-size: 12pt;\n    font-weight: 600;\n    color: #2c3e50;\n    margin-top: 12pt;\n    margin-bottom: 6pt;\n  }\n\n  /* Contact information styling */\n  h1 + p {\n    text-align: center;\n    font-size: 10pt;\n    color: #7f8c8d;\n    margin-bottom: 6pt;\n    font-weight: 500;\n  }\n\n  /* Professional summary and other paragraphs */\n  p {\n    margin-bottom: 8pt;\n    text-align: justify;\n  }\n\n  /* Horizontal rule styling */\n  hr {\n    border: none;\n    border-top: 1px solid #bdc3c7;\n    margin: 15pt 0;\n    width: 100%;\n  }\n\n  /* Lists */\n  ul {\n    margin: 8pt 0;\n    padding-left: 20pt;\n  }\n\n  li {\n    margin-bottom: 4pt;\n    line-height: 1.3;\n  }\n\n  /* Strong text styling */\n  strong {\n    color: #2c3e50;\n    font-weight: 600;\n  }\n\n  /* Links */\n  a {\n    color: #3498db;\n    text-decoration: none;\n  }\n\n  a:hover {\n    text-decoration: underline;\n  }\n\n  /* Experience section specific styling */\n  h3 + p {\n    font-style: italic;\n    color: #7f8c8d;\n    font-size: 10pt;\n    margin-top: -4pt;\n    margin-bottom: 8pt;\n  }\n\n  /* Skills section formatting */\n  h2:nth-of-type(2) + p {\n    font-size: 10pt;\n    line-height: 1.6;\n  }\n\n  /* Technical skills with better spacing */\n  p:has(strong) {\n    margin-bottom: 4pt;\n  }\n\n  /* Project titles in Notable Projects section */\n  h3:has(+ p:not([style])) {\n    color: #3498db;\n    font-size: 11pt;\n  }\n\n  /* Education section formatting */\n  h3 + p + ul {\n    margin-top: 6pt;\n  }\n\n  /* Certification and awards spacing */\n  ul:has(strong) li {\n    font-weight: 500;\n  }\n\n  /* Page break controls */\n  .page-break {\n    page-break-before: always;\n  }\n\n  .no-break {\n    page-break-inside: avoid;\n  }\n\n  /* Ensure sections don't break poorly */\n  h2 {\n    page-break-after: avoid;\n  }\n\n  h3 {\n    page-break-after: avoid;\n  }\n\n  /* Print-specific adjustments */\n  @media print {\n    body {\n      font-size: 10pt;\n      line-height: 1.3;\n    }\n    \n    h1 {\n      font-size: 24pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n      margin-top: 16pt;\n    }\n    \n    /* Ensure good contrast for printing */\n    * {\n      -webkit-print-color-adjust: exact !important;\n      color-adjust: exact !important;\n    }\n  }\n\n  /* Responsive adjustments for different page sizes */\n  @media (max-width: 8.5in) {\n    body {\n      margin: 0.25in;\n      max-width: none;\n    }\n    \n    h1 {\n      font-size: 22pt;\n    }\n    \n    h2 {\n      font-size: 12pt;\n    }\n  }\n\n  /* Fine-tuning for professional appearance */\n  em {\n    font-style: italic;\n    color: #555;\n  }\n\n  /* Contact icons and special characters */\n  p:first-of-type strong {\n    font-size: 12pt;\n    color: #34495e;\n  }\n\n  /* Bullet point alternatives for clean look */\n  ul.no-bullets {\n    list-style: none;\n    padding-left: 0;\n  }\n\n  ul.no-bullets li:before {\n    content: \"▸ \";\n    color: #3498db;\n    font-weight: bold;\n    margin-right: 8pt;\n  }\n\n  </style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

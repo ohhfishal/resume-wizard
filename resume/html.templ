@@ -128,11 +128,16 @@ templ ProjectsSection(projects []Project) {
         <h3 id={ fmt.Sprintf("projects-%d", index)}>
           <strong>{ project.Name }</strong>
         </h3>
-        <p>{ project.Description }</p>
+        // <p>{ project.Description }</p>
         <ul>
+          for _, bullet := range strings.Split(project.Description, ". ") {
+            <li>
+              { strings.TrimSuffix(bullet, ".") }.
+            </li>
+          }
           if len(project.Technologies) > 0{
             <li>
-              <strong>Technologies: </strong> { strings.Join(project.Technologies, ", ") }
+              Technologies: { strings.Join(project.Technologies, ", ") }
             </li>
           }
         </ul>
@@ -148,17 +153,22 @@ templ EducationSection(educations []Education) {
   <div>
     if len(educations) > 0 {
       for index, education := range educations {
-        <h3 id={fmt.Sprintf("education-%w", index)}>
-          <strong>{ education.Degree }</strong> | 
-          <em>{ education.Institution }</em> | 
-          <em>{ education.Duration }</em>
+        <h3 id={fmt.Sprintf("education-%d", index)}>
+          <strong>{ education.Degree }</strong>
+
+          if education.Institution != "" {
+            | <em>{ education.Institution }</em>
+          }
+
+          if education.GPA != "" {
+            | <em>GPA: { education.GPA }</em>
+          }
+
+          if education.Duration != "" {
+            | <em>{ education.Duration }</em>
+          }
         </h3>
         <ul>
-          if education.GPA != "" {
-            <li>
-              <strong>GPA: </strong> { education.GPA }
-            </li>
-          }
 
           if len(education.RelevantCoursework) > 0 {
             <li>
