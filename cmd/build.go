@@ -22,7 +22,7 @@ func (cmd *BuildCmd) Run(logger *slog.Logger) error {
 		defer file.Close()
 	}
 
-	entry, err := resume.FromFiles(cmd.Inputs)
+	entry, err := resume.FromFiles(cmd.Inputs...)
 	if err != nil {
 		return fmt.Errorf("creating resume from input: %w", err)
 	}

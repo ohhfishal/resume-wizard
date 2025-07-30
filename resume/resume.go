@@ -110,7 +110,7 @@ func (resume Resume) ToJSON(w io.Writer) error {
 	).Encode(resume)
 }
 
-func FromFiles(files []*os.File) (Resume, error) {
+func FromFiles(files ...*os.File) (Resume, error) {
 	if len(files) == 0 {
 		return Resume{}, errors.New("must include at least one file")
 	}
