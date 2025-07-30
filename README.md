@@ -2,7 +2,15 @@
 
 CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 
-## Design
+## CLI Workflows
+- Use `build` to create the inital YAML file. (First time)
+    - Also could be an `init` command.
+- Use `wizard` (or `decorate`) decorate it for a job.
+- Continue iterating with `build` until renders a good PDF.
+- Use `save` to insert it into a db.
+- Optional: `export` to view it as a csv
+
+## High Level Design
 - [ ] Create a CLI proof of concept
     - [X] Parse YAML/JSON into an IR
     - [X] Convert the IR to HTML
