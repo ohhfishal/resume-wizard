@@ -1,4 +1,4 @@
-package wizard
+package cmd
 
 import (
 	"bufio"
@@ -10,11 +10,11 @@ import (
 	"strings"
 )
 
-type Cmd struct {
+type WizardCmd struct {
 	File *os.File `arg:"" help:"File to read"`
 }
 
-func (cmd *Cmd) Run(logger *slog.Logger) error {
+func (cmd *WizardCmd) Run(logger *slog.Logger) error {
 	defer cmd.File.Close()
 	metadata, err := parse(cmd.File)
 	if err != nil {

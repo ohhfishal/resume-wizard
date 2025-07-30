@@ -6,15 +6,12 @@ import (
 	"log/slog"
 
 	"github.com/alecthomas/kong"
-	"github.com/ohhfishal/resume-wizard/cmd/build"
-	"github.com/ohhfishal/resume-wizard/cmd/serve"
-	"github.com/ohhfishal/resume-wizard/cmd/wizard"
 )
 
 type RootCmd struct {
-	Build  build.Cmd  `cmd:"" help:"Compile a resume from a input file."`
-	Serve  serve.Cmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve"`
-	Wizard wizard.Cmd `cmd:"" help:"Do some magic"`
+	Build  BuildCmd  `cmd:"" help:"Compile a resume from a input file."`
+	Serve  ServeCmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve"`
+	Wizard WizardCmd `cmd:"" help:"Do some magic"`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {

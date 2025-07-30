@@ -1,4 +1,4 @@
-package build
+package cmd
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type Cmd struct {
+type BuildCmd struct {
 	Inputs            []*os.File `arg:"" required:"" help:"Input file to convert (Must match \"*.yaml\", \"*.json\" or \"-\")"`
 	Output            string     `short:"o" optional:"" enum:"html,yaml,json" default:"html" help:"Output format (\"html\",\"yaml\",\"json\")"`
 	ApplyPersonalInfo *os.File   `short:"p" group:"Personal Info:" placeholder:"FILE" help:"Apply personal info from a file to remove redactions."`
@@ -17,7 +17,7 @@ type Cmd struct {
 }
 
 // TODO: Careful where we log to since this can emit to stdout
-func (cmd *Cmd) Run(logger *slog.Logger) error {
+func (cmd *BuildCmd) Run(logger *slog.Logger) error {
 	for _, file := range cmd.Inputs {
 		defer file.Close()
 	}

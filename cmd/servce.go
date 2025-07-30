@@ -1,4 +1,4 @@
-package serve
+package cmd
 
 import (
 	"context"
@@ -9,12 +9,12 @@ import (
 	"github.com/ohhfishal/resume-wizard/server"
 )
 
-type Cmd struct {
+type ServeCmd struct {
 	// TODO: Add port
 	DatabaseSource string `short:"s" default:":memory:" help:"Database connection string (sqlite)."`
 }
 
-func (cmd *Cmd) Run(ctx context.Context, logger *slog.Logger) error {
+func (cmd *ServeCmd) Run(ctx context.Context, logger *slog.Logger) error {
 	database, err := db.Open(ctx, "sqlite3", cmd.DatabaseSource)
 	if err != nil {
 		return fmt.Errorf("connecting to database: %w", err)
