@@ -1,58 +1,149 @@
 package server
 
+import (
+  "time"
+	"github.com/ohhfishal/resume-wizard/db"
+)
+
 const (
   UploadFileKey = "file"
   NameKey = "name"
 )
 
-templ MainPage(names []string) {
-	<!DOCTYPE html>
-	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-		<head>
-			<meta charset="utf-8"/>
-			<meta name="generator" content="templ"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-			<title>Main Page</title>
-			@DefaultStyle()
+templ MainPage(resumes []db.Resume, applications []db.Application) {
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Resume Wizard</title>
+      <link rel="stylesheet" href="assets/styles/default.css">
       <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
-      <script>
-          htmx.on('#form', 'htmx:xhr:progress', function(evt) {
-            htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
-          });
-      </script>
-		</head>
-		<body>
-      @UploadFile()
-      @ResumeSelector(names)
-		</body>
-	</html>
+  </head>
+  <body>
+      <div class="container">
+          <div class="header">
+              <h1>Resume Wizard</h1>
+              <p>Keep track of your job applications and their status</p>
+          </div>
+
+          @ResumeForm()
+
+          @ApplicationForm(resumes)
+
+          @ApplicationsTable(applications)
+
+      </div>
+  </body>
+  </html>
 }
 
-templ UploadFile() {
-  <div>
-    <form id='form' hx-encoding='multipart/form-data' hx-post='/resume'>
-      <input type='text' name={ NameKey } required>
-      <input type='file' name={ UploadFileKey } required>
-      <button>
-          Upload
-      </button>
-      <progress id='progress' value='0' max='100'></progress>
+templ ResumeForm() {
+  <div class="form-section">
+    <h2>Upload Resume</h2>
+
+    <form id="resumeForm" 
+      hx-post='/resume' 
+      hx-encoding='multipart/form-data' 
+      hx-swap='none' 
+      hx-on::after-request="if(event.detail.successful) this.reset()"
+    >
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="resumeName">Resume Name</label>
+                <input type="text" id="resumeName" name="name" placeholder="e.g., Software Engineer" required>
+            </div>
+            <div class="form-group">
+                <label for="resumeFile">Resume File</label>
+                <input type="file" id="resumeFile" name="file" accept=".yaml,.json" required>
+            </div>
+        </div>
+        <button type="submit" class="btn">Upload Resume</button>
     </form>
   </div>
 }
 
-templ ResumeSelector(names []string) {
-  // TODO: Implement the rest of this!
-  <div>
-  <label for="resumes">Choose a resume:</label>
-  <select id="resumes" name="resumename">
-  for _, name := range names {
-    <option value="name">{ name }</option>
-  }
-  </select>
+templ ApplicationForm(resumes []db.Resume) {
+  <div class="form-section">
+      <h2>Add New Application</h2>
+      <form id="applicationForm"
+        hx-post='/application'
+      >
+          <div class="form-grid">
+              @ResumeDropdown(resumes)
+              <div class="form-group">
+                  <label for="company">Company</label>
+                  <input type="text" id="company" name="company" required>
+              </div>
+              <div class="form-group">
+                  <label for="position">Position</label>
+                  <input type="text" id="position" name="position" required>
+              </div>
+              <div class="form-group">
+                  <label for="status">Status</label>
+                  <select id="status" name="status">
+                      <option value="pending">Pending</option>
+                      <option value="interviewed">Interviewed</option>
+                      <option value="rejected">Rejected</option>
+                      <option value="accepted">Accepted</option>
+                  </select>
+              </div>
+          </div>
+          <button type="submit" class="btn">Add Application</button>
+      </form>
   </div>
 }
 
-templ DefaultStyle() {
-  // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+templ ResumeDropdown(resumes []db.Resume) {
+  <div class="form-group" hx-get="/components/resumeDropdown" hx-trigger={EventResumeUploaded + " from:body"}>
+      <label for="resume">Resume</label>
+      <select id="resume" name="resume_id" required>
+          <option value="">Select a resume...</option>
+          for _, resume := range resumes {
+            // TODO: Use the ID and name
+            <option value={ resume.ID }> { resume.Name }</option>
+          }
+      </select>
+  </div>
+}
+
+templ ApplicationsTable(applications []db.Application) {
+  <div class="table-section">
+      <h2>Your Applications</h2>
+      <div class="table-container">
+          <table id="applicationsTable">
+              <thead>
+                  <tr>
+                      <th>Resume</th>
+                      <th>Company</th>
+                      <th>Position</th>
+                      <th>Status</th>
+                      <th>Applied Date</th>
+                  </tr>
+              </thead>
+              <tbody id="applicationsBody">
+                  if len(applications) == 0 {
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p>No applications found. Add your first application above!</p>
+                        </td>
+                    </tr>
+                  }
+                  for _, application := range applications {
+                    <tr>
+                        <td>Placeholder FIXME</td>
+                        <td>{ application.Company }</td>
+                        <td>{ application.Position }</td>
+                        <td><span class={ "status " + application.Status }>{ application.Status }</span></td>
+                        // TODO: Improve formatting of time
+                        <td>{ application.CreatedAt.Format(time.DateOnly) }</td>
+                    </tr>
+                  }
+              </tbody>
+          </table>
+      </div>
+  </div>
 }

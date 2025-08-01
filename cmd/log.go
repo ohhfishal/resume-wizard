@@ -21,11 +21,12 @@ type LogCmd struct {
 }
 
 type ApplyCmd struct {
-	File *os.File `arg:"" required:"" help:"File used (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	File       *os.File `arg:"" required:"" help:"File used (Must match \"*.yaml\", \"*.json\" or \"-\")"`
+	Company    string   `arg:"" required:"" help:"Company applied to."`
+	Position   string   `arg:"" required:"" help:"Position applied to."`
+	ResumeName string   `short:"n" help:"Name of resume (Defaults to position)"`
 	// TODO: Improve defaults
 	DatabaseSource string `short:"s" default:":memory:" help:"Database connection string (sqlite)."`
-	Company        string `arg:"" required:"" help:"Company applied to."`
-	Position       string `arg:"" required:"" help:"Position applied to."`
 }
 
 func (cmd *ApplyCmd) Run(ctx context.Context, logger *slog.Logger) error {
@@ -41,9 +42,13 @@ func (cmd *ApplyCmd) Run(ctx context.Context, logger *slog.Logger) error {
 		return fmt.Errorf("connecting to database: %w", err)
 	}
 
+	if cmd.ResumeName == `` {
+		cmd.ResumeName = cmd.Position
+	}
+
 	// TODO: Transaction this?
 	id, err := database.InsertResume(ctx, db.InsertResumeParams{
-		Name: "TODO",
+		Name: cmd.ResumeName,
 		Body: &entry,
 	})
 	if err != nil {

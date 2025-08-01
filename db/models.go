@@ -5,18 +5,18 @@
 package db
 
 import (
-	"database/sql"
+	"time"
 
 	"github.com/ohhfishal/resume-wizard/resume"
 )
 
 type Application struct {
-	ResumeID  int64          `json:"resume_id"`
-	Company   string         `json:"company"`
-	Position  string         `json:"position"`
-	CreatedAt sql.NullTime   `json:"created_at"`
-	UpdatedAt sql.NullTime   `json:"updated_at"`
-	Status    sql.NullString `json:"status"`
+	ResumeID  int64     `json:"resume_id"`
+	Company   string    `json:"company"`
+	Position  string    `json:"position"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Status    string    `json:"status"`
 }
 
 type Resume struct {

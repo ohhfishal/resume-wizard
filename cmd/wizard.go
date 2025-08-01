@@ -8,8 +8,8 @@ import (
 )
 
 type WizardCmd struct {
-	File *os.File `arg:"" help:"File to read"`
-	AnthropicKey string `env:"ANTHROPIC_API_KEY" help:"API key to use Claude."`
+	File         *os.File `arg:"" help:"File to read"`
+	AnthropicKey string   `env:"ANTHROPIC_API_KEY" help:"API key to use Claude."`
 }
 
 func (cmd *WizardCmd) Run(logger *slog.Logger) error {

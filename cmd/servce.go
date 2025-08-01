@@ -11,7 +11,7 @@ import (
 
 type ServeCmd struct {
 	// TODO: Add port
-	DatabaseSource string `short:"s" default:":memory:" help:"Database connection string (sqlite)."`
+	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
 }
 
 func (cmd *ServeCmd) Run(ctx context.Context, logger *slog.Logger) error {

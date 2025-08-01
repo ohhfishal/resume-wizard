@@ -11,11 +11,47 @@ import (
 	"github.com/ohhfishal/resume-wizard/resume"
 )
 
+const getApplications = `-- name: GetApplications :many
+SELECT resume_id, company, position, created_at, updated_at, status from applications
+ORDER BY created_at
+`
+
+func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
+	rows, err := q.db.QueryContext(ctx, getApplications)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Application{}
+	for rows.Next() {
+		var i Application
+		if err := rows.Scan(
+			&i.ResumeID,
+			&i.Company,
+			&i.Position,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getNames = `-- name: GetNames :many
 SELECT name from resumes
 ORDER BY name
 `
 
+// TODO: Remove this
 func (q *Queries) GetNames(ctx context.Context) ([]string, error) {
 	rows, err := q.db.QueryContext(ctx, getNames)
 	if err != nil {
@@ -39,13 +75,13 @@ func (q *Queries) GetNames(ctx context.Context) ([]string, error) {
 	return items, nil
 }
 
-const getRows = `-- name: GetRows :many
+const getResumes = `-- name: GetResumes :many
 SELECT id, name, body from resumes
 ORDER BY name
 `
 
-func (q *Queries) GetRows(ctx context.Context) ([]Resume, error) {
-	rows, err := q.db.QueryContext(ctx, getRows)
+func (q *Queries) GetResumes(ctx context.Context) ([]Resume, error) {
+	rows, err := q.db.QueryContext(ctx, getResumes)
 	if err != nil {
 		return nil, err
 	}

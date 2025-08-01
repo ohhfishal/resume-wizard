@@ -34,26 +34,55 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
 
+	r.Post("/resume", PostResumeHandler(server.logger, server.database))
+
 	r.Mount(
 		"/assets",
 		http.StripPrefix("/assets", http.FileServer(http.FS(assets.Assets))),
 	)
 
+	r.Route("/components", func(r chi.Router) {
+		r.Get("/resumeDropdown", func(w http.ResponseWriter, r *http.Request) {
+			resumes, err := server.database.GetResumes(r.Context())
+			if err != nil {
+				http.Error(w,
+					fmt.Sprintf("reading database for names: %s", err.Error()),
+					http.StatusInternalServerError,
+				)
+				return
+			}
+			ResumeDropdown(resumes).Render(r.Context(), w)
+		})
+	})
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		names, err := server.database.GetNames(r.Context())
+		resumes, err := server.database.GetResumes(r.Context())
 		if err != nil {
 			http.Error(w,
-				fmt.Sprintf("reading database: %s", err.Error()),
+				fmt.Sprintf("reading database for names: %s", err.Error()),
 				http.StatusInternalServerError,
 			)
 			return
 		}
-		server.logger.Info("got from db", "names", names)
-		// TODO: Implement
-		MainPage(names).Render(r.Context(), w)
-	})
 
-	r.Post("/resume", NewUploadHandler(server.logger, server.database))
+		applications, err := server.database.GetApplications(r.Context())
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for applications: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		server.logger.Debug(
+			"got from db",
+			"names", resumes,
+			"apps", applications,
+		)
+
+		// TODO: Implement
+		MainPage(resumes, applications).Render(r.Context(), w)
+	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
