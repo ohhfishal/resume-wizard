@@ -75,6 +75,18 @@ func (q *Queries) GetNames(ctx context.Context) ([]string, error) {
 	return items, nil
 }
 
+const getResumeByID = `-- name: GetResumeByID :one
+SELECT id, name, body from resumes
+WHERE ID = ?
+`
+
+func (q *Queries) GetResumeByID(ctx context.Context, id int64) (Resume, error) {
+	row := q.db.QueryRowContext(ctx, getResumeByID, id)
+	var i Resume
+	err := row.Scan(&i.ID, &i.Name, &i.Body)
+	return i, err
+}
+
 const getResumes = `-- name: GetResumes :many
 SELECT id, name, body from resumes
 ORDER BY name

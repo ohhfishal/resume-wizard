@@ -7,6 +7,10 @@ ORDER BY name;
 SELECT * from resumes
 ORDER BY name;
 
+-- name: GetResumeByID :one
+SELECT * from resumes
+WHERE ID = ?;
+
 -- name: InsertResume :one
 INSERT INTO resumes (name, body)
 VALUES (?, ?)

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -42,6 +43,7 @@ func (server *Server) Run(ctx context.Context) error {
 	)
 
 	r.Route("/components", func(r chi.Router) {
+		// TODO: FIX THESE! IE Have its errors be valid HTML
 		r.Get("/resumeDropdown", func(w http.ResponseWriter, r *http.Request) {
 			resumes, err := server.database.GetResumes(r.Context())
 			if err != nil {
@@ -51,7 +53,32 @@ func (server *Server) Run(ctx context.Context) error {
 				)
 				return
 			}
-			ResumeDropdown(resumes).Render(r.Context(), w)
+			ResumeDropdown(resumes, "").Render(r.Context(), w)
+		})
+		r.Get("/resumeEditor", func(w http.ResponseWriter, r *http.Request) {
+			id := r.URL.Query().Get("resume_id")
+			if id == "" {
+				ResumeEditor(db.Resume{ID: -1}).Render(r.Context(), w)
+				return
+			}
+			intID, err := strconv.ParseInt(id, 10, 64)
+			if err != nil {
+				http.Error(w,
+					fmt.Sprintf("could not conver id to int: %s", err.Error()),
+					http.StatusBadRequest,
+				)
+				return
+			}
+
+			resume, err := server.database.GetResumeByID(r.Context(), intID)
+			if err != nil {
+				http.Error(w,
+					fmt.Sprintf("reading database for resume: %s", err.Error()),
+					http.StatusInternalServerError,
+				)
+				return
+			}
+			ResumeEditor(resume).Render(r.Context(), w)
 		})
 	})
 
