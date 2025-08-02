@@ -160,7 +160,7 @@ func EditResumeForm(resumes []db.Resume) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(ResumeEditorID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 95, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 90, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -239,7 +239,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(EventResumeUploaded + " from:body")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 135, Col: 108}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 131, Col: 108}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -257,7 +257,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs("#" + changeListenerID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 142, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 141, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -275,7 +275,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(resume.ID)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 145, Col: 41}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 145, Col: 30}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -288,7 +288,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(resume.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 145, Col: 58}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 145, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -316,7 +316,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(resume.ID)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 152, Col: 41}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 152, Col: 30}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -329,7 +329,7 @@ func ResumeDropdown(resumes []db.Resume, changeListenerID string) templ.Componen
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(resume.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 152, Col: 58}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 152, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -439,7 +439,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 202, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 202, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -462,7 +462,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(application.Company)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 207, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 206, Col: 32}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -475,7 +475,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(application.Position)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 208, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 207, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -510,7 +510,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(application.Status)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 209, Col: 95}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 208, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
@@ -523,7 +523,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(application.CreatedAt.Format(time.DateOnly))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 211, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/server.templ`, Line: 210, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {

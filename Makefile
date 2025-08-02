@@ -1,6 +1,7 @@
 
 
 build: 
+	templ fmt .
 	templ generate
 	sqlc generate
 	go fmt ./...

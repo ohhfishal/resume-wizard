@@ -1,8 +1,8 @@
 package resume
 
 import (
-  "fmt"
-  "strings"
+	"fmt"
+	"strings"
 )
 
 templ ResumePage(resume Resume) {
@@ -14,184 +14,174 @@ templ ResumePage(resume Resume) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 			<title>{ resume.PersonalInfo.Name } - { resume.Title }</title>
 			@DefaultStyle()
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 		</head>
 		<body>
-      @ResumeHTML(resume)
+			@ResumeHTML(resume)
 		</body>
 	</html>
 }
 
-
 templ ResumeHTML(resume Resume) {
-  <div class="resume">
-    @Header(resume)
-    if resume.Summary != "" {
-      @Summary(resume.Summary)
-    }
-    for _, section := range resume.Sections {
-      @ResumeSection(section)
-    }
-  </div>
+	<div class="resume">
+		@Header(resume)
+		if resume.Summary != "" {
+			@Summary(resume.Summary)
+		}
+		for _, section := range resume.Sections {
+			@ResumeSection(section)
+		}
+	</div>
 }
-
 
 templ Header(resume Resume) {
-  <div class="header">
-    <h1 id="name">{ resume.PersonalInfo.Name }</h1>
-    <p>
-    if title := resume.Title; title != "" {
-      <strong>{ resume.Title }</strong>
-      <br/>
-    }
-    // TODO: Make more generic and formatted better
-    // TODO: Center elements in this ddiv
-    if resume.PersonalInfo.Email != ""  {
-      <i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
-    }
-    if link := resume.PersonalInfo.LinkedIn; link != ""  {
-      | <i class="fa fa-linkedin"></i> <a href={ link }>LinkedIn</a>
-    }
-
-    if link := resume.PersonalInfo.Github; link != ""  {
-      | <i class="fa fa-github"></i> <a href={ link }>GitHub</a>
-    }
-
-    if link := resume.PersonalInfo.Portfolio; link != ""  {
-      | <i class="fa fa-globe"></i> <a href={ link }>Portfolio</a>
-    }
-    </p>
-
-  </div>
-
+	<div class="header">
+		<h1 id="name">{ resume.PersonalInfo.Name }</h1>
+		<p>
+			if title := resume.Title; title != "" {
+				<strong>{ resume.Title }</strong>
+				<br/>
+			}
+			// TODO: Make more generic and formatted better
+			// TODO: Center elements in this ddiv
+			if resume.PersonalInfo.Email != "" {
+				<i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
+			}
+			if link := resume.PersonalInfo.LinkedIn; link != "" {
+				| <i class="fa fa-linkedin"></i> <a href={ link }>LinkedIn</a>
+			}
+			if link := resume.PersonalInfo.Github; link != "" {
+				| <i class="fa fa-github"></i> <a href={ link }>GitHub</a>
+			}
+			if link := resume.PersonalInfo.Portfolio; link != "" {
+				| <i class="fa fa-globe"></i> <a href={ link }>Portfolio</a>
+			}
+		</p>
+	</div>
 }
+
 templ Summary(summary string) {
-  <h2 id="professional-summary">Professional Summary</h2>
-  <p>{ summary }</p>
+	<h2 id="professional-summary">Professional Summary</h2>
+	<p>{ summary }</p>
 }
 
 templ ResumeSection(section Section) {
-  <div>
-    <h2>{ section.Title }</h2>
-    if section.Education != nil {
-      @EducationSection(section.Education)
-    } else if section.Experience != nil {
-      @ExperienceSection(section.Experience)
-    } else if section.Skills != nil {
-      @SkillsSection(section.Skills)
-    } else if section.Projects != nil {
-      @ProjectsSection(section.Projects)
-    } else {
-      <span>UNKNOWN SECTION</span>
-    }
-  </div>
-
+	<div>
+		<h2>{ section.Title }</h2>
+		if section.Education != nil {
+			@EducationSection(section.Education)
+		} else if section.Experience != nil {
+			@ExperienceSection(section.Experience)
+		} else if section.Skills != nil {
+			@SkillsSection(section.Skills)
+		} else if section.Projects != nil {
+			@ProjectsSection(section.Projects)
+		} else {
+			<span>UNKNOWN SECTION</span>
+		}
+	</div>
 }
 
 templ ExperienceSection(positions []Experience) {
-  <div>
-  if len(positions) > 0 {
-    for index, position := range positions {
-      <h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
-      <ul>
-        for _, description := range position.Responsibilities {
-          <li>{ description }</li>
-        }
-      </ul>
-    }
-  } else {
-    <span>No experience</span>
-  }
-  </div>
+	<div>
+		if len(positions) > 0 {
+			for index, position := range positions {
+				<h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
+				<ul>
+					for _, description := range position.Responsibilities {
+						<li>{ description }</li>
+					}
+				</ul>
+			}
+		} else {
+			<span>No experience</span>
+		}
+	</div>
 }
 
 templ SkillsSection(allSkills map[string][]string) {
-  <div>
-  if len(allSkills) > 0 {
-      <p>
-        for category, skills := range allSkills {
-          if len(skills) > 0 {
-            <strong>{ category }:</strong> { strings.Join(skills, ", ") } <br />
-          }
-        }
-      </p>
-  } else {
-    <span>No skills</span>
-  }
-</div>
+	<div>
+		if len(allSkills) > 0 {
+			<p>
+				for category, skills := range allSkills {
+					if len(skills) > 0 {
+						<strong>{ category }:</strong> { strings.Join(skills, ", ") }
+						<br/>
+					}
+				}
+			</p>
+		} else {
+			<span>No skills</span>
+		}
+	</div>
 }
 
 templ ProjectsSection(projects []Project) {
-  <div>
-    if len(projects) > 0 {
-      for index, project := range projects {
-        <h3 id={ fmt.Sprintf("projects-%d", index)}>
-          <strong>{ project.Name }</strong>
-        </h3>
-        // <p>{ project.Description }</p>
-        <ul>
-          for _, bullet := range strings.Split(project.Description, ". ") {
-            <li>
-              { strings.TrimSuffix(bullet, ".") }.
-            </li>
-          }
-          if len(project.Technologies) > 0{
-            <li>
-              Technologies: { strings.Join(project.Technologies, ", ") }
-            </li>
-          }
-        </ul>
-      }
-  //<p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
-    } else {
-      <span>No projects</span>
-    }
-  </div>
+	<div>
+		if len(projects) > 0 {
+			for index, project := range projects {
+				<h3 id={ fmt.Sprintf("projects-%d", index) }>
+					<strong>{ project.Name }</strong>
+				</h3>
+				// <p>{ project.Description }</p>
+				<ul>
+					for _, bullet := range strings.Split(project.Description, ". ") {
+						<li>
+							{ strings.TrimSuffix(bullet, ".") }.
+						</li>
+					}
+					if len(project.Technologies) > 0 {
+						<li>
+							Technologies: { strings.Join(project.Technologies, ", ") }
+						</li>
+					}
+				</ul>
+			}
+			//<p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
+		} else {
+			<span>No projects</span>
+		}
+	</div>
 }
 
 templ EducationSection(educations []Education) {
-  <div>
-    if len(educations) > 0 {
-      for index, education := range educations {
-        <h3 id={fmt.Sprintf("education-%d", index)}>
-          <strong>{ education.Degree }</strong>
-
-          if education.Institution != "" {
-            | <em>{ education.Institution }</em>
-          }
-
-          if education.GPA != "" {
-            | <em>GPA: { education.GPA }</em>
-          }
-
-          if education.Duration != "" {
-            | <em>{ education.Duration }</em>
-          }
-        </h3>
-        <ul>
-
-          if len(education.RelevantCoursework) > 0 {
-            <li>
-              <strong>Relevant Coursework: </strong>
-              { strings.Join(education.RelevantCoursework, ", ") }
-            </li>
-          }
-
-          if education.Focus != "" {
-            <li>
-              <strong>Focus: </strong> { education.Focus }
-            </li>
-          }
-        </ul>
-      }
-    } else {
-      <span>No education</span>
-    }
-  </div>
+	<div>
+		if len(educations) > 0 {
+			for index, education := range educations {
+				<h3 id={ fmt.Sprintf("education-%d", index) }>
+					<strong>{ education.Degree }</strong>
+					if education.Institution != "" {
+						| <em>{ education.Institution }</em>
+					}
+					if education.GPA != "" {
+						| <em>GPA: { education.GPA }</em>
+					}
+					if education.Duration != "" {
+						| <em>{ education.Duration }</em>
+					}
+				</h3>
+				<ul>
+					if len(education.RelevantCoursework) > 0 {
+						<li>
+							<strong>Relevant Coursework: </strong>
+							{ strings.Join(education.RelevantCoursework, ", ") }
+						</li>
+					}
+					if education.Focus != "" {
+						<li>
+							<strong>Focus: </strong> { education.Focus }
+						</li>
+					}
+				</ul>
+			}
+		} else {
+			<span>No education</span>
+		}
+	</div>
 }
 
 templ DefaultStyle() {
-  <style>
+	<style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -208,7 +198,7 @@ templ DefaultStyle() {
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <style>
+	<style>
   /* Resume CSS Stylesheet */
 
   /* Page setup for PDF */
