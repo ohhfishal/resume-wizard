@@ -19,19 +19,21 @@ templ MainPage(resumes []db.Resume, applications []db.Application) {
       <title>Resume Wizard</title>
       <link rel="stylesheet" href="assets/styles/default.css">
       <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
+      @ThemeScript()
   </head>
   <body>
       <div class="container">
           <div class="header">
               <h1>Resume Wizard</h1>
               <p>Keep track of your job applications and their status</p>
+              @ThemeButton()
           </div>
 
           @ResumeForm()
 
           @ApplicationForm(resumes)
 
-          @ApplicationsTable(applications)
+          @ApplicationsTable(resumes, applications)
 
       </div>
   </body>
@@ -107,7 +109,14 @@ templ ResumeDropdown(resumes []db.Resume) {
   </div>
 }
 
-templ ApplicationsTable(applications []db.Application) {
+templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
+  {{ 
+    // TODO: I don't know if this should stay here
+    mapping := map[int64]string{}
+    for _, resume := range resumes {
+      mapping[resume.ID] = resume.Name
+    }
+  }}
   <div class="table-section">
       <h2>Your Applications</h2>
       <div class="table-container">
@@ -134,7 +143,12 @@ templ ApplicationsTable(applications []db.Application) {
                   }
                   for _, application := range applications {
                     <tr>
-                        <td>Placeholder FIXME</td>
+                        if name, ok := mapping[application.ResumeID]; ok {
+                          <td>{ name }</td>
+                        } else {
+                          <td>Unknown Resume</td>
+                        }
+
                         <td>{ application.Company }</td>
                         <td>{ application.Position }</td>
                         <td><span class={ "status " + application.Status }>{ application.Status }</span></td>
@@ -146,4 +160,44 @@ templ ApplicationsTable(applications []db.Application) {
           </table>
       </div>
   </div>
+}
+
+templ ThemeButton() {
+  <button class="theme-toggle" title="Toggle theme"></button>
+}
+
+templ ThemeScript() {
+  <script>
+    const ThemeManager = {
+        getCurrentTheme() {
+            return localStorage.getItem('theme') || 'light';
+        },
+        
+        applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        },
+        
+        toggleTheme() {
+            const currentTheme = this.getCurrentTheme();
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            this.applyTheme(newTheme);
+        },
+        
+        init() {
+            this.applyTheme(this.getCurrentTheme());
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        ThemeManager.init();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.theme-toggle') || e.target.closest('.theme-toggle')) {
+            e.preventDefault();
+            ThemeManager.toggleTheme();
+        }
+    });
+  </script>
 }

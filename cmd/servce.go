@@ -15,6 +15,10 @@ type ServeCmd struct {
 }
 
 func (cmd *ServeCmd) Run(ctx context.Context, logger *slog.Logger) error {
+	if cmd.DatabaseSource == ":memory:" {
+		logger.Info("using in-memorry database")
+	}
+
 	database, err := db.Open(ctx, "sqlite3", cmd.DatabaseSource)
 	if err != nil {
 		return fmt.Errorf("connecting to database: %w", err)
