@@ -56,7 +56,8 @@ func (server *Server) Run(ctx context.Context) error {
 				)
 				return
 			}
-			ResumeDropdown(resumes, "").Render(r.Context(), w)
+			listener := r.URL.Query().Get("listener")
+			ResumeDropdown(resumes, listener).Render(r.Context(), w)
 		})
 		r.Get("/resumeEditor", func(w http.ResponseWriter, r *http.Request) {
 			id := r.URL.Query().Get("resume_id")

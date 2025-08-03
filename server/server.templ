@@ -128,7 +128,13 @@ templ ApplicationForm(resumes []db.Resume) {
 }
 
 templ ResumeDropdown(resumes []db.Resume, changeListenerID string) {
-	<div class="form-group" hx-get="/components/resumeDropdown" hx-trigger={ EventResumeUploaded + " from:body" }>
+	{{
+	var values = map[string]string{
+		"listener": changeListenerID,
+	}
+	var trigger = EventResumeUploaded + " from:body"
+	}}
+	<div class="form-group" hx-swap="outerHTML" hx-vals={ templ.JSONString(values) } hx-get="/components/resumeDropdown" hx-trigger={ trigger }>
 		<label for="resume">Resume</label>
 		if changeListenerID != "" {
 			<select
