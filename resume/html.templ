@@ -47,6 +47,9 @@ templ Header(resume Resume) {
 			if resume.PersonalInfo.Email != "" {
 				<i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
 			}
+			if citizenship := resume.PersonalInfo.Citizenship; citizenship != "" {
+				| <i class="fa fa-globe"></i> { citizenship }
+			}
 			if link := resume.PersonalInfo.LinkedIn; link != "" {
 				| <i class="fa fa-linkedin"></i> <a href={ link }>LinkedIn</a>
 			}
@@ -54,7 +57,7 @@ templ Header(resume Resume) {
 				| <i class="fa fa-github"></i> <a href={ link }>GitHub</a>
 			}
 			if link := resume.PersonalInfo.Portfolio; link != "" {
-				| <i class="fa fa-globe"></i> <a href={ link }>Portfolio</a>
+				| <i class="fa fa-paperclip"></i> <a href={ link }>Portfolio</a>
 			}
 		</p>
 	</div>

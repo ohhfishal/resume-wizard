@@ -10,6 +10,11 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 - Use `save` to insert it into a db.
 - Optional: `export` to view it as a csv
 
+## TODO
+- [ ] Have selected tab be stored in local storage to make refresh easier
+- [ ] Allow editing of status via the UI
+- [ ] Start working on metrics/analytics?
+
 ## High Level Design
 - [ ] Create a CLI proof of concept
     - [X] Parse YAML/JSON into an IR
@@ -20,7 +25,7 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
         - [ ] Which template (with default)
         - [ ] Done! New resume is saved. (Maybe update a spreadsheet with which resume used too?
         - [ ] Include a way to prune automatically?
-- [ ] Move to a web-based application if the complexity gets there
+- [X] Move to a web-based application if the complexity gets there
 
 ## Roadmap
 - [ ] Support for JSON/TOML inputs and HTML/Markdown/PDF Outputs (QoL)

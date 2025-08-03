@@ -11,6 +11,7 @@ personalInfo:
   linkedin: "https://www.linkedin.com/in/john-doe-dev"
   github: "https://github.com/johndoe-dev"
   portfolio: "https://johndoe.dev"
+  citzenship: "US Citizen"
 
 sections:
   - title: "PROFESSIONAL EXPERIENCE"

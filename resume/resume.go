@@ -47,11 +47,12 @@ type Resume struct {
 }
 
 type PersonalInfo struct {
-	Name      string `json:"name" yaml:"name"`
-	Email     string `json:"email" yaml:"email"`
-	LinkedIn  string `json:"linkedin" yaml:"linkedin"`
-	Github    string `json:"github" yaml:"github"`
-	Portfolio string `json:"portfolio" yaml:"portfolio"`
+	Name        string `json:"name" yaml:"name"`
+	Email       string `json:"email" yaml:"email"`
+	LinkedIn    string `json:"linkedin" yaml:"linkedin"`
+	Github      string `json:"github" yaml:"github"`
+	Portfolio   string `json:"portfolio" yaml:"portfolio"`
+	Citizenship string `json:"citizenship" yaml:"citizenship"`
 	// Links map[string]string `yaml:"linksi"`
 }
 
