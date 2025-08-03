@@ -101,6 +101,8 @@ templ ApplicationForm(resumes []db.Resume) {
 		<form
 			id="applicationForm"
 			hx-post="/application"
+			hx-swap="none"
+			hx-on::after-request="if(event.detail.successful) this.reset()"
 		>
 			<div class="form-grid">
 				@ResumeDropdown(resumes, "")
@@ -177,8 +179,10 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 	for _, resume := range resumes {
 		mapping[resume.ID] = resume.Name
 	}
+
+	refreshTrigger := EventApplicationsUpdate + " from:body"
 	}}
-	<div class="table-section">
+	<div class="table-section" hx-swap="outerHTML" hx-get="/components/applicationsTable" hx-trigger={ refreshTrigger }>
 		<h2>Your Applications</h2>
 		<div class="table-container">
 			<table id="applicationsTable">
@@ -195,9 +199,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 					if len(applications) == 0 {
 						<tr>
 							<td colspan="5" class="empty-state">
-								<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-								</svg>
+								// TODO: Add a nice litle image
 								<p>No applications found. Add your first application above!</p>
 							</td>
 						</tr>

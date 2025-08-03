@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
@@ -11,7 +12,10 @@ import (
 
 const MaxFileSize = 12_000 // 12KB
 
-const EventResumeUploaded = "resumeUploaded"
+const (
+	EventResumeUploaded     = "resumeUploaded"
+	EventApplicationsUpdate = "applicationsUpdate"
+)
 
 var UploadFileTypes = []string{
 	"application/yaml",
@@ -22,28 +26,35 @@ type PostApplicationInput struct {
 	ResumeID int64
 	Company  string
 	Position string
+	Status   string
 }
 
 func Parse(r *http.Request) (*PostApplicationInput, error) {
-	if err := r.ParseForm; err != nil {
-		return nil, fmt.Errorf("invalid form: %w", err)
-	}
-
-	id := r.FormValue("id")
+	id := r.FormValue("resume_id")
 	intID, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		return nil, fmt.Errorf("field id: %w", err)
+		return nil, fmt.Errorf("invalid field id: %w", err)
 	}
 
-	company := r.FormValue("id")
-	position := r.FormValue("id")
+	company := r.FormValue("company")
+	position := r.FormValue("position")
+	status := r.FormValue("status")
 
-	// TODO: Implement validation
+	if company == "" {
+		return nil, errors.New("missing field: company")
+	} else if position == "" {
+		return nil, errors.New("missing field: position")
+	} else if status == "" {
+		return nil, errors.New("missing field: position")
+	} else if status != "pending" {
+		return nil, errors.New("non-pending status not implemented")
+	}
 
 	return &PostApplicationInput{
 		ResumeID: intID,
 		Company:  company,
 		Position: position,
+		Status:   status,
 	}, nil
 }
 
@@ -66,8 +77,8 @@ func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.Hand
 			)
 			return
 		}
-		// TODO: Trigger AND update UI frromm the event
-		// w.Header().Set("HX-Trigger", EventResumeUploaded)
+
+		w.Header().Set("HX-Trigger", EventApplicationsUpdate)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 	}
