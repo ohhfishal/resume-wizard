@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -18,6 +19,7 @@ import (
 type Server struct {
 	logger   *slog.Logger
 	database *db.Queries
+	host     string
 	port     string
 }
 
@@ -25,7 +27,8 @@ func New(logger *slog.Logger, database *db.Queries) (*Server, error) {
 	return &Server{
 		database: database,
 		logger:   logger,
-		port:     "8080", // TODO: Fix hardcoding
+		host:     "0.0.0.0", // TODO: Fix hardcoding
+		port:     "8080",    // TODO: Fix hardcoding
 	}, nil
 }
 
@@ -118,7 +121,7 @@ func (server *Server) Run(ctx context.Context) error {
 	})
 
 	s := &http.Server{
-		Addr:         ":" + server.port,
+		Addr:         net.JoinHostPort(server.host, server.port),
 		Handler:      r,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
@@ -134,7 +137,7 @@ func (server *Server) Run(ctx context.Context) error {
 		}
 	}()
 
-	server.logger.Info("starting server", "port", server.port)
+	server.logger.Info("starting server", "port", server.port, "host", server.host)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}
