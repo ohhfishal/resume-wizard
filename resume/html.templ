@@ -47,6 +47,9 @@ templ Header(resume Resume) {
 			if resume.PersonalInfo.Email != "" {
 				<i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
 			}
+			if phone := resume.PersonalInfo.Phone; phone != "" {
+				| <i class="fa fa-phone"></i> { phone }
+			}
 			if citizenship := resume.PersonalInfo.Citizenship; citizenship != "" {
 				| <i class="fa fa-globe"></i> { citizenship }
 			}

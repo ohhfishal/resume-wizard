@@ -53,6 +53,7 @@ type PersonalInfo struct {
 	Github      string `json:"github" yaml:"github"`
 	Portfolio   string `json:"portfolio" yaml:"portfolio"`
 	Citizenship string `json:"citizenship" yaml:"citizenship"`
+	Phone       string `json:"phone" yaml:"phone"`
 	// Links map[string]string `yaml:"linksi"`
 }
 
