@@ -16,6 +16,13 @@ INSERT INTO resumes (name, body)
 VALUES (?, ?)
 RETURNING id;
 
+-- name: UpdateResume :exec
+UPDATE resumes
+SET 
+  body = ?
+WHERE 
+  id = ?;
+
 -- name: GetApplications :many
 SELECT * from applications
 ORDER BY created_at;

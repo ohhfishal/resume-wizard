@@ -158,3 +158,21 @@ func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (int
 	err := row.Scan(&id)
 	return id, err
 }
+
+const updateResume = `-- name: UpdateResume :exec
+UPDATE resumes
+SET 
+  body = ?
+WHERE 
+  id = ?
+`
+
+type UpdateResumeParams struct {
+	Body *resume.Resume `json:"body"`
+	ID   int64          `json:"id"`
+}
+
+func (q *Queries) UpdateResume(ctx context.Context, arg UpdateResumeParams) error {
+	_, err := q.db.ExecContext(ctx, updateResume, arg.Body, arg.ID)
+	return err
+}

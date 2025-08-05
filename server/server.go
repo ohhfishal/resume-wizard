@@ -37,6 +37,7 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
 
+	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
 	r.Post("/resume", PostResumeHandler(server.logger, server.database))
 	r.Post("/application", PostApplicationHandler(server.logger, server.database))
 

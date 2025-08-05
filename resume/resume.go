@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/goccy/go-yaml"
 )
@@ -98,6 +99,14 @@ func (resume Resume) ToHTML(w io.Writer) error {
 	// return htmlTemplate.Execute(w, resume)
 }
 
+func (resume Resume) YAML() (string, error) {
+	var writer strings.Builder
+	if err := resume.ToYAML(&writer); err != nil {
+		return "", err
+	}
+	return writer.String(), nil
+}
+
 func (resume Resume) ToYAML(w io.Writer) error {
 	encoder := yaml.NewEncoder(
 		w,
@@ -175,22 +184,10 @@ func FromJSON(reader io.Reader, resume *Resume) error {
 func FromYAML(reader io.Reader, resume *Resume) error {
 	if err := yaml.NewDecoder(
 		reader,
+		yaml.DisallowUnknownField(),
 	).Decode(resume); err != nil {
 		return fmt.Errorf("parsing yaml: %w", err)
 	}
-	return nil
-}
-
-func decode[T any](input any, output *T) error {
-	data, err := yaml.Marshal(input)
-	if err != nil {
-		return err
-	}
-
-	if err := yaml.Unmarshal(data, output); err != nil {
-		return err
-	}
-
 	return nil
 }
 

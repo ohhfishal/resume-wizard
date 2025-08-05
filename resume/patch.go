@@ -15,7 +15,7 @@ type Patch struct {
 
 func (resume *Resume) ApplyPatch(reader io.Reader) error {
 	var patch Patch
-	if err := yaml.NewDecoder(reader).Decode(&patch); err != nil {
+	if err := yaml.NewDecoder(reader, yaml.DisallowUnknownField()).Decode(&patch); err != nil {
 		return fmt.Errorf("parsing patch yaml: %w", err)
 	}
 	resume.PersonalInfo = patch.PersonalInfo

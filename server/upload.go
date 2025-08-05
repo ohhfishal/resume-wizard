@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 const MaxFileSize = 12_000 // 12KB
@@ -79,6 +80,41 @@ func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.Hand
 		}
 
 		w.Header().Set("HX-Trigger", EventApplicationsUpdate)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func PutResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		intID, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			http.Error(w, fmt.Errorf("invalid id: %w", err).Error(), http.StatusBadRequest)
+			return
+		}
+
+		body := r.FormValue("resume")
+
+		var updatedResume resume.Resume
+		if err := resume.FromYAML(strings.NewReader(body), &updatedResume); err != nil {
+			http.Error(w,
+				fmt.Sprintf("parsing resume: %s", err.Error()),
+				http.StatusBadRequest,
+			)
+		}
+
+		if err := database.UpdateResume(r.Context(), db.UpdateResumeParams{
+			ID:   intID,
+			Body: &updatedResume,
+		}); err != nil {
+			http.Error(w,
+				fmt.Sprintf("updating resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -165,7 +201,7 @@ func PostResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFu
 		)
 
 		w.Header().Set("HX-Trigger", EventResumeUploaded)
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 	}
 }
