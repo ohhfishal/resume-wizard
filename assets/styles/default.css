@@ -175,6 +175,25 @@ body {
     display: block;
 }
 
+.editor-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.editor {
+    width: 100%;
+    height: 70vh;
+    border: none;
+    resize: none;
+    padding: 20px;
+    font-family: 'Monocraft', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    background: #1a1a1a;
+    color: #f0f0f0;
+}
+
 .form-section, .table-section, .section {
     background: var(--bg-secondary);
     border-radius: 8px;

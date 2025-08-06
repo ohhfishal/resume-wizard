@@ -26,26 +26,6 @@ templ MainPage(resumes []db.Resume, applications []db.Application) {
 			<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
 			@ThemeScript()
 			@TabScript()
-			<style>
-        .editor-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .editor {
-            width: 100%;
-            height: 70vh;
-            border: none;
-            resize: none;
-            padding: 20px;
-            font-family: 'Monocraft', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            outline: none;
-            background: #1a1a1a;
-            color: #f0f0f0;
-        }
-    </style>
 		</head>
 		<body>
 			<div class="container">
