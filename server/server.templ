@@ -282,8 +282,12 @@ templ ThemeScript() {
 templ TabScript() {
 	<script>
     const TabManager = {
+        getCurrentTab() {
+            return localStorage.getItem('tab') || 'resumes-tab';
+        },
+
         init() {
-            this.showTab('resumes-tab');
+            this.showTab(this.getCurrentTab());
         },
 
         showTab(tabId) {
@@ -304,6 +308,7 @@ templ TabScript() {
             if (targetButton) {
                 targetButton.classList.add('active');
             }
+            localStorage.setItem('tab', tabId);
         }
     };
 
