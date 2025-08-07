@@ -159,6 +159,24 @@ func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (int
 	return id, err
 }
 
+const updateApplication = `-- name: UpdateApplication :exec
+UPDATE applications
+SET
+  status = ?
+WHERE position = ? AND company = ?
+`
+
+type UpdateApplicationParams struct {
+	Status   string `json:"status"`
+	Position string `json:"position"`
+	Company  string `json:"company"`
+}
+
+func (q *Queries) UpdateApplication(ctx context.Context, arg UpdateApplicationParams) error {
+	_, err := q.db.ExecContext(ctx, updateApplication, arg.Status, arg.Position, arg.Company)
+	return err
+}
+
 const updateResume = `-- name: UpdateResume :exec
 UPDATE resumes
 SET 

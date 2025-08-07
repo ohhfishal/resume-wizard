@@ -41,6 +41,7 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
 	r.Post("/resume", PostResumeHandler(server.logger, server.database))
 	r.Post("/application", PostApplicationHandler(server.logger, server.database))
+	r.Put("/application", PutApplicationHandler(server.logger, server.database))
 
 	r.Mount(
 		"/assets",

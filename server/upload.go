@@ -43,8 +43,6 @@ func Parse(r *http.Request) (*PostApplicationInput, error) {
 		return nil, errors.New("missing field: position")
 	} else if status == "" {
 		return nil, errors.New("missing field: position")
-	} else if status != "pending" {
-		return nil, errors.New("non-pending status not implemented")
 	}
 
 	return &PostApplicationInput{
@@ -55,10 +53,41 @@ func Parse(r *http.Request) (*PostApplicationInput, error) {
 	}, nil
 }
 
+func PutApplicationHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		inputs, err := Parse(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if err := database.UpdateApplication(r.Context(), db.UpdateApplicationParams{
+			Status:   inputs.Status,
+			Company:  inputs.Company,
+			Position: inputs.Position,
+		}); err != nil {
+			http.Error(w,
+				fmt.Sprintf("could not insert into database: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		w.Header().Set("HX-Trigger", components.EventApplicationsUpdate)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
 func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		inputs, err := Parse(r)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if inputs.Status != "pending" {
+			err := errors.New("non-pending status not implemented")
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}

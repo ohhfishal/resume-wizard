@@ -27,6 +27,12 @@ WHERE
 SELECT * from applications
 ORDER BY created_at;
 
+-- name: UpdateApplication :exec
+UPDATE applications
+SET
+  status = ?
+WHERE position = ? AND company = ?;
+
 -- name: InsertLog :one
 INSERT INTO applications (resume_id, company, position)
 VALUES (?, ?, ?)
