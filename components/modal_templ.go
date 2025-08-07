@@ -60,7 +60,7 @@ func ModalScript() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n  const modal = document.getElementById(\"applicationModal\");\n  const confirmBtn = modal.querySelector(\"#confirmBtn\");\n  const outputBox = document.getElementById(\"#output\");\n\n  function openApplicationModal(application) {\n    console.log(application);\n    modal.showModal();\n  }\n\n  // \"Cancel\" button closes the dialog without submitting because of [formmethod=\"dialog\"], triggering a close event.\n  modal.addEventListener(\"close\", (e) => {\n  });\n\n  // Prevent the \"confirm\" button from the default behavior of submitting the form, and close the dialog with the `close()` method, which triggers the \"close\" event.\n  confirmBtn.addEventListener(\"click\", (event) => {\n    event.preventDefault(); // We don't want to submit this fake form\n    console.log(\"123\");\n    modal.close(\"TEST\"); // Have to send the select box value here.\n  });\n\n  </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n  const modal = document.getElementById(\"applicationModal\");\n  const inputs = modal.getElementsByTagName(\"input\");\n  const selects = modal.getElementsByTagName(\"select\");\n\n  function openApplicationModal(application) {\n    for (const input of inputs) {\n      input.value = application[input.name] != undefined ? application[input.name] : \"\"\n    }\n    for (const select of selects) {\n      select.value = application[select.name]\n    }\n    modal.showModal();\n  }\n\n  // \"Cancel\" button closes the dialog without submitting because of [formmethod=\"dialog\"], triggering a close event.\n  modal.addEventListener(\"close\", (e) => {\n  });\n\n\n  </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,8 +98,10 @@ func Modal(props ModalProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = ApplicationForm(ApplicationFormProps{
-			Title:   "Update Application",
-			Resumes: props.Resumes,
+			Title:      "Update Application",
+			Resumes:    props.Resumes,
+			ButtonText: "Edit Application",
+			HXMethod:   "hx-put",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

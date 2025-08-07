@@ -10,11 +10,16 @@ templ ModalStyle() {
 templ ModalScript() {
 	<script>
   const modal = document.getElementById("applicationModal");
-  const confirmBtn = modal.querySelector("#confirmBtn");
-  const outputBox = document.getElementById("#output");
+  const inputs = modal.getElementsByTagName("input");
+  const selects = modal.getElementsByTagName("select");
 
   function openApplicationModal(application) {
-    console.log(application);
+    for (const input of inputs) {
+      input.value = application[input.name] != undefined ? application[input.name] : ""
+    }
+    for (const select of selects) {
+      select.value = application[select.name]
+    }
     modal.showModal();
   }
 
@@ -22,12 +27,6 @@ templ ModalScript() {
   modal.addEventListener("close", (e) => {
   });
 
-  // Prevent the "confirm" button from the default behavior of submitting the form, and close the dialog with the `close()` method, which triggers the "close" event.
-  confirmBtn.addEventListener("click", (event) => {
-    event.preventDefault(); // We don't want to submit this fake form
-    console.log("123");
-    modal.close("TEST"); // Have to send the select box value here.
-  });
 
   </script>
 }
@@ -39,8 +38,10 @@ type ModalProps struct {
 templ Modal(props ModalProps) {
 	<dialog class="form-section" id="applicationModal">
 		@ApplicationForm(ApplicationFormProps{
-			Title:   "Update Application",
-			Resumes: props.Resumes,
+			Title:      "Update Application",
+			Resumes:    props.Resumes,
+			ButtonText: "Edit Application",
+			HXMethod:   "hx-put",
 		})
 	</dialog>
 }

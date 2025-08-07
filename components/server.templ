@@ -51,7 +51,6 @@ templ MainPage(resumes []db.Resume, applications []db.Application) {
 					@ApplicationForm(ApplicationFormProps{
 						Resumes: resumes,
 					})
-					)
 					@ApplicationsTable(resumes, applications)
 					@Modal(ModalProps{
 						Resumes: resumes,
@@ -163,7 +162,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 						</tr>
 					}
 					for _, application := range applications {
-						<tr onclick={ templ.JSFuncCall("openApplicationModal", fmt.Sprintf("%v", application)) }>
+						<tr onclick={ templ.JSFuncCall("openApplicationModal", application) }>
 							if name, ok := mapping[application.ResumeID]; ok {
 								<td>{ name }</td>
 							} else {

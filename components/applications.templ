@@ -3,20 +3,32 @@ package components
 import "github.com/ohhfishal/resume-wizard/db"
 
 type ApplicationFormProps struct {
-	Title   string
-	Resumes []db.Resume
+	Resumes    []db.Resume
+	Title      string
+	ButtonText string
+	HXMethod   string
+}
+
+func (props *ApplicationFormProps) SetDefaults() {
+	if props.Title == "" {
+		props.Title = "Add New Application"
+	}
+
+	if props.HXMethod == "" {
+		props.HXMethod = "hx-post"
+	}
+
+	if props.ButtonText == "" {
+		props.ButtonText = "Add Application"
+	}
 }
 
 templ ApplicationForm(props ApplicationFormProps) {
+	{{ props.SetDefaults() }}
 	<div class="form-section">
-		if props.Title != "" {
-			<h2>{ props.Title }</h2>
-		} else {
-			<h2>Add New Application</h2>
-		}
+		<h2>{ props.Title }</h2>
 		<form
-			id="applicationForm"
-			hx-post="/application"
+			{ props.HXMethod }="/application"
 			hx-swap="none"
 			hx-on::after-request="if(event.detail.successful) this.reset()"
 		>
@@ -24,15 +36,15 @@ templ ApplicationForm(props ApplicationFormProps) {
 				@ResumeDropdown(props.Resumes, "")
 				<div class="form-group">
 					<label for="company">Company</label>
-					<input type="text" id="company" name="company" required/>
+					<input type="text" name="company" required/>
 				</div>
 				<div class="form-group">
 					<label for="position">Position</label>
-					<input type="text" id="position" name="position" required/>
+					<input type="text" name="position" required/>
 				</div>
 				<div class="form-group">
 					<label for="status">Status</label>
-					<select id="status" name="status">
+					<select name="status">
 						<option value="pending">Pending</option>
 						<option value="interviewed">Interviewed</option>
 						<option value="rejected">Rejected</option>
@@ -40,7 +52,7 @@ templ ApplicationForm(props ApplicationFormProps) {
 					</select>
 				</div>
 			</div>
-			<button type="submit" class="btn">Add Application</button>
+			<button type="submit" class="btn">{ props.ButtonText }</button>
 		</form>
 	</div>
 }
