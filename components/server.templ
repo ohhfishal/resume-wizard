@@ -1,4 +1,4 @@
-package server
+package components
 
 import (
 	"fmt"
@@ -9,6 +9,11 @@ import (
 const (
 	UploadFileKey = "file"
 	NameKey       = "name"
+)
+
+const (
+	EventResumeUploaded     = "resumeUploaded"
+	EventApplicationsUpdate = "applicationsUpdate"
 )
 
 const (
@@ -43,10 +48,17 @@ templ MainPage(resumes []db.Resume, applications []db.Application) {
 					@EditResumeForm(resumes)
 				</div>
 				<div id="applications-tab" class="tab-content">
-					@ApplicationForm(resumes)
+					@ApplicationForm(ApplicationFormProps{
+						Resumes: resumes,
+					})
+					)
 					@ApplicationsTable(resumes, applications)
+					@Modal(ModalProps{
+						Resumes: resumes,
+					})
 				</div>
 			</div>
+			@ModalScript()
 		</body>
 	</html>
 }
@@ -92,75 +104,6 @@ templ EditResumeForm(resumes []db.Resume) {
 				<span>TODO: </span> Have this be a loading thing
 			</div>
 		</form>
-	</div>
-}
-
-templ ApplicationForm(resumes []db.Resume) {
-	<div class="form-section">
-		<h2>Add New Application</h2>
-		<form
-			id="applicationForm"
-			hx-post="/application"
-			hx-swap="none"
-			hx-on::after-request="if(event.detail.successful) this.reset()"
-		>
-			<div class="form-grid">
-				@ResumeDropdown(resumes, "")
-				<div class="form-group">
-					<label for="company">Company</label>
-					<input type="text" id="company" name="company" required/>
-				</div>
-				<div class="form-group">
-					<label for="position">Position</label>
-					<input type="text" id="position" name="position" required/>
-				</div>
-				<div class="form-group">
-					<label for="status">Status</label>
-					<select id="status" name="status">
-						<option value="pending">Pending</option>
-						<option value="interviewed">Interviewed</option>
-						<option value="rejected">Rejected</option>
-						<option value="accepted">Accepted</option>
-					</select>
-				</div>
-			</div>
-			<button type="submit" class="btn">Add Application</button>
-		</form>
-	</div>
-}
-
-templ ResumeDropdown(resumes []db.Resume, changeListenerID string) {
-	{{
-	var values = map[string]string{
-		"listener": changeListenerID,
-	}
-	var trigger = EventResumeUploaded + " from:body"
-	}}
-	<div class="form-group" hx-swap="outerHTML" hx-vals={ templ.JSONString(values) } hx-get="/components/resumeDropdown" hx-trigger={ trigger }>
-		<label for="resume">Resume</label>
-		if changeListenerID != "" {
-			<select
-				id="resume"
-				name="resume_id"
-				required
-				hx-get="/components/resumeEditor"
-				hx-trigger="load, change"
-				hx-swap="innerHTML"
-				hx-target={ "#" + changeListenerID }
-			>
-				<option value="">Select a resume...</option>
-				for _, resume := range resumes {
-					<option value={ resume.ID }>{ resume.Name }</option>
-				}
-			</select>
-		} else {
-			<select id="resume" name="resume_id" required>
-				<option value="">Select a resume...</option>
-				for _, resume := range resumes {
-					<option value={ resume.ID }>{ resume.Name }</option>
-				}
-			</select>
-		}
 	</div>
 }
 
@@ -220,7 +163,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 						</tr>
 					}
 					for _, application := range applications {
-						<tr>
+						<tr onclick={ templ.JSFuncCall("openApplicationModal", fmt.Sprintf("%v", application)) }>
 							if name, ok := mapping[application.ResumeID]; ok {
 								<td>{ name }</td>
 							} else {

@@ -1,0 +1,46 @@
+package components
+
+import "github.com/ohhfishal/resume-wizard/db"
+
+type ApplicationFormProps struct {
+	Title   string
+	Resumes []db.Resume
+}
+
+templ ApplicationForm(props ApplicationFormProps) {
+	<div class="form-section">
+		if props.Title != "" {
+			<h2>{ props.Title }</h2>
+		} else {
+			<h2>Add New Application</h2>
+		}
+		<form
+			id="applicationForm"
+			hx-post="/application"
+			hx-swap="none"
+			hx-on::after-request="if(event.detail.successful) this.reset()"
+		>
+			<div class="form-grid">
+				@ResumeDropdown(props.Resumes, "")
+				<div class="form-group">
+					<label for="company">Company</label>
+					<input type="text" id="company" name="company" required/>
+				</div>
+				<div class="form-group">
+					<label for="position">Position</label>
+					<input type="text" id="position" name="position" required/>
+				</div>
+				<div class="form-group">
+					<label for="status">Status</label>
+					<select id="status" name="status">
+						<option value="pending">Pending</option>
+						<option value="interviewed">Interviewed</option>
+						<option value="rejected">Rejected</option>
+						<option value="accepted">Accepted</option>
+					</select>
+				</div>
+			</div>
+			<button type="submit" class="btn">Add Application</button>
+		</form>
+	</div>
+}

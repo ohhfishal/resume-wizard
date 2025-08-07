@@ -1,0 +1,38 @@
+package components
+
+import "github.com/ohhfishal/resume-wizard/db"
+
+templ ResumeDropdown(resumes []db.Resume, changeListenerID string) {
+	{{
+	var values = map[string]string{
+		"listener": changeListenerID,
+	}
+	var trigger = EventResumeUploaded + " from:body"
+	}}
+	<div class="form-group" hx-swap="outerHTML" hx-vals={ templ.JSONString(values) } hx-get="/components/resumeDropdown" hx-trigger={ trigger }>
+		<label for="resume">Resume</label>
+		if changeListenerID != "" {
+			<select
+				id="resume"
+				name="resume_id"
+				required
+				hx-get="/components/resumeEditor"
+				hx-trigger="load, change"
+				hx-swap="innerHTML"
+				hx-target={ "#" + changeListenerID }
+			>
+				<option value="">Select a resume...</option>
+				for _, resume := range resumes {
+					<option value={ resume.ID }>{ resume.Name }</option>
+				}
+			</select>
+		} else {
+			<select id="resume" name="resume_id" required>
+				<option value="">Select a resume...</option>
+				for _, resume := range resumes {
+					<option value={ resume.ID }>{ resume.Name }</option>
+				}
+			</select>
+		}
+	</div>
+}

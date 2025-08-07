@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
+	"github.com/ohhfishal/resume-wizard/components"
 	"github.com/ohhfishal/resume-wizard/db"
 )
 
@@ -72,9 +73,7 @@ func (server *Server) Run(ctx context.Context) error {
 			"names", resumes,
 			"apps", applications,
 		)
-
-		// TODO: Implement
-		MainPage(resumes, applications).Render(r.Context(), w)
+		components.MainPage(resumes, applications).Render(r.Context(), w)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
