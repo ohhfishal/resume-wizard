@@ -31,6 +31,7 @@ templ MainPage(resumes []db.Resume, applications []db.Application) {
 			<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
 			@ThemeScript()
 			@TabScript()
+			@CompileResumeScript()
 		</head>
 		<body>
 			<div class="container">
@@ -146,6 +147,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 				<thead>
 					<tr>
 						<th>Resume</th>
+						<th></th>
 						<th>Company</th>
 						<th>Position</th>
 						<th>Status</th>
@@ -164,9 +166,17 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 					for _, application := range applications {
 						<tr onclick={ templ.JSFuncCall("openApplicationModal", application) }>
 							if name, ok := mapping[application.ResumeID]; ok {
-								<td>{ name }</td>
+								<td>
+									<p>{ name }</p>
+								</td>
+								<td>
+									<div>
+										@ViewResumeButton(application.ResumeID)
+									</div>
+								</td>
 							} else {
 								<td>Unknown Resume</td>
+								<td></td>
 							}
 							<td>{ application.Company }</td>
 							<td>{ application.Position }</td>

@@ -61,6 +61,10 @@ func MainPage(resumes []db.Resume, applications []db.Application) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		templ_7745c5c3_Err = CompileResumeScript().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</head><body><div class=\"container\"><div class=\"header\"><h1>Resume Wizard</h1><p>Keep track of your job applications and their status</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -182,7 +186,7 @@ func EditResumeForm(resumes []db.Resume) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(ResumeEditorID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 102, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 103, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -230,7 +234,7 @@ func ResumeEditor(resume db.Resume) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/resume/%d", resume.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 115, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 116, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -243,7 +247,7 @@ func ResumeEditor(resume db.Resume) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(resume.Body.YAML())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 125, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 126, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -294,13 +298,13 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(refreshTrigger)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 142, Col: 114}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 143, Col: 114}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"><h2>Your Applications</h2><div class=\"table-container\"><table id=\"applicationsTable\"><thead><tr><th>Resume</th><th>Company</th><th>Position</th><th>Status</th><th>Applied Date</th></tr></thead> <tbody id=\"applicationsBody\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"><h2>Your Applications</h2><div class=\"table-container\"><table id=\"applicationsTable\"><thead><tr><th>Resume</th><th></th><th>Company</th><th>Position</th><th>Status</th><th>Applied Date</th></tr></thead> <tbody id=\"applicationsBody\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -329,56 +333,64 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 				return templ_7745c5c3_Err
 			}
 			if name, ok := mapping[application.ResumeID]; ok {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<td>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<td><p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 167, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 170, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</td>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</p></td><td><div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ViewResumeButton(application.ResumeID).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></td>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<td>Unknown Resume</td>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<td>Unknown Resume</td><td></td>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<td>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<td>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(application.Company)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 171, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 181, Col: 32}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</td><td>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</td><td>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(application.Position)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 172, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 182, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</td><td>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</td><td>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -387,7 +399,7 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -400,38 +412,38 @@ func ApplicationsTable(resumes []db.Resume, applications []db.Application) templ
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(application.Status)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 173, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 183, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</span></td><td>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</span></td><td>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(application.CreatedAt.Format(time.DateOnly))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 175, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/server.templ`, Line: 185, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</td></tr>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</td></tr>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</tbody></table></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</tbody></table></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -460,7 +472,7 @@ func ThemeButton() templ.Component {
 			templ_7745c5c3_Var18 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<button class=\"theme-toggle\" title=\"Toggle theme\"></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<button class=\"theme-toggle\" title=\"Toggle theme\"></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -489,7 +501,7 @@ func ThemeScript() templ.Component {
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<script>\n    const ThemeManager = {\n        getCurrentTheme() {\n            return localStorage.getItem('theme') || 'light';\n        },\n        \n        applyTheme(theme) {\n            document.documentElement.setAttribute('data-theme', theme);\n            localStorage.setItem('theme', theme);\n        },\n        \n        toggleTheme() {\n            const currentTheme = this.getCurrentTheme();\n            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';\n            this.applyTheme(newTheme);\n        },\n        \n        init() {\n            this.applyTheme(this.getCurrentTheme());\n        }\n    };\n\n    document.addEventListener('DOMContentLoaded', function() {\n        ThemeManager.init();\n    });\n\n    document.addEventListener('click', function(e) {\n        if (e.target.matches('.theme-toggle') || e.target.closest('.theme-toggle')) {\n            e.preventDefault();\n            ThemeManager.toggleTheme();\n        }\n    });\n  </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<script>\n    const ThemeManager = {\n        getCurrentTheme() {\n            return localStorage.getItem('theme') || 'light';\n        },\n        \n        applyTheme(theme) {\n            document.documentElement.setAttribute('data-theme', theme);\n            localStorage.setItem('theme', theme);\n        },\n        \n        toggleTheme() {\n            const currentTheme = this.getCurrentTheme();\n            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';\n            this.applyTheme(newTheme);\n        },\n        \n        init() {\n            this.applyTheme(this.getCurrentTheme());\n        }\n    };\n\n    document.addEventListener('DOMContentLoaded', function() {\n        ThemeManager.init();\n    });\n\n    document.addEventListener('click', function(e) {\n        if (e.target.matches('.theme-toggle') || e.target.closest('.theme-toggle')) {\n            e.preventDefault();\n            ThemeManager.toggleTheme();\n        }\n    });\n  </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -518,7 +530,7 @@ func TabScript() templ.Component {
 			templ_7745c5c3_Var20 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<script>\n    const TabManager = {\n        getCurrentTab() {\n            return localStorage.getItem('tab') || 'resumes-tab';\n        },\n\n        init() {\n            this.showTab(this.getCurrentTab());\n        },\n\n        showTab(tabId) {\n            document.querySelectorAll('.tab-content').forEach(tab => {\n                tab.classList.remove('active');\n            });\n            \n            document.querySelectorAll('.tab-button').forEach(button => {\n                button.classList.remove('active');\n            });\n            \n            const targetTab = document.getElementById(tabId);\n            if (targetTab) {\n                targetTab.classList.add('active');\n            }\n            \n            const targetButton = document.querySelector(`[data-tab=\"${tabId}\"]`);\n            if (targetButton) {\n                targetButton.classList.add('active');\n            }\n            localStorage.setItem('tab', tabId);\n        }\n    };\n\n    document.addEventListener('DOMContentLoaded', function() {\n        TabManager.init();\n    });\n\n    document.addEventListener('click', function(e) {\n        if (e.target.matches('.tab-button')) {\n            e.preventDefault();\n            const tabId = e.target.getAttribute('data-tab');\n            TabManager.showTab(tabId);\n        }\n    });\n  </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<script>\n    const TabManager = {\n        getCurrentTab() {\n            return localStorage.getItem('tab') || 'resumes-tab';\n        },\n\n        init() {\n            this.showTab(this.getCurrentTab());\n        },\n\n        showTab(tabId) {\n            document.querySelectorAll('.tab-content').forEach(tab => {\n                tab.classList.remove('active');\n            });\n            \n            document.querySelectorAll('.tab-button').forEach(button => {\n                button.classList.remove('active');\n            });\n            \n            const targetTab = document.getElementById(tabId);\n            if (targetTab) {\n                targetTab.classList.add('active');\n            }\n            \n            const targetButton = document.querySelector(`[data-tab=\"${tabId}\"]`);\n            if (targetButton) {\n                targetButton.classList.add('active');\n            }\n            localStorage.setItem('tab', tabId);\n        }\n    };\n\n    document.addEventListener('DOMContentLoaded', function() {\n        TabManager.init();\n    });\n\n    document.addEventListener('click', function(e) {\n        if (e.target.matches('.tab-button')) {\n            e.preventDefault();\n            const tabId = e.target.getAttribute('data-tab');\n            TabManager.showTab(tabId);\n        }\n    });\n  </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
