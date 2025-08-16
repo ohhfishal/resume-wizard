@@ -49,6 +49,14 @@ templ CompileResumeScript() {
   </script>
 }
 
+templ EditApplicationButton(application db.Application) {
+	<button
+		onclick={ templ.JSFuncCall("openApplicationModal", application) }
+	>
+		EDIT
+	</button>
+}
+
 templ ViewResumeButton(id int64) {
 	{{
 	type CompileForm struct {

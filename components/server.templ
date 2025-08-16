@@ -152,6 +152,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 						<th>Position</th>
 						<th>Status</th>
 						<th>Applied Date</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="applicationsBody">
@@ -164,7 +165,7 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 						</tr>
 					}
 					for _, application := range applications {
-						<tr onclick={ templ.JSFuncCall("openApplicationModal", application) }>
+						<tr>
 							if name, ok := mapping[application.ResumeID]; ok {
 								<td>
 									<p>{ name }</p>
@@ -183,6 +184,8 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 							<td><span class={ "status " + application.Status }>{ application.Status }</span></td>
 							// TODO: Improve formatting of time
 							<td>{ application.CreatedAt.Format(time.DateOnly) }</td>
+							<td>@EditApplicationButton(application)
+</td>
 						</tr>
 					}
 				</tbody>
