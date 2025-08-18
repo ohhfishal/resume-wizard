@@ -1,0 +1,52 @@
+package page
+
+import "github.com/ohhfishal/resume-wizard/db"
+
+type PageProps struct {
+	Title   string
+	Imports []templ.Component
+	Body    templ.Component
+}
+
+templ Page(props PageProps) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			if props.Title != "" {
+				<title>{ props.Title }</title>
+			}
+			for _, component := range props.Imports {
+				@component
+			}
+		</head>
+		@props.Body
+	</html>
+}
+
+templ Home() {
+	// resumes []db.Resume, applications []db.Application) {
+	@Page(PageProps{
+		Title: "Resume Wizard",
+		Imports: []templ.Component{
+			DefaultStyle(),
+			HTMX(),
+		},
+		Body: HomeBody(nil, nil),
+	})
+}
+
+templ HomeBody(resumes []db.Resume, applications []db.Application) {
+	<body>
+		Hello world
+	</body>
+}
+
+templ DefaultStyle() {
+	<link rel="stylesheet" href="assets/styles/default.css"/>
+}
+
+templ HTMX() {
+	<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
+}

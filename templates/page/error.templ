@@ -1,0 +1,19 @@
+package page
+
+templ Error(err error) {
+	@Page(PageProps{
+		Title: "Page Not Found",
+		Imports: []templ.Component{
+			DefaultStyle(),
+		},
+		Body: ErrorBody(err),
+	})
+}
+
+templ ErrorBody(err error) {
+	<body>
+		<div>
+			{ err.Error() }
+		</div>
+	</body>
+}

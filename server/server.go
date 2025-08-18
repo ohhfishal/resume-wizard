@@ -3,10 +3,12 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -14,6 +16,7 @@ import (
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates"
+	"github.com/ohhfishal/resume-wizard/templates/page"
 )
 
 type Server struct {
@@ -51,6 +54,10 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
+	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
+		page.Home().Render(r.Context(), w)
+	})
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		resumes, err := server.database.GetResumes(r.Context())
 		if err != nil {
@@ -78,11 +85,7 @@ func (server *Server) Run(ctx context.Context) error {
 		templates.MainPage(resumes, applications).Render(r.Context(), w)
 	})
 
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(map[string]string{"error": "Not Found"})
-	})
+	r.NotFound(NotFoundHandler)
 
 	s := &http.Server{
 		Addr:         net.JoinHostPort(server.host, server.port),
@@ -106,6 +109,26 @@ func (server *Server) Run(ctx context.Context) error {
 		return err
 	}
 	return nil
+}
+
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	accept := r.Header.Get("Accept")
+	err := errors.New("Page Not Found")
+
+	w.WriteHeader(http.StatusNotFound)
+	switch {
+	case strings.Contains(accept, "text/html"):
+		w.Header().Set("Content-Type", "text/html")
+		page.Error(err).Render(r.Context(), w)
+	case strings.Contains(accept, "text/plain"):
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(err.Error()))
+	case strings.Contains(accept, "application/json"):
+		fallthrough
+	default:
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]any{"error": err})
+	}
 }
 
 func loggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
