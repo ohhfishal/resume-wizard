@@ -3,8 +3,8 @@ package server
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
-	"github.com/ohhfishal/resume-wizard/components"
 	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/templates"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -35,7 +35,7 @@ func ComponentsHandler(logger *slog.Logger, database *db.Queries) func(chi.Route
 				)
 				return
 			}
-			components.ApplicationsTable(resumes, applications).Render(r.Context(), w)
+			templates.ApplicationsTable(resumes, applications).Render(r.Context(), w)
 		})
 		r.Get("/resumeDropdown", func(w http.ResponseWriter, r *http.Request) {
 			resumes, err := database.GetResumes(r.Context())
@@ -47,12 +47,12 @@ func ComponentsHandler(logger *slog.Logger, database *db.Queries) func(chi.Route
 				return
 			}
 			listener := r.URL.Query().Get("listener")
-			components.ResumeDropdown(resumes, listener).Render(r.Context(), w)
+			templates.ResumeDropdown(resumes, listener).Render(r.Context(), w)
 		})
 		r.Get("/resumeEditor", func(w http.ResponseWriter, r *http.Request) {
 			id := r.URL.Query().Get("resume_id")
 			if id == "" {
-				components.ResumeEditor(db.Resume{ID: -1}).Render(r.Context(), w)
+				templates.ResumeEditor(db.Resume{ID: -1}).Render(r.Context(), w)
 				return
 			}
 			intID, err := strconv.ParseInt(id, 10, 64)
@@ -72,7 +72,7 @@ func ComponentsHandler(logger *slog.Logger, database *db.Queries) func(chi.Route
 				)
 				return
 			}
-			components.ResumeEditor(resume).Render(r.Context(), w)
+			templates.ResumeEditor(resume).Render(r.Context(), w)
 		})
 	}
 }

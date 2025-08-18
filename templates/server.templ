@@ -1,4 +1,4 @@
-package components
+package templates
 
 import (
 	"fmt"
@@ -184,8 +184,9 @@ templ ApplicationsTable(resumes []db.Resume, applications []db.Application) {
 							<td><span class={ "status " + application.Status }>{ application.Status }</span></td>
 							// TODO: Improve formatting of time
 							<td>{ application.CreatedAt.Format(time.DateOnly) }</td>
-							<td>@EditApplicationButton(application)
-</td>
+							<td>
+								@EditApplicationButton(application)
+							</td>
 						</tr>
 					}
 				</tbody>

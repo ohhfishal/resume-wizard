@@ -3,9 +3,9 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/ohhfishal/resume-wizard/components"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
+	"github.com/ohhfishal/resume-wizard/templates"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -73,7 +73,7 @@ func PutApplicationHandler(logger *slog.Logger, database *db.Queries) http.Handl
 			return
 		}
 
-		w.Header().Set("HX-Trigger", components.EventApplicationsUpdate)
+		w.Header().Set("HX-Trigger", templates.EventApplicationsUpdate)
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -104,7 +104,7 @@ func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.Hand
 			return
 		}
 
-		w.Header().Set("HX-Trigger", components.EventApplicationsUpdate)
+		w.Header().Set("HX-Trigger", templates.EventApplicationsUpdate)
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 	}
@@ -148,7 +148,7 @@ func PutResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFun
 func PostResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Handle this smarter. Don't allow repeats
-		name := r.FormValue(components.NameKey)
+		name := r.FormValue(templates.NameKey)
 		if name == "" {
 			http.Error(w,
 				"missing field: name",
@@ -157,7 +157,7 @@ func PostResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFu
 			return
 		}
 
-		file, header, err := r.FormFile(components.UploadFileKey)
+		file, header, err := r.FormFile(templates.UploadFileKey)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading file: %s", err.Error()),
@@ -225,7 +225,7 @@ func PostResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFu
 			slog.Any("resume", newResume),
 		)
 
-		w.Header().Set("HX-Trigger", components.EventResumeUploaded)
+		w.Header().Set("HX-Trigger", templates.EventResumeUploaded)
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 	}

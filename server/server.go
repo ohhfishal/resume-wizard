@@ -12,8 +12,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
-	"github.com/ohhfishal/resume-wizard/components"
 	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/templates"
 )
 
 type Server struct {
@@ -75,7 +75,7 @@ func (server *Server) Run(ctx context.Context) error {
 			"names", resumes,
 			"apps", applications,
 		)
-		components.MainPage(resumes, applications).Render(r.Context(), w)
+		templates.MainPage(resumes, applications).Render(r.Context(), w)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
