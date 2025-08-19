@@ -11,11 +11,9 @@ import (
 
 type RootCmd struct {
 	Config kong.ConfigFlag `short:"c" help:"Path to config file to load." type:"path"`
-	Test string `short:"t"`
 	Build  BuildCmd  `cmd:"" help:"Compile a resume from a input file."`
-	Log    LogCmd    `cmd:"" help:"Log usuage of resumes."`
 	Serve  ServeCmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
-	Wizard WizardCmd `cmd:"" help:"Do some magic."`
+	Log    LogCmd    `cmd:"" help:"Log usuage of resumes."`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {
