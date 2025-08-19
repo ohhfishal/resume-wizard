@@ -1,22 +1,26 @@
 package card
 
+const SmallCard = "sm"
+
 type CardProps struct {
-	Header         string
-	HeaderMetadata []templ.Component
+	Size string
 }
 
-templ Card(props CardProps) {
-	<div class="card">
-		<div class="card-header">
-			if props.Header != "" {
-				<h3>{ props.Header }</h3>
-			}
-			<div class="card-meta">
-				for _, metadata := range props.HeaderMetadata {
-					@metadata
-				}
-			</div>
-		</div>
+templ Card(props ...CardProps) {
+	{{
+	var prop = CardProps{}
+	if len(props) > 0 {
+		prop = props[0]
+	}
+
+	var class string
+	if prop.Size == SmallCard {
+		class = "card-sm"
+	} else {
+		class = "card"
+	}
+	}}
+	<div class={ class }>
 		{ children... }
 	</div>
 }

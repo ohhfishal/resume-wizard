@@ -13,13 +13,19 @@ templ ResumeCard(resumes []db.Resume) {
 		resumes = resumes[:MAX_BASE_RESUMES]
 	}
 	}}
-	@Card(CardProps{
-		Header: "Base Resumes",
-		HeaderMetadata: []templ.Component{
-			ResumeCountBadge(len(resumes)),
-			AddResumeButton(disabled),
-		},
-	}) {
+	@Card(CardProps{}) {
+		<div class="card-header">
+			<h3>{ "Base Resumes" }</h3>
+			<div class="card-meta">
+				<span class="count-badge">{ len(resumes) } Resumes</span>
+				<div class="tooltip-container">
+					<button class="btn-add" disabled?={ disabled }>+ Add New </button>
+					if disabled {
+						<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
+					}
+				</div>
+			</div>
+		</div>
 		<div class="resume-list">
 			for _, resume := range resumes {
 				@ResumeItem(resume)
@@ -39,18 +45,5 @@ templ ResumeItem(resume db.Resume) {
 			<button class="btn-small">Edit</button>
 			<button class="btn-small">Delete</button>
 		</div>
-	</div>
-}
-
-templ ResumeCountBadge(count int) {
-	<span class="count-badge">{ count } Resumes</span>
-}
-
-templ AddResumeButton(disabled bool) {
-	<div class="tooltip-container">
-		<button class="btn-add" disabled?={ disabled }>+ Add New </button>
-		if disabled {
-			<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
-		}
 	</div>
 }

@@ -54,6 +54,9 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
+	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+		page.Login(page.LoginProps{}).Render(r.Context(), w)
+	})
 	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
 		resumes, err := server.database.GetResumes(r.Context())
 		if err != nil {
