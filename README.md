@@ -10,9 +10,24 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 - Use `save` to insert it into a db.
 - Optional: `export` to view it as a csv
 
+## V2 
+- [ ] Support base resumes
+    - [ ] Add
+    - [ ] Delete
+    - [ ] Edit
+- [ ] Tailor workflow
+    - [ ] Job info
+    - [ ] Call to LLM
+    - [ ] Edit/Review
+    - [ ] Log event
+- [ ] Store in a file store such as seaweedfs (S3 compatible)
+        - [ ] For now can just dump them at a configurable directory
+- [ ] Read only activity log (sqlite)
+
+
 ## TODO
-- [ ] Have selected tab be stored in local storage to make refresh easier
-- [ ] Allow editing of status via the UI
+- [X] Have selected tab be stored in local storage to make refresh easier
+- [X] Allow editing of status via the UI
 - [ ] Start working on metrics/analytics?
 
 ## High Level Design
