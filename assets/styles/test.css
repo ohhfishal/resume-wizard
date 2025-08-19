@@ -1,0 +1,271 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+.header {
+    background: #161b22;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #58a6ff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.wizard-hat {
+    font-size: 1.25rem;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #8b949e;
+    font-weight: 500;
+}
+
+.nav a:hover {
+    color: #58a6ff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero {
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    color: #8b949e;
+    font-size: 1.1rem;
+}
+
+.primary-action {
+    background: #161b22;
+    border: 2px dashed #30363d;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    transition: border-color 0.2s;
+}
+
+.primary-action:hover {
+    border-color: #58a6ff;
+}
+
+.primary-action h2 {
+    margin-bottom: 1rem;
+    color: #e6edf3;
+}
+
+.primary-action p {
+    color: #8b949e;
+    margin-bottom: 2rem;
+}
+
+.btn-primary {
+    background: #238636;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 1rem;
+}
+
+.btn-primary:hover {
+    background: #2ea043;
+}
+
+.btn-secondary {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-secondary:hover {
+    background: #30363d;
+}
+
+.card {
+    background: #161b22;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: none;
+    border: 1px solid #30363d;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.count-badge {
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.btn-add {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: #30363d;
+}
+
+.btn-add:disabled {
+    background: #161b22;
+    color: #484f58;
+    border: 1px solid #30363d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-add:disabled:hover {
+    background: #161b22;
+    color: #484f58;
+    border: 1px solid #30363d;
+}
+
+.resume-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.resume-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background: #0d1117;
+}
+
+.resume-info h4 {
+    margin-bottom: 0.25rem;
+}
+
+.resume-info p {
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.resume-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #21262d;
+    color: #e6edf3;
+    cursor: pointer;
+}
+
+.btn-small:hover {
+    background: #30363d;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #30363d;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tooltip-container {
+    position: relative; /* Essential for positioning the tooltip */
+    display: inline-block; /* Or block, depending on layout */
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1; /* Ensures tooltip appears above other content */
+    bottom: 125%; /* Adjust position relative to the button */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}

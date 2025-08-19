@@ -1,0 +1,56 @@
+package card
+
+import "github.com/ohhfishal/resume-wizard/db"
+
+// TODO: Make a feature flag
+const MAX_BASE_RESUMES = 3
+
+templ ResumeCard(resumes []db.Resume) {
+	{{
+	// TODO: Make a feature flag based on the user
+	var disabled = len(resumes) >= MAX_BASE_RESUMES
+	if disabled {
+		resumes = resumes[:MAX_BASE_RESUMES]
+	}
+	}}
+	@Card(CardProps{
+		Header: "Base Resumes",
+		HeaderMetadata: []templ.Component{
+			ResumeCountBadge(len(resumes)),
+			AddResumeButton(disabled),
+		},
+	}) {
+		<div class="resume-list">
+			for _, resume := range resumes {
+				@ResumeItem(resume)
+			}
+		</div>
+	}
+}
+
+templ ResumeItem(resume db.Resume) {
+	<div class="resume-item">
+		<div class="resume-info">
+			<h4>{ resume.Name }</h4>
+			<p>Uploaded PLACEHOLDER • Last used PLACEHOLDER</p>
+		</div>
+		<div class="resume-actions">
+			<button class="btn-small">Tailor</button>
+			<button class="btn-small">Edit</button>
+			<button class="btn-small">Delete</button>
+		</div>
+	</div>
+}
+
+templ ResumeCountBadge(count int) {
+	<span class="count-badge">{ count } Resumes</span>
+}
+
+templ AddResumeButton(disabled bool) {
+	<div class="tooltip-container">
+		<button class="btn-add" disabled?={ disabled }>+ Add New </button>
+		if disabled {
+			<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
+		}
+	</div>
+}

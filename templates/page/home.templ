@@ -1,50 +1,71 @@
 package page
 
-import "github.com/ohhfishal/resume-wizard/db"
+import (
+	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/templates/card"
+)
 
-type PageProps struct {
-	Title   string
-	Imports []templ.Component
-	Body    templ.Component
+type HomeProps struct {
+	Resumes      []db.Resume
+	Applications []db.Application
+	// TODO: Feature flags / User info goes here
 }
 
-templ Page(props PageProps) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			if props.Title != "" {
-				<title>{ props.Title }</title>
-			}
-			for _, component := range props.Imports {
-				@component
-			}
-		</head>
-		@props.Body
-	</html>
-}
-
-templ Home() {
-	// resumes []db.Resume, applications []db.Application) {
+templ Home(props HomeProps) {
 	@Page(PageProps{
-		Title: "Resume Wizard",
+		Title: "🧙‍♂️ Resume Wizard",
 		Imports: []templ.Component{
 			DefaultStyle(),
 			HTMX(),
 		},
-		Body: HomeBody(nil, nil),
+		Body: HomeBody(props.Resumes, props.Applications),
 	})
 }
 
 templ HomeBody(resumes []db.Resume, applications []db.Application) {
 	<body>
-		Hello world
+		@Header()
+		<div class="container">
+			<div class="hero">
+				<h1>Home</h1>
+				<p>Put a search bar or something here.</p>
+			</div>
+			@card.ResumeCard(resumes)
+			<div class="card">
+				<div class="card-header">
+					<h3>Recent Activity</h3>
+					<div class="card-meta">
+						<span class="count-badge">12 tailored • 8 applications</span>
+					</div>
+				</div>
+				<div class="activity-item">
+					<div>
+						<h4>Senior React Developer - TechCorp</h4>
+						<p>Tailored from Software Engineer Resume</p>
+					</div>
+					<div style="color: #8b949e; font-size: 0.9rem;">Yesterday</div>
+				</div>
+				<div class="activity-item">
+					<div>
+						<h4>Frontend Lead - StartupXYZ</h4>
+						<p>Tailored from Frontend Developer Resume</p>
+					</div>
+					<div style="color: #8b949e; font-size: 0.9rem;">3 days ago</div>
+				</div>
+				<div class="activity-item">
+					<div>
+						<h4>Full Stack Engineer - BigTech</h4>
+						<p>Tailored from Software Engineer Resume</p>
+					</div>
+					<div style="color: #8b949e; font-size: 0.9rem;">1 week ago</div>
+				</div>
+			</div>
+		</div>
 	</body>
 }
 
 templ DefaultStyle() {
-	<link rel="stylesheet" href="assets/styles/default.css"/>
+	<link rel="stylesheet" href="assets/styles/test.css"/>
 }
 
 templ HTMX() {

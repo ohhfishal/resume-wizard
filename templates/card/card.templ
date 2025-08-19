@@ -1,0 +1,22 @@
+package card
+
+type CardProps struct {
+	Header         string
+	HeaderMetadata []templ.Component
+}
+
+templ Card(props CardProps) {
+	<div class="card">
+		<div class="card-header">
+			if props.Header != "" {
+				<h3>{ props.Header }</h3>
+			}
+			<div class="card-meta">
+				for _, metadata := range props.HeaderMetadata {
+					@metadata
+				}
+			</div>
+		</div>
+		{ children... }
+	</div>
+}

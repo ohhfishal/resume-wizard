@@ -1,0 +1,37 @@
+package page
+
+type PageProps struct {
+	Title   string
+	Imports []templ.Component
+	Body    templ.Component
+}
+
+templ Page(props PageProps) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			if props.Title != "" {
+				<title>{ props.Title }</title>
+			}
+			for _, component := range props.Imports {
+				@component
+			}
+		</head>
+		@props.Body
+	</html>
+}
+
+templ Header() {
+	<div class="header">
+		<div class="logo">
+			<span class="wizard-hat">🧙‍♂️</span>
+			Resume Wizard
+		</div>
+		<nav class="nav">
+			<a href="#">Settings</a>
+			<a href="#">Logout</a>
+		</nav>
+	</div>
+}

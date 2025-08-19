@@ -55,7 +55,28 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
 	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
-		page.Home().Render(r.Context(), w)
+		resumes, err := server.database.GetResumes(r.Context())
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for names: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		applications, err := server.database.GetApplications(r.Context())
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for applications: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		page.Home(page.HomeProps{
+			Resumes:      resumes,
+			Applications: applications,
+		}).Render(r.Context(), w)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
