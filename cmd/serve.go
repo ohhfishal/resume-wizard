@@ -5,25 +5,15 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/server"
 )
 
 type ServeCmd struct {
-	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
+	Config server.Config `embed:""`
 }
 
 func (cmd *ServeCmd) Run(ctx context.Context, logger *slog.Logger) error {
-	if cmd.DatabaseSource == ":memory:" {
-		logger.Info("using in-memorry database")
-	}
-
-	database, err := db.Open(ctx, "sqlite3", cmd.DatabaseSource)
-	if err != nil {
-		return fmt.Errorf("connecting to database: %w", err)
-	}
-
-	s, err := server.New(logger, database)
+	s, err := server.New(ctx, cmd.Config, logger)
 	if err != nil {
 		return fmt.Errorf("creating server: %w", err)
 	}

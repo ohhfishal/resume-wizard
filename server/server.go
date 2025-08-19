@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/chi/v5/middleware" 
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates"
@@ -21,21 +21,30 @@ import (
 
 type Config struct {
 	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
+	Port string `default:"8080" help:"Port to serve on"`
+	Host string `default:"localhost" help:"Address to serve from"`
 }
 
 type Server struct {
 	logger   *slog.Logger
 	database *db.Queries
-	host     string
-	port     string
+	config Config
 }
 
-func New(logger *slog.Logger, database *db.Queries) (*Server, error) {
+func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
+	if config.DatabaseSource == ":memory:" {
+		logger.Warn("using in-memorry database")
+	}
+
+	database, err := db.Open(ctx, "sqlite3", config.DatabaseSource)
+	if err != nil {
+		return nil, fmt.Errorf("connecting to database: %w", err)
+	}
+
 	return &Server{
 		database: database,
 		logger:   logger,
-		host:     "0.0.0.0", // TODO: Fix hardcoding
-		port:     "8080",    // TODO: Fix hardcoding
+		config: config,
 	}, nil
 }
 
@@ -116,7 +125,7 @@ func (server *Server) Run(ctx context.Context) error {
 	r.NotFound(NotFoundHandler)
 
 	s := &http.Server{
-		Addr:         net.JoinHostPort(server.host, server.port),
+		Addr:         net.JoinHostPort(server.config.Host, server.config.Port),
 		Handler:      r,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
@@ -127,12 +136,16 @@ func (server *Server) Run(ctx context.Context) error {
 		server.logger.Info("shutting down")
 		if err := s.Shutdown(context.Background()); err != nil {
 			server.logger.Error("closing server",
-				"error", err,
+				slog.Any("error", err),
 			)
 		}
 	}()
 
-	server.logger.Info("starting server", "port", server.port, "host", server.host)
+	server.logger.Info(
+		"starting server", 
+		slog.String("port", server.config.Port), 
+		slog.String("host", server.config.Host),
+	)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}
