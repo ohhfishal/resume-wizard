@@ -19,6 +19,10 @@ import (
 	"github.com/ohhfishal/resume-wizard/templates/page"
 )
 
+type Config struct {
+	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
+}
+
 type Server struct {
 	logger   *slog.Logger
 	database *db.Queries

@@ -6,9 +6,12 @@ import (
 	"log/slog"
 
 	"github.com/alecthomas/kong"
+	kongyaml "github.com/alecthomas/kong-yaml"
 )
 
 type RootCmd struct {
+	Config kong.ConfigFlag `short:"c" help:"Path to config file to load." type:"path"`
+	Test string `short:"t"`
 	Build  BuildCmd  `cmd:"" help:"Compile a resume from a input file."`
 	Log    LogCmd    `cmd:"" help:"Log usuage of resumes."`
 	Serve  ServeCmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
@@ -23,6 +26,7 @@ func Run(ctx context.Context, stdout io.Writer, args []string) error {
 		cmd,
 		kong.Exit(func(_ int) { exit = true }),
 		kong.BindTo(ctx, new(context.Context)),
+		kong.Configuration(kongyaml.Loader),
 	)
 	if err != nil {
 		return err
@@ -31,7 +35,9 @@ func Run(ctx context.Context, stdout io.Writer, args []string) error {
 	parser.Stdout = stdout
 	parser.Stderr = stdout
 
-	context, err := parser.Parse(args)
+	context, err := parser.Parse(
+		args,
+	)
 	if err != nil || exit {
 		return err
 	}

@@ -10,7 +10,6 @@ import (
 )
 
 type ServeCmd struct {
-	// TODO: Add port
 	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
 }
 
