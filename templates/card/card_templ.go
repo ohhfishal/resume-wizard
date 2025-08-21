@@ -8,7 +8,10 @@ package card
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-const SmallCard = "sm"
+const (
+	SmallCard = "card-sm"
+	LargeCard = "card-large"
+)
 
 type CardProps struct {
 	Size string
@@ -41,10 +44,8 @@ func Card(props ...CardProps) templ.Component {
 			prop = props[0]
 		}
 
-		var class string
-		if prop.Size == SmallCard {
-			class = "card-sm"
-		} else {
+		class := prop.Size
+		if class == "" {
 			class = "card"
 		}
 		var templ_7745c5c3_Var2 = []any{class}

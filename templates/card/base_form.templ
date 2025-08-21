@@ -1,0 +1,38 @@
+package card
+
+type BaseResumeFormProps struct {
+}
+
+templ BaseResumeForm(props ...BaseResumeFormProps) {
+	@Card(CardProps{
+		// Size: SmallCard,
+	}) {
+		<div class="card-header">
+			<h3>Pick a workflow</h3>
+		</div>
+		<div class="choice-screen">
+			<div class="choice-option upload" onclick="document.getElementById('file-input').click()">
+				<div class="choice-icon">📄</div>
+				<h3>Upload Resume</h3>
+				<p>Have an existing resume? Upload a JSON or YAML file.</p>
+				<button class="button btn-primary">Choose File</button>
+				<input
+					id="file-input"
+					class="button btn-primary"
+					type="file"
+					accept=".json,.yaml"
+					hx-post="/api/dev/base"
+					hx-trigger="change"
+				/>
+			</div>
+			<a hx-boost="true" href="/base/build" class="choice-option manual">
+				<div>
+					<div class="choice-icon">✏️</div>
+					<h3>Build from Scratch</h3>
+					<p>We'll walk you through each section step by step to create your perfect resume.</p>
+					<button class="button btn-primary">Get Started</button>
+				</div>
+			</a>
+		</div>
+	}
+}

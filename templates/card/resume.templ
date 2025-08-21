@@ -18,12 +18,15 @@ templ ResumeCard(resumes []db.Resume) {
 			<h3>{ "Base Resumes" }</h3>
 			<div class="card-meta">
 				<span class="count-badge">{ len(resumes) } Resumes</span>
-				<div class="tooltip-container">
-					<button class="btn-add" disabled?={ disabled }>+ Add New </button>
-					if disabled {
+				if disabled {
+					<div class="tooltip-container">
+						// TODO: Have this not redirect the whole page
+						<button href="/base" class="button btn-add" hx-boost="true" disabled>+ Add New </button>
 						<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
-					}
-				</div>
+					</div>
+				} else {
+					<a href="/base" class="button btn-add" hx-boost="true">+ Add New </a>
+				}
 			</div>
 		</div>
 		<div class="resume-list">

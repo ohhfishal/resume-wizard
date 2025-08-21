@@ -1,0 +1,30 @@
+package page
+
+import "github.com/ohhfishal/resume-wizard/templates/card"
+
+type BaseResumeProps struct {
+}
+
+templ BaseResume(props BaseResumeProps) {
+	@Page(PageProps{
+		Title: "🧙‍♂️ Resume Wizard",
+		Imports: []templ.Component{
+			DefaultStyle(),
+			HTMX(),
+		},
+		Body: BaseResumeBody(props),
+	})
+}
+
+templ BaseResumeBody(props BaseResumeProps) {
+	<body>
+		@Header()
+		<div class="container">
+			<div class="hero">
+				<h1>Create a base resume</h1>
+				<p>This is the resume we tailor to jobs!</p>
+			</div>
+			@card.BaseResumeForm()
+		</div>
+	</body>
+}

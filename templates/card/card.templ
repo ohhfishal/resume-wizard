@@ -1,6 +1,9 @@
 package card
 
-const SmallCard = "sm"
+const (
+	SmallCard = "card-sm"
+	LargeCard = "card-large"
+)
 
 type CardProps struct {
 	Size string
@@ -13,10 +16,8 @@ templ Card(props ...CardProps) {
 		prop = props[0]
 	}
 
-	var class string
-	if prop.Size == SmallCard {
-		class = "card-sm"
-	} else {
+	class := prop.Size
+	if class == "" {
 		class = "card"
 	}
 	}}

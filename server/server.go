@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware" 
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates"
@@ -21,14 +21,14 @@ import (
 
 type Config struct {
 	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
-	Port string `default:"8080" help:"Port to serve on"`
-	Host string `default:"localhost" help:"Address to serve from"`
+	Port           string `default:"8080" help:"Port to serve on"`
+	Host           string `default:"localhost" help:"Address to serve from"`
 }
 
 type Server struct {
 	logger   *slog.Logger
 	database *db.Queries
-	config Config
+	config   Config
 }
 
 func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
@@ -44,7 +44,7 @@ func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, erro
 	return &Server{
 		database: database,
 		logger:   logger,
-		config: config,
+		config:   config,
 	}, nil
 }
 
@@ -67,6 +67,9 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
+	r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
+		page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
+	})
 	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
 		page.Login(page.LoginProps{}).Render(r.Context(), w)
 	})
@@ -142,8 +145,8 @@ func (server *Server) Run(ctx context.Context) error {
 	}()
 
 	server.logger.Info(
-		"starting server", 
-		slog.String("port", server.config.Port), 
+		"starting server",
+		slog.String("port", server.config.Port),
 		slog.String("host", server.config.Host),
 	)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -13,6 +13,9 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 ## V2 
 - [ ] Support base resumes
     - [ ] Add
+        - [ ] Fill out a form manually
+        - [ ] Upload YAML/JSON
+        - [ ] Upload PDF
     - [ ] Delete
     - [ ] Edit
 - [ ] Tailor workflow
@@ -23,6 +26,10 @@ CLI tool for converting YAML files to resume PDF's (Or html/markdown etc).
 - [ ] Store in a file store such as seaweedfs (S3 compatible)
         - [ ] For now can just dump them at a configurable directory
 - [ ] Read only activity log (sqlite)
+- [ ] Login and OAuth2 
+    - [ ] Forgejo
+    - [ ] LinkedIn?
+    - [ ] Google?
 
 
 ## TODO
