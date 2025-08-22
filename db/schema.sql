@@ -36,5 +36,8 @@ CREATE TABLE IF NOT EXISTS base_resumes  (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- TODO: Hard coding examples
 INSERT INTO users(id, name) VALUES (0, 'admin') ON CONFLICT DO NOTHING;
+
+INSERT INTO base_resumes (user_id, name, resume) VALUES (0, 'Example Resume', '{}') ON CONFLICT DO NOTHING;
 

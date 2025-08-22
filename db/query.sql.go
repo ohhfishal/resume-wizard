@@ -46,6 +46,32 @@ func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
 	return items, nil
 }
 
+const getBaseResume = `-- name: GetBaseResume :one
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from base_resumes
+WHERE user_id = ? AND id = ?
+`
+
+type GetBaseResumeParams struct {
+	UserID int64 `json:"user_id"`
+	ID     int64 `json:"id"`
+}
+
+func (q *Queries) GetBaseResume(ctx context.Context, arg GetBaseResumeParams) (BaseResume, error) {
+	row := q.db.QueryRowContext(ctx, getBaseResume, arg.UserID, arg.ID)
+	var i BaseResume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const getBaseResumes = `-- name: GetBaseResumes :many
 SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from base_resumes
 WHERE user_id = ?

@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -58,6 +59,7 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
 	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
 
+	// TODO: Remove old endpoints
 	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
 	r.Post("/resume", PostResumeHandler(server.logger, server.database))
 	r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
@@ -76,6 +78,30 @@ func (server *Server) Run(ctx context.Context) error {
 	})
 	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
 		page.Login(page.LoginProps{}).Render(r.Context(), w)
+	})
+	r.Get("/tailor", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("invalid base resume id: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     id,
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		page.TailorResume(page.TailorResumeProps{
+			Base: base,
+		}).Render(r.Context(), w)
 	})
 	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
 		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)

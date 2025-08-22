@@ -1,0 +1,30 @@
+package page
+
+import (
+	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/templates/card"
+)
+
+type TailorResumeProps struct {
+	Base db.BaseResume
+}
+
+templ TailorResume(prop TailorResumeProps) {
+	@Page(PageProps{
+		Title: "🧙‍♂️ Resume Wizard",
+		Imports: []templ.Component{
+			DefaultStyle(),
+			HTMX(),
+		},
+		Body: TailorResumeBody(prop),
+	})
+}
+
+templ TailorResumeBody(prop TailorResumeProps) {
+	<body>
+		@Header()
+		<div class="container">
+			@card.TailorResumeCard(prop.Base)
+		</div>
+	</body>
+}

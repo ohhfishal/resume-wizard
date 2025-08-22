@@ -68,29 +68,31 @@ templ BaseResumeReviewForm(resumes ...*resume.Resume) {
 				<p>Eventually this will be a easy to fill form</p>
 			</div>
 		}
-		<form
-			hx-post="/api/dev/base"
-			hx-encoding="multipart/form-data"
-			hx-swap="none"
-		>
-			@Card(CardProps{}) {
+		@Card(CardProps{
+			Size: DefaultCard,
+		}) {
+			<form
+				hx-post="/api/dev/base"
+				hx-encoding="multipart/form-data"
+				hx-swap="none"
+			>
 				<div class="card-header">
 					<h3>Resume</h3>
 				</div>
-				<label for="name">Base Resume Name: </label>
-				<input
-					name="name"
-					id="name"
-					type="text"
-					if base != nil {
-						value={ base.Title }
-					}
-				/>
-				<br/>
+				<div class="form-group">
+					<label for="name">Base Resume Name: </label>
+					<input
+						name="name"
+						id="name"
+						type="text"
+						if base != nil {
+							value={ base.Title }
+						}
+					/>
+				</div>
 				@components.ResumeEditor(base)
-				<br/>
 				<button class="btn-primary">Submit</button>
-			}
-		</form>
+			</form>
+		}
 	</div>
 }

@@ -58,15 +58,19 @@ templ ResumeItem(resume db.BaseResume) {
 			fmt.Sprintf("%s%s", metadata, resume.LastUsed.Time),
 		)
 	}
+
+	info := map[string]any{
+		"id": resume.ID,
+	}
 	}}
 	<div class="resume-item">
 		<div class="resume-info">
 			<h4>{ resume.Name }</h4>
 			<p>{ strings.Join(metadata, " • ") }</p>
 		</div>
-		<div class="resume-actions">
-			<button class="btn-small">Tailor</button>
-			<button class="btn-small">Edit</button>
+		<div class="resume-actions" hx-boost="true">
+			<a href="/tailor" hx-vals={ templ.JSONString(info) } class="button btn-small">Tailor</a>
+			<a href="/edit" hx-vals={ templ.JSONString(info) } class="button btn-small">Edit</a>
 			<button class="btn-small">Delete</button>
 		</div>
 	</div>

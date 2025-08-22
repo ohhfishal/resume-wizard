@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 const (
 	SmallCard   = "card-sm"
-	LargeCard   = "card-large"
+	LargeCard   = "card-lg"
 	DefaultCard = "card"
 )
 

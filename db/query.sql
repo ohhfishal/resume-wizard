@@ -43,6 +43,10 @@ INSERT INTO base_resumes (user_id, name, resume)
 VALUES (?, ?, ?)
 RETURNING *;
 
+-- name: GetBaseResume :one
+SELECT * from base_resumes
+WHERE user_id = ? AND id = ?;
+
 -- name: GetBaseResumes :many
 SELECT * from base_resumes
 WHERE user_id = ?
