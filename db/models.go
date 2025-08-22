@@ -20,16 +20,15 @@ type Application struct {
 	Status    string    `json:"status"`
 }
 
-type Basis struct {
-	ID           int64        `json:"id"`
-	UserID       int64        `json:"user_id"`
-	Name         string       `json:"name"`
-	Bucket       string       `json:"bucket"`
-	BucketPrefix string       `json:"bucket_prefix"`
-	CreatedAt    time.Time    `json:"created_at"`
-	UpdatedAt    time.Time    `json:"updated_at"`
-	LastUsed     interface{}  `json:"last_used"`
-	DeletedAt    sql.NullTime `json:"deleted_at"`
+type BaseResume struct {
+	ID        int64          `json:"id"`
+	UserID    int64          `json:"user_id"`
+	Name      string         `json:"name"`
+	Resume    *resume.Resume `json:"resume"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	LastUsed  sql.NullTime   `json:"last_used"`
+	DeletedAt sql.NullTime   `json:"deleted_at"`
 }
 
 type Resume struct {

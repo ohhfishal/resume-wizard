@@ -33,7 +33,7 @@ type Server struct {
 
 func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
 	if config.DatabaseSource == ":memory:" {
-		logger.Warn("using in-memorry database")
+		logger.Warn("using in-memory database")
 	}
 
 	database, err := db.Open(ctx, "sqlite3", config.DatabaseSource)
@@ -53,6 +53,10 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
+
+	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
+	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
+	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
 
 	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
 	r.Post("/resume", PostResumeHandler(server.logger, server.database))
@@ -74,7 +78,7 @@ func (server *Server) Run(ctx context.Context) error {
 		page.Login(page.LoginProps{}).Render(r.Context(), w)
 	})
 	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
-		resumes, err := server.database.GetResumes(r.Context())
+		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading database for names: %s", err.Error()),

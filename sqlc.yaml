@@ -16,3 +16,8 @@ sql:
               type: "Resume"
               import: "github.com/ohhfishal/resume-wizard/resume"
               pointer: true
+          - column: "base_resumes.resume"
+            go_type:
+              type: "Resume"
+              import: "github.com/ohhfishal/resume-wizard/resume"
+              pointer: true

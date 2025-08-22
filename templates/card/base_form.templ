@@ -1,11 +1,16 @@
 package card
 
+import (
+	"github.com/ohhfishal/resume-wizard/resume"
+	"github.com/ohhfishal/resume-wizard/templates/components"
+)
+
 type BaseResumeFormProps struct {
 }
 
 templ BaseResumeForm(props ...BaseResumeFormProps) {
 	@Card(CardProps{
-		// Size: SmallCard,
+		Size: DefaultCard,
 	}) {
 		<div class="card-header">
 			<h3>Pick a workflow</h3>
@@ -16,16 +21,23 @@ templ BaseResumeForm(props ...BaseResumeFormProps) {
 				<h3>Upload Resume</h3>
 				<p>Have an existing resume? Upload a JSON or YAML file.</p>
 				<button class="button btn-primary">Choose File</button>
-				<input
-					id="file-input"
-					class="button btn-primary"
-					type="file"
-					accept=".json,.yaml"
-					hx-post="/api/dev/base"
+				<form
+					hx-post="/base/upload"
 					hx-trigger="change"
-				/>
+					hx-encoding="multipart/form-data"
+					hx-target="closest .container"
+					hx-swap="outerHTML"
+				>
+					<input
+						id="file-input"
+						name="file"
+						class="button btn-primary"
+						type="file"
+						accept=".json,.yaml"
+					/>
+				</form>
 			</div>
-			<a hx-boost="true" href="/base/build" class="choice-option manual">
+			<a hx-boost="true" href="/base/new" class="choice-option manual">
 				<div>
 					<div class="choice-icon">✏️</div>
 					<h3>Build from Scratch</h3>
@@ -35,4 +47,50 @@ templ BaseResumeForm(props ...BaseResumeFormProps) {
 			</a>
 		</div>
 	}
+}
+
+templ BaseResumeReviewForm(resumes ...*resume.Resume) {
+	{{
+	var base *resume.Resume
+	if len(resumes) > 0 {
+		base = resumes[0]
+	}
+	}}
+	<div class="container">
+		if base != nil {
+			<div class="hero">
+				<h1>Review</h1>
+				<p>Make sure everything is right</p>
+			</div>
+		} else {
+			<div class="hero">
+				<h1>NOT IMPLEMENTED</h1>
+				<p>Eventually this will be a easy to fill form</p>
+			</div>
+		}
+		<form
+			hx-post="/api/dev/base"
+			hx-encoding="multipart/form-data"
+			hx-swap="none"
+		>
+			@Card(CardProps{}) {
+				<div class="card-header">
+					<h3>Resume</h3>
+				</div>
+				<label for="name">Base Resume Name: </label>
+				<input
+					name="name"
+					id="name"
+					type="text"
+					if base != nil {
+						value={ base.Title }
+					}
+				/>
+				<br/>
+				@components.ResumeEditor(base)
+				<br/>
+				<button class="btn-primary">Submit</button>
+			}
+		</form>
+	</div>
 }

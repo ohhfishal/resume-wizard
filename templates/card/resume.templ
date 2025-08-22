@@ -1,11 +1,16 @@
 package card
 
-import "github.com/ohhfishal/resume-wizard/db"
+import (
+	"fmt"
+	"github.com/ohhfishal/resume-wizard/db"
+	"strings"
+	"time"
+)
 
 // TODO: Make a feature flag
 const MAX_BASE_RESUMES = 3
 
-templ ResumeCard(resumes []db.Resume) {
+templ BaseResumeCard(resumes []db.BaseResume) {
 	{{
 	// TODO: Make a feature flag based on the user
 	var disabled = len(resumes) >= MAX_BASE_RESUMES
@@ -29,19 +34,35 @@ templ ResumeCard(resumes []db.Resume) {
 				}
 			</div>
 		</div>
-		<div class="resume-list">
-			for _, resume := range resumes {
-				@ResumeItem(resume)
-			}
-		</div>
+		@BaseResumeList(resumes)
 	}
 }
 
-templ ResumeItem(resume db.Resume) {
+templ BaseResumeList(resumes []db.BaseResume) {
+	// TODO: Update on deletes or adds or edits
+	<div class="resume-list">
+		for _, resume := range resumes {
+			@ResumeItem(resume)
+		}
+	</div>
+}
+
+templ ResumeItem(resume db.BaseResume) {
+	{{
+
+	metadata := []string{
+		"Uploaded " + resume.CreatedAt.Format(time.DateOnly),
+	}
+	if resume.LastUsed.Valid {
+		metadata = append(metadata,
+			fmt.Sprintf("%s%s", metadata, resume.LastUsed.Time),
+		)
+	}
+	}}
 	<div class="resume-item">
 		<div class="resume-info">
 			<h4>{ resume.Name }</h4>
-			<p>Uploaded PLACEHOLDER • Last used PLACEHOLDER</p>
+			<p>{ strings.Join(metadata, " • ") }</p>
 		</div>
 		<div class="resume-actions">
 			<button class="btn-small">Tailor</button>

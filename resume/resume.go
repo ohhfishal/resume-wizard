@@ -204,6 +204,23 @@ func (resume *Resume) HidePersonalInfo() {
 	}
 }
 
+func FromContentType(reader io.Reader, contentType string) (*Resume, error) {
+	var resume Resume
+	switch contentType {
+	case "application/json":
+		if err := FromJSON(reader, &resume); err != nil {
+			return nil, fmt.Errorf("parsing json: %w", err)
+		}
+	case "application/yaml":
+		if err := FromYAML(reader, &resume); err != nil {
+			return nil, fmt.Errorf("parsing yaml: %w", err)
+		}
+	default:
+		return nil, fmt.Errorf("invalid content type: %s", contentType)
+	}
+	return &resume, nil
+}
+
 // Implement methods to be used in a database
 func (r Resume) Value() (driver.Value, error) {
 	return json.Marshal(r)

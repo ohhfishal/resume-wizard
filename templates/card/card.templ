@@ -1,12 +1,14 @@
 package card
 
 const (
-	SmallCard = "card-sm"
-	LargeCard = "card-large"
+	SmallCard   = "card-sm"
+	LargeCard   = "card-large"
+	DefaultCard = "card"
 )
 
 type CardProps struct {
 	Size string
+	ID   string
 }
 
 templ Card(props ...CardProps) {
@@ -18,10 +20,15 @@ templ Card(props ...CardProps) {
 
 	class := prop.Size
 	if class == "" {
-		class = "card"
+		class = DefaultCard
 	}
 	}}
-	<div class={ class }>
+	<div
+		class={ class }
+		if prop.ID != "" {
+			id={ prop.ID }
+		}
+	>
 		{ children... }
 	</div>
 }

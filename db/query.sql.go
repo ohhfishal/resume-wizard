@@ -46,6 +46,44 @@ func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
 	return items, nil
 }
 
+const getBaseResumes = `-- name: GetBaseResumes :many
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from base_resumes
+WHERE user_id = ?
+ORDER BY created_at
+`
+
+func (q *Queries) GetBaseResumes(ctx context.Context, userID int64) ([]BaseResume, error) {
+	rows, err := q.db.QueryContext(ctx, getBaseResumes, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []BaseResume{}
+	for rows.Next() {
+		var i BaseResume
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Resume,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LastUsed,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getNames = `-- name: GetNames :many
 SELECT name from resumes
 ORDER BY name
@@ -113,6 +151,34 @@ func (q *Queries) GetResumes(ctx context.Context) ([]Resume, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const insertBase = `-- name: InsertBase :one
+INSERT INTO base_resumes (user_id, name, resume)
+VALUES (?, ?, ?)
+RETURNING id, user_id, name, resume, created_at, updated_at, last_used, deleted_at
+`
+
+type InsertBaseParams struct {
+	UserID int64          `json:"user_id"`
+	Name   string         `json:"name"`
+	Resume *resume.Resume `json:"resume"`
+}
+
+func (q *Queries) InsertBase(ctx context.Context, arg InsertBaseParams) (BaseResume, error) {
+	row := q.db.QueryRowContext(ctx, insertBase, arg.UserID, arg.Name, arg.Resume)
+	var i BaseResume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
 const insertLog = `-- name: InsertLog :one

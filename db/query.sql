@@ -37,3 +37,13 @@ WHERE position = ? AND company = ?;
 INSERT INTO applications (resume_id, company, position)
 VALUES (?, ?, ?)
 RETURNING *;
+
+-- name: InsertBase :one
+INSERT INTO base_resumes (user_id, name, resume)
+VALUES (?, ?, ?)
+RETURNING *;
+
+-- name: GetBaseResumes :many
+SELECT * from base_resumes
+WHERE user_id = ?
+ORDER BY created_at; -- Last used??

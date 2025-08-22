@@ -14,7 +14,7 @@ import (
 )
 
 type HomeProps struct {
-	Resumes      []db.Resume
+	Resumes      []db.BaseResume
 	Applications []db.Application
 	// TODO: Feature flags / User info goes here
 }
@@ -55,7 +55,7 @@ func Home(props HomeProps) templ.Component {
 	})
 }
 
-func HomeBody(resumes []db.Resume, applications []db.Application) templ.Component {
+func HomeBody(resumes []db.BaseResume, applications []db.Application) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -88,7 +88,7 @@ func HomeBody(resumes []db.Resume, applications []db.Application) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = card.ResumeCard(resumes).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = card.BaseResumeCard(resumes).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

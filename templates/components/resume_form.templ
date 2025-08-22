@@ -1,0 +1,17 @@
+package components
+
+import "github.com/ohhfishal/resume-wizard/resume"
+
+templ ResumeEditor(base *resume.Resume) {
+	<textarea
+		name="resume"
+		id="yamlEditor"
+		class="editor"
+		placeholder="Write YAML here"
+		spellcheck="false"
+	>
+		if base != nil {
+			{ base.YAML() }
+		}
+	</textarea>
+}

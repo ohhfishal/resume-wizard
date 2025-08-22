@@ -6,7 +6,7 @@ import (
 )
 
 type HomeProps struct {
-	Resumes      []db.Resume
+	Resumes      []db.BaseResume
 	Applications []db.Application
 	// TODO: Feature flags / User info goes here
 }
@@ -22,7 +22,7 @@ templ Home(props HomeProps) {
 	})
 }
 
-templ HomeBody(resumes []db.Resume, applications []db.Application) {
+templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
 	<body>
 		@Header()
 		<div class="container">
@@ -30,7 +30,7 @@ templ HomeBody(resumes []db.Resume, applications []db.Application) {
 				<h1>Home</h1>
 				<p>Put a search bar or something here.</p>
 			</div>
-			@card.ResumeCard(resumes)
+			@card.BaseResumeCard(resumes)
 			<div class="card">
 				<div class="card-header">
 					<h3>Recent Activity</h3>

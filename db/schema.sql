@@ -24,17 +24,15 @@ CREATE TABLE IF NOT EXISTS users (
   PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS bases  (
-  id INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS base_resumes  (
+  id INTEGER PRIMARY KEY,
   user_id INTEGER NOT NULL,
   name TEXT NOT NULL,
-  bucket TEXT NOT NULL,
-  bucket_prefix TEXT NOT NULL,
+  resume TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  last_used DATATIME,
+  last_used DATETIME,
   deleted_at DATETIME,
-  PRIMARY KEY (id, user_id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
