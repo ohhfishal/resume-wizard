@@ -24,7 +24,7 @@ func (form *PostCompileForm) Parse(r *http.Request) error {
 	return nil
 }
 
-func PostCompileHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PostCompileHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request PostCompileForm
 		if err := request.Parse(r); err != nil {

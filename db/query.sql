@@ -51,3 +51,45 @@ WHERE user_id = ? AND id = ?;
 SELECT * from base_resumes
 WHERE user_id = ?
 ORDER BY created_at; -- Last used??
+
+-- name: CreateSession :one
+-- Create a session of a user working on an application
+INSERT INTO sessions (
+  uuid,
+  base_resume_id,
+  user_id,
+  company,
+  position,
+  description,
+  resume
+) VALUES (?, ?, ?, ?, ?, ?, ?)
+RETURNING *;
+
+-- name: GetSession :one
+-- Get a session (user space)
+SELECT * FROM sessions
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL;
+
+-- name: SoftDeleteSession :exec
+UPDATE sessions 
+SET deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL;
+
+-- name: CreateApplication :one
+INSERT INTO applications_v2 (
+    user_id,
+    base_resume_id,
+    company,
+    position,
+    description,
+    resume,
+    status
+) VALUES (
+    ?, ?, ?, ?, ?, ?, 'pending'
+) RETURNING *;
+
+-- name: GetApplicationsV2 :many
+SELECT * from applications_v2
+WHERE user_id = ? AND deleted_at IS NULL;
+

@@ -28,7 +28,7 @@ func FormFileResume(r *http.Request, key string) (*resume.Resume, error) {
 	return newResume, nil
 }
 
-func GetBaseResumeForm(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func GetBaseResumeForm(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var baseResume *resume.Resume
 		if r.Method == http.MethodPost {
@@ -46,7 +46,7 @@ func GetBaseResumeForm(logger *slog.Logger, database *db.Queries) http.HandlerFu
 	}
 }
 
-func PostBaseResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PostBaseResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("name")
 		if title == "" {

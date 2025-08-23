@@ -1,13 +1,8 @@
 package page
 
-import (
-	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates/card"
-)
+import "github.com/ohhfishal/resume-wizard/templates/card"
 
-type TailorResumeProps struct {
-	Base db.BaseResume
-}
+type TailorResumeProps card.TailorResumeCardProps
 
 templ TailorResume(prop TailorResumeProps) {
 	@Page(PageProps{
@@ -24,7 +19,7 @@ templ TailorResumeBody(prop TailorResumeProps) {
 	<body>
 		@Header()
 		<div class="container">
-			@card.TailorResumeCard(prop.Base)
+			@card.TailorResumeCard((card.TailorResumeCardProps)(prop))
 		</div>
 	</body>
 }

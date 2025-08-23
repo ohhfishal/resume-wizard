@@ -15,7 +15,7 @@ func componentError(w http.ResponseWriter, err error, status int) {
 	http.Error(w, err.Error(), status)
 }
 
-func ComponentsHandler(logger *slog.Logger, database *db.Queries) func(chi.Router) {
+func ComponentsHandler(logger *slog.Logger, database *db.DB) func(chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/applicationsTable", func(w http.ResponseWriter, r *http.Request) {
 			resumes, err := database.GetResumes(r.Context())

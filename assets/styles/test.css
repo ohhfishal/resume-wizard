@@ -390,7 +390,7 @@ a {
     background: #2ea043;
 }
 
-#file-input {
+#file-input, .hidden {
   display: none;
 }
 

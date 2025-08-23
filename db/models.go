@@ -12,12 +12,27 @@ import (
 )
 
 type Application struct {
-	ResumeID  int64     `json:"resume_id"`
-	Company   string    `json:"company"`
-	Position  string    `json:"position"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Status    string    `json:"status"`
+	ResumeID    int64     `json:"resume_id"`
+	Company     string    `json:"company"`
+	Position    string    `json:"position"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Status      string    `json:"status"`
+}
+
+type ApplicationsV2 struct {
+	ID           int64          `json:"id"`
+	UserID       int64          `json:"user_id"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+	Status       string         `json:"status"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    sql.NullTime   `json:"deleted_at"`
 }
 
 type BaseResume struct {
@@ -35,6 +50,19 @@ type Resume struct {
 	ID   int64          `json:"id"`
 	Name string         `json:"name"`
 	Body *resume.Resume `json:"body"`
+}
+
+type Session struct {
+	Uuid         string         `json:"uuid"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	UserID       int64          `json:"user_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    sql.NullTime   `json:"deleted_at"`
 }
 
 type User struct {

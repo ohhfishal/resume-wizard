@@ -21,3 +21,13 @@ sql:
               type: "Resume"
               import: "github.com/ohhfishal/resume-wizard/resume"
               pointer: true
+          - column: "sessions.resume"
+            go_type:
+              type: "Resume"
+              import: "github.com/ohhfishal/resume-wizard/resume"
+              pointer: true
+          - column: "applications_v2.resume"
+            go_type:
+              type: "Resume"
+              import: "github.com/ohhfishal/resume-wizard/resume"
+              pointer: true

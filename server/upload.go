@@ -53,7 +53,7 @@ func Parse(r *http.Request) (*PostApplicationInput, error) {
 	}, nil
 }
 
-func PutApplicationHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PutApplicationHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		inputs, err := Parse(r)
 		if err != nil {
@@ -79,7 +79,7 @@ func PutApplicationHandler(logger *slog.Logger, database *db.Queries) http.Handl
 	}
 }
 
-func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PostApplicationHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		inputs, err := Parse(r)
 		if err != nil {
@@ -110,7 +110,7 @@ func PostApplicationHandler(logger *slog.Logger, database *db.Queries) http.Hand
 	}
 }
 
-func PutResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PutResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		intID, err := strconv.ParseInt(id, 10, 64)
@@ -145,7 +145,7 @@ func PutResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFun
 	}
 }
 
-func PostResumeHandler(logger *slog.Logger, database *db.Queries) http.HandlerFunc {
+func PostResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Handle this smarter. Don't allow repeats
 		name := r.FormValue(templates.NameKey)

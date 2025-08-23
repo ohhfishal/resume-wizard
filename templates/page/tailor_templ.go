@@ -8,14 +8,9 @@ package page
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates/card"
-)
+import "github.com/ohhfishal/resume-wizard/templates/card"
 
-type TailorResumeProps struct {
-	Base db.BaseResume
-}
+type TailorResumeProps card.TailorResumeCardProps
 
 func TailorResume(prop TailorResumeProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -86,7 +81,7 @@ func TailorResumeBody(prop TailorResumeProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = card.TailorResumeCard(prop.Base).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = card.TailorResumeCard((card.TailorResumeCardProps)(prop)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS applications (
   resume_id INTEGER NOT NULL,
   company TEXT NOT NULL,
   position TEXT NOT NULL,
+  description TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   status TEXT CHECK( status IN ('pending', 'interviewed', 'rejected', 'accepted') ) DEFAULT 'pending' NOT NULL,
@@ -16,6 +17,8 @@ CREATE TABLE IF NOT EXISTS applications (
   PRIMARY KEY (company, position),
   FOREIGN KEY(resume_id) REFERENCES resumes(id)
 );
+
+-- V2 stuff
 
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER NOT NULL,
@@ -33,6 +36,44 @@ CREATE TABLE IF NOT EXISTS base_resumes  (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   last_used DATETIME,
   deleted_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  uuid TEXT PRIMARY KEY,
+  base_resume_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+
+  company TEXT NOT NULL,
+  position TEXT NOT NULL,
+  description TEXT NOT NULL,
+  resume TEXT NOT NULL,
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  deleted_at DATETIME,
+
+  FOREIGN KEY (base_resume_id) REFERENCES base_resumes(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS applications_v2 (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  base_resume_id INTEGER NOT NULL,
+
+  company TEXT NOT NULL,
+  position TEXT NOT NULL,
+  description TEXT NOT NULL,
+  resume TEXT NOT NULL,
+
+  status TEXT CHECK( status IN ('pending', 'interviewed', 'rejected', 'accepted') ) DEFAULT 'pending' NOT NULL,
+
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  deleted_at DATETIME,
+
+  FOREIGN KEY (base_resume_id) REFERENCES base_resumes(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

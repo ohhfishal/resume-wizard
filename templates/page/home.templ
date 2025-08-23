@@ -3,11 +3,12 @@ package page
 import (
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates/card"
+	"time"
 )
 
 type HomeProps struct {
 	Resumes      []db.BaseResume
-	Applications []db.Application
+	Applications []db.ApplicationsV2
 	// TODO: Feature flags / User info goes here
 }
 
@@ -22,7 +23,7 @@ templ Home(props HomeProps) {
 	})
 }
 
-templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
+templ HomeBody(resumes []db.BaseResume, applications []db.ApplicationsV2) {
 	<body>
 		@Header()
 		<div class="container">
@@ -31,11 +32,31 @@ templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
 				<p>Put a search bar or something here.</p>
 			</div>
 			@card.BaseResumeCard(resumes)
+			// TODO: Clean this up?
+			if len(applications) > 0 {
+				@card.Card() {
+					<div class="card-header">
+						<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
+						<div class="card-meta">
+							<span class="count-badge">{ len(applications) } applications</span>
+						</div>
+					</div>
+					for _, app := range applications {
+						<div class="activity-item">
+							<div>
+								<h4>{ app.Company + " - " + app.Position }</h4>
+								<p>Tailored from TODO GET THIS</p>
+							</div>
+							<div style="color: #8b949e; font-size: 0.9rem;">{ app.CreatedAt.Format(time.DateOnly) }</div>
+						</div>
+					}
+				}
+			}
 			<div class="card">
 				<div class="card-header">
 					<h3>Recent Activity</h3>
 					<div class="card-meta">
-						<span class="count-badge">12 tailored • 8 applications</span>
+						<span class="count-badge">{ len(applications) } applications</span>
 					</div>
 				</div>
 				<div class="activity-item">
@@ -62,12 +83,4 @@ templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
 			</div>
 		</div>
 	</body>
-}
-
-templ DefaultStyle() {
-	<link rel="stylesheet" href="assets/styles/test.css"/>
-}
-
-templ HTMX() {
-	<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
 }

@@ -5,8 +5,24 @@ import (
 	"github.com/ohhfishal/resume-wizard/templates/components"
 )
 
-templ TailorResumeCard(base db.BaseResume) {
-	@Card(CardProps{}) {
+type TailorResumeCardProps struct {
+	Base            db.BaseResume
+	Session         db.Session
+	LockApplication bool
+}
+
+templ TailorResumeCard(props ...TailorResumeCardProps) {
+	{{
+	var prop TailorResumeCardProps
+	if len(props) != 0 {
+		prop = props[0]
+	}
+	base := prop.Base
+	locked := prop.LockApplication
+	}}
+	@Card(CardProps{
+		ID: "tailor-card",
+	}) {
 		<div class="card-header">
 			<h3>Apply using: { base.Name }</h3>
 		</div>
@@ -14,10 +30,16 @@ templ TailorResumeCard(base db.BaseResume) {
 			// TODO: Have this return a HX-Redirect to /tailor/{session}
 			// That way we can store it and let the user continue later!
 			<form
-				hx-post="/api/dev/generate"
+				if locked {
+					hx-post={ "/api/dev/application/" + prop.Session.Uuid }
+				} else {
+					hx-post="/api/dev/generate"
+				}
 				hx-encoding="multipart/form-data"
-				hx-swap="none"
+				hx-swap="innerHTML"
+				hx-target="#tailor-card"
 			>
+				<input name="base_resume_id" value={ base.ID } class="hidden" type="text"/>
 				<div class="form-row">
 					<div class="form-group">
 						<label for="company_name">Company: </label>
@@ -25,6 +47,9 @@ templ TailorResumeCard(base db.BaseResume) {
 							name="company_name"
 							id="company_name"
 							type="text"
+							required
+							disabled?={ locked }
+							value={ prop.Session.Company }
 						/>
 					</div>
 					<div class="form-group">
@@ -33,20 +58,40 @@ templ TailorResumeCard(base db.BaseResume) {
 							name="title"
 							id="title"
 							type="text"
+							required
+							disabled?={ locked }
+							value={ prop.Session.Position }
 						/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="description">Job Description</label>
-					<textarea id="description" rows="3" placeholder="Paste the job description here."></textarea>
+					<textarea
+						id="description"
+						name="description"
+						rows="3"
+						required
+						placeholder="Paste the job description here."
+						disabled?={ locked }
+					>
+						{ prop.Session.Description }
+					</textarea>
 					<small>TODO: Maximum XXX characters.</small>
 				</div>
-				<div class="form-group">
-					<label for="resumeEditor">Resume</label>
-					@components.ResumeEditor(base.Resume)
-				</div>
+				if locked {
+					<div class="form-group">
+						<label for="resumeEditor">Tailored Resume</label>
+						@components.ResumeEditor(prop.Session.Resume)
+					</div>
+				}
 				<div class="btn-container">
-					<button class="btn-primary">Generate</button>
+					<button class="btn-primary">
+						if locked {
+							Submit
+						} else {
+							Generate
+						}
+					</button>
 				</div>
 			</form>
 		</div>

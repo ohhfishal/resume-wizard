@@ -18,6 +18,7 @@ import (
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates"
 	"github.com/ohhfishal/resume-wizard/templates/page"
+	"github.com/ohhfishal/resume-wizard/wizard"
 )
 
 type Config struct {
@@ -28,8 +29,9 @@ type Config struct {
 
 type Server struct {
 	logger   *slog.Logger
-	database *db.Queries
+	database *db.DB
 	config   Config
+	wizard   *wizard.Wizard
 }
 
 func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
@@ -55,9 +57,13 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
 
+	r.Post("/api/dev/application/{session_id}", PostApplicationHandlerNew(server.logger, server.database))
+
 	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
 	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
 	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
+
+	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
 
 	// TODO: Remove old endpoints
 	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
@@ -103,6 +109,29 @@ func (server *Server) Run(ctx context.Context) error {
 			Base: base,
 		}).Render(r.Context(), w)
 	})
+	r.Get("/tailor/{uuid}", func(w http.ResponseWriter, r *http.Request) {
+		session, err := server.database.GetSession(r.Context(), db.GetSessionParams{
+			UserID: 0, /* TODO: Set to userID */
+			Uuid:   r.PathValue("uuid"),
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("restoring session: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     session.BaseResumeID,
+		})
+
+		page.TailorResume(page.TailorResumeProps{
+			Base:            base,
+			Session:         session,
+			LockApplication: true,
+		}).Render(r.Context(), w)
+	})
 	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
 		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
@@ -113,13 +142,16 @@ func (server *Server) Run(ctx context.Context) error {
 			return
 		}
 
-		applications, err := server.database.GetApplications(r.Context())
+		applications, err := server.database.GetApplicationsV2(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading database for applications: %s", err.Error()),
 				http.StatusInternalServerError,
 			)
 			return
+		}
+		if len(applications) == 0 {
+			server.logger.Warn("NO APPLICATIONS")
 		}
 
 		page.Home(page.HomeProps{
