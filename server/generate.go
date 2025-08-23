@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates/page"
 	"github.com/ohhfishal/resume-wizard/wizard"
 	"log/slog"
 	"net/http"
@@ -42,7 +41,12 @@ func GenerateHandler(logger *slog.Logger, database *db.DB, model *wizard.Wizard)
 			return
 		}
 
-		annotated, err := model.Annotate(base)
+		annotated, err := model.Annotate(r.Context(), wizard.AnnotationContext{
+			Base:        base,
+			Company:     form.Company,
+			Position:    form.Title,
+			Description: form.Description,
+		})
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("annotating resume: %s", err.Error()),
@@ -70,13 +74,6 @@ func GenerateHandler(logger *slog.Logger, database *db.DB, model *wizard.Wizard)
 
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/tailor/%s", session.Uuid))
 		w.WriteHeader(http.StatusOK)
-		return
-
-		page.TailorResume(page.TailorResumeProps{
-			Base:            base,
-			Session:         session,
-			LockApplication: true,
-		}).Render(r.Context(), w)
 	}
 }
 

@@ -26,7 +26,7 @@ type ApplyCmd struct {
 	Position   string   `arg:"" required:"" help:"Position applied to."`
 	ResumeName string   `short:"n" help:"Name of resume (Defaults to position)"`
 	// TODO: Improve defaults
-	DatabaseSource string `short:"s" default:":memory:" help:"Database connection string (sqlite)."`
+	Database db.Config `embed:"" prefix:"database-" envprefix:"DATABASE_"`
 }
 
 func (cmd *ApplyCmd) Run(ctx context.Context, logger *slog.Logger) error {
@@ -37,7 +37,7 @@ func (cmd *ApplyCmd) Run(ctx context.Context, logger *slog.Logger) error {
 		return fmt.Errorf("getting resume from input: %w", err)
 	}
 
-	database, err := db.Open(ctx, "sqlite3", cmd.DatabaseSource)
+	database, err := cmd.Database.Open(ctx)
 	if err != nil {
 		return fmt.Errorf("connecting to database: %w", err)
 	}

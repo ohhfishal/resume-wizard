@@ -22,9 +22,10 @@ import (
 )
 
 type Config struct {
-	DatabaseSource string `short:"s" default:":memory:" env:"DATABASE_SOURCE" help:"Database connection string (sqlite)."`
-	Port           string `default:"8080" help:"Port to serve on"`
-	Host           string `default:"localhost" help:"Address to serve from"`
+	Port     string        `default:"8080" short:"P" help:"Port to serve on"`
+	Host     string        `default:"localhost" short:"H" help:"Address to serve from"`
+	Database db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
+	Wizard   wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
 }
 
 type Server struct {
@@ -35,19 +36,30 @@ type Server struct {
 }
 
 func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
-	if config.DatabaseSource == ":memory:" {
+	if logger == nil {
+		logger = slog.New(slog.DiscardHandler)
+	}
+
+	if config.Database.Source == ":memory:" {
 		logger.Warn("using in-memory database")
 	}
 
-	database, err := db.Open(ctx, "sqlite3", config.DatabaseSource)
+	database, err := config.Database.Open(context.WithValue(ctx, "logger", logger))
 	if err != nil {
 		return nil, fmt.Errorf("connecting to database: %w", err)
 	}
+
+	var model = config.Wizard
+	if err := model.Init(logger); err != nil {
+		return nil, fmt.Errorf("connecting to llm provider: %w", err)
+	}
+	logger.Info("wizard made", "wizard", model.URL)
 
 	return &Server{
 		database: database,
 		logger:   logger,
 		config:   config,
+		wizard:   &model,
 	}, nil
 }
 

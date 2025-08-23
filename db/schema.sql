@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS applications_v2 (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- TODO: Hard coding examples
 INSERT INTO users(id, name) VALUES (0, 'admin') ON CONFLICT DO NOTHING;
 
-INSERT INTO base_resumes (user_id, name, resume) VALUES (0, 'Example Resume', '{}') ON CONFLICT DO NOTHING;
+-- TODO: Hard coding examples (Have this be the first thing users see??
+-- INSERT INTO base_resumes (user_id, name, resume) VALUES (0, 'Example Resume', '{}') ON CONFLICT DO NOTHING;
 
