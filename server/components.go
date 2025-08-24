@@ -5,6 +5,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates"
+	"github.com/ohhfishal/resume-wizard/templates/card"
+	"github.com/ohhfishal/resume-wizard/templates/components"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -36,6 +38,17 @@ func ComponentsHandler(logger *slog.Logger, database *db.DB) func(chi.Router) {
 				return
 			}
 			templates.ApplicationsTable(resumes, applications).Render(r.Context(), w)
+		})
+		r.Get("/baseResumeList", func(w http.ResponseWriter, r *http.Request) {
+			resumes, err := database.GetBaseResumes(r.Context(), 0 /* TODO: SET userID */)
+			if err != nil {
+				componentError(w,
+					fmt.Errorf("reading database for base resumes: %s", err),
+					http.StatusInternalServerError,
+				)
+				return
+			}
+			card.BaseResumeList(resumes).Render(r.Context(), w)
 		})
 		r.Get("/resumeDropdown", func(w http.ResponseWriter, r *http.Request) {
 			resumes, err := database.GetResumes(r.Context())
@@ -73,6 +86,30 @@ func ComponentsHandler(logger *slog.Logger, database *db.DB) func(chi.Router) {
 				return
 			}
 			templates.ResumeEditor(resume).Render(r.Context(), w)
+		})
+		r.Get("/tailoredResumeSection/{uuid}", func(w http.ResponseWriter, r *http.Request) {
+			session, err := database.GetSession(r.Context(), db.GetSessionParams{
+				Uuid:   r.PathValue("uuid"),
+				UserID: 0, /* TODO: SET userID */
+			})
+			if err != nil {
+				componentError(w,
+					fmt.Errorf("reading database for base resumes: %s", err),
+					http.StatusInternalServerError,
+				)
+				return
+			} else if session.Resume == nil {
+				// TODO: Set from the config
+				w.Header().Set("Retry-After", "1")
+				componentError(w,
+					fmt.Errorf("reading database for base resumes: %s", err),
+					http.StatusServiceUnavailable,
+				)
+				return
+			}
+			components.TailoredResumeSection(components.TailoredResumeSectionProps{
+				Session: session,
+			}).Render(r.Context(), w)
 		})
 	}
 }

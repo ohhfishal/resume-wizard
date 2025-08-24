@@ -633,3 +633,11 @@ input[type="range"]::-moz-range-thumb {
     justify-content: flex-end;
     margin-top: 1rem;
 }
+
+/* htmx loading */
+.htmx-settling img {
+  opacity: 0;
+}
+img {
+ transition: opacity 300ms ease-in;
+}

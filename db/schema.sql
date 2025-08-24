@@ -44,16 +44,19 @@ CREATE TABLE IF NOT EXISTS sessions (
   base_resume_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
 
+  -- Input
   company TEXT NOT NULL,
   position TEXT NOT NULL,
   description TEXT NOT NULL,
-  resume TEXT NOT NULL,
+
+  -- Output
+  resume TEXT,
 
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   deleted_at DATETIME,
 
-  FOREIGN KEY (base_resume_id) REFERENCES base_resumes(id),
+  FOREIGN KEY (base_resume_id, user_id) REFERENCES base_resumes(id, user_id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

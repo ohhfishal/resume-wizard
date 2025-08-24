@@ -11,6 +11,24 @@ import (
 	"github.com/ohhfishal/resume-wizard/resume"
 )
 
+const addResumeToSession = `-- name: AddResumeToSession :exec
+UPDATE sessions 
+SET resume = ?,
+    updated_at = CURRENT_TIMESTAMP
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL
+`
+
+type AddResumeToSessionParams struct {
+	Resume *resume.Resume `json:"resume"`
+	Uuid   string         `json:"uuid"`
+	UserID int64          `json:"user_id"`
+}
+
+func (q *Queries) AddResumeToSession(ctx context.Context, arg AddResumeToSessionParams) error {
+	_, err := q.db.ExecContext(ctx, addResumeToSession, arg.Resume, arg.Uuid, arg.UserID)
+	return err
+}
+
 const createApplication = `-- name: CreateApplication :one
 INSERT INTO applications_v2 (
     user_id,
@@ -69,7 +87,7 @@ INSERT INTO sessions (
   company,
   position,
   description,
-  resume
+  resume -- TODO: Think this can be removed
 ) VALUES (?, ?, ?, ?, ?, ?, ?)
 RETURNING uuid, base_resume_id, user_id, company, position, description, resume, created_at, updated_at, deleted_at
 `

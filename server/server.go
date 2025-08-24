@@ -22,10 +22,11 @@ import (
 )
 
 type Config struct {
-	Port     string        `default:"8080" short:"P" help:"Port to serve on"`
-	Host     string        `default:"localhost" short:"H" help:"Address to serve from"`
-	Database db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
-	Wizard   wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
+	Port           string        `default:"8080" short:"P" help:"Port to serve on"`
+	Host           string        `default:"localhost" short:"H" help:"Address to serve from"`
+	RequestTimeout time.Duration `default:"30s" help:"How long to keep requests alive"`
+	Database       db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
+	Wizard         wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
 }
 
 type Server struct {
@@ -53,7 +54,6 @@ func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, erro
 	if err := model.Init(logger); err != nil {
 		return nil, fmt.Errorf("connecting to llm provider: %w", err)
 	}
-	logger.Info("wizard made", "wizard", model.URL)
 
 	return &Server{
 		database: database,
@@ -68,6 +68,7 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(server.config.RequestTimeout))
 
 	r.Post("/api/dev/application/{session_id}", PostApplicationHandlerNew(server.logger, server.database))
 

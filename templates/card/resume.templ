@@ -40,7 +40,11 @@ templ BaseResumeCard(resumes []db.BaseResume) {
 
 templ BaseResumeList(resumes []db.BaseResume) {
 	// TODO: Update on deletes or adds or edits
-	<div class="resume-list">
+	<div
+		class="resume-list"
+		hx-get="/components/baseResumeList"
+		hx-swap="outerHTML"
+	>
 		for _, resume := range resumes {
 			@ResumeItem(resume)
 		}

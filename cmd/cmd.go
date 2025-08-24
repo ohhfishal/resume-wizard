@@ -10,13 +10,16 @@ import (
 )
 
 type RootCmd struct {
+	// Root options
 	Config kong.ConfigFlag `short:"c" help:"Path to config file to load." type:"path"`
-	LoggerConfig struct {
-		Level string `enum="disabled,error,warn,info,debug" placeholder:"info" default="info" help:"Log level to use. ('disabled','error','warn','info','debug')"`
+	Logger struct {
+		Level string `default:"info" enum:"disabled,error,warn,info,debug" placeholder:"info" help:"Log level to use. ('disabled','error','warn','info','debug')"`
 	} `embed:"" prefix:"logger-"`
-	Build  BuildCmd        `cmd:"" help:"Compile a resume from a input file."`
-	Serve  ServeCmd        `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
-	Log    LogCmd          `cmd:"" help:"Log usuage of resumes."`
+
+	// Commands
+	Build BuildCmd `cmd:"" help:"Compile a resume from a input file."`
+	Serve ServeCmd `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
+	Log   LogCmd   `cmd:"" help:"Log usuage of resumes."`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {
@@ -54,7 +57,7 @@ func Run(ctx context.Context, stdout io.Writer, args []string) error {
 
 func (cmd RootCmd) NewLogger(stdout io.Writer) *slog.Logger {
 	var level slog.Level
-	switch cmd.LoggerConfig.Level {
+	switch cmd.Logger.Level {
 	case "disabled":
 		return slog.New(slog.DiscardHandler)
 	case "error":
@@ -68,7 +71,7 @@ func (cmd RootCmd) NewLogger(stdout io.Writer) *slog.Logger {
 	default:
 		level = slog.LevelInfo
 	}
-	return  slog.New(slog.NewJSONHandler(stdout, &slog.HandlerOptions{
+	return slog.New(slog.NewJSONHandler(stdout, &slog.HandlerOptions{
 		Level: level,
 	}))
 }

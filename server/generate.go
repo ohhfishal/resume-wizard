@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
@@ -9,6 +10,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type GenerateForm struct {
@@ -29,31 +31,6 @@ func GenerateHandler(logger *slog.Logger, database *db.DB, model *wizard.Wizard)
 			)
 			return
 		}
-		base, err := database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     form.BaseResumeID,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-
-		annotated, err := model.Annotate(r.Context(), wizard.AnnotationContext{
-			Base:        base,
-			Company:     form.Company,
-			Position:    form.Title,
-			Description: form.Description,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("annotating resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
 
 		session, err := database.CreateSession(r.Context(), db.CreateSessionParams{
 			Uuid:         form.UUID,
@@ -62,7 +39,7 @@ func GenerateHandler(logger *slog.Logger, database *db.DB, model *wizard.Wizard)
 			Company:      form.Company,
 			Position:     form.Title,
 			Description:  form.Description,
-			Resume:       annotated,
+			Resume:       nil,
 		})
 		if err != nil {
 			http.Error(w,
@@ -71,6 +48,43 @@ func GenerateHandler(logger *slog.Logger, database *db.DB, model *wizard.Wizard)
 			)
 			return
 		}
+
+		go func(ctx context.Context, logger *slog.Logger, session db.Session) {
+			// TODO: Have this be configurable
+			ctx, cancel := context.WithTimeout(ctx, time.Minute)
+			defer cancel()
+
+			base, err := database.GetBaseResume(ctx, db.GetBaseResumeParams{
+				UserID: session.UserID,
+				ID:     session.BaseResumeID,
+			})
+			if err != nil {
+				logger.Error("failed to read base resume", slog.Any("error", err))
+				return
+			}
+			annotated, err := model.Annotate(ctx, wizard.AnnotationContext{
+				Base:        base,
+				Company:     form.Company,
+				Position:    form.Title,
+				Description: form.Description,
+			})
+			if err != nil {
+				logger.Error("failed to annotate resume", slog.Any("error", err))
+				return
+			}
+			if err := database.AddResumeToSession(ctx, db.AddResumeToSessionParams{
+				Resume: annotated,
+				UserID: session.UserID,
+				Uuid:   session.Uuid,
+			}); err != nil {
+				logger.Error("failed to update session", slog.Any("error", err))
+				return
+			}
+			// TODO: Mark the session as done
+			logger.Debug("tailored resume successfully",
+				slog.String("uuid", session.Uuid),
+			)
+		}(context.Background(), logger, session)
 
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/tailor/%s", session.Uuid))
 		w.WriteHeader(http.StatusOK)

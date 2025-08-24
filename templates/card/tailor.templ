@@ -79,10 +79,9 @@ templ TailorResumeCard(props ...TailorResumeCardProps) {
 					<small>TODO: Maximum XXX characters.</small>
 				</div>
 				if locked {
-					<div class="form-group">
-						<label for="resumeEditor">Tailored Resume</label>
-						@components.ResumeEditor(prop.Session.Resume)
-					</div>
+					@components.TailoredResumeSection(components.TailoredResumeSectionProps{
+						Session: prop.Session,
+					})
 				}
 				<div class="btn-container">
 					<button class="btn-primary">

@@ -1,0 +1,26 @@
+package components
+
+import "github.com/ohhfishal/resume-wizard/db"
+
+type TailoredResumeSectionProps struct {
+	Session db.Session
+}
+
+templ TailoredResumeSection(prop TailoredResumeSectionProps) {
+	if tailoredResume := prop.Session.Resume; tailoredResume != nil {
+		<div class="form-group">
+			<label for="resumeEditor">Tailored Resume</label>
+			@ResumeEditor(tailoredResume)
+		</div>
+	} else {
+		<div
+			class="tailor-resume-loading"
+			hx-get={ "/components/tailoredResumeSection/" + prop.Session.Uuid }
+			hx-trigger="load, every 1s"
+			hx-swap="outerHTML"
+			hx-target="this"
+		>
+			<img alt="Result loading..." width="150" src="/assets/img/bars.svg"/>
+		</div>
+	}
+}

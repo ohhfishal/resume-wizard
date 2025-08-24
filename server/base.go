@@ -76,6 +76,6 @@ func PostBaseResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFun
 
 		w.Header().Set("Content-Type", "text/html")
 		w.Header().Set("HX-Redirect", "/home")
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusSeeOther)
 	}
 }

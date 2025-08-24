@@ -106,6 +106,13 @@ func (resume Resume) YAML() (string, error) {
 	}
 	return writer.String(), nil
 }
+func (resume Resume) JSON() (string, error) {
+	var writer strings.Builder
+	if err := resume.ToJSON(&writer); err != nil {
+		return "", err
+	}
+	return writer.String(), nil
+}
 
 func (resume Resume) ToYAML(w io.Writer) error {
 	encoder := yaml.NewEncoder(

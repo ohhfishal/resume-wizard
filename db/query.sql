@@ -61,13 +61,19 @@ INSERT INTO sessions (
   company,
   position,
   description,
-  resume
+  resume -- TODO: Think this can be removed
 ) VALUES (?, ?, ?, ?, ?, ?, ?)
 RETURNING *;
 
 -- name: GetSession :one
 -- Get a session (user space)
 SELECT * FROM sessions
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL;
+
+-- name: AddResumeToSession :exec
+UPDATE sessions 
+SET resume = ?,
+    updated_at = CURRENT_TIMESTAMP
 WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL;
 
 -- name: SoftDeleteSession :exec
