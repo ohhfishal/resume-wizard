@@ -1,0 +1,68 @@
+package card
+
+import (
+	"fmt"
+	"github.com/ohhfishal/resume-wizard/db"
+	"time"
+)
+
+templ ApplicationsCard(applications []db.ApplicationsV2) {
+	@Card() {
+		<div class="card-header">
+			<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
+			<div class="card-meta">
+				<span class="count-badge">{ len(applications) } applications</span>
+			</div>
+		</div>
+		for _, app := range applications {
+			@ApplicationsRow(app)
+		}
+	}
+}
+
+templ ApplicationsRow(app db.ApplicationsV2) {
+	{{
+	created := app.CreatedAt.Format(time.DateOnly)
+	updated := app.UpdatedAt.Format(time.DateOnly)
+	id := fmt.Sprintf("row-%d", app.ID)
+	}}
+	<details id={ id } class="card-row">
+		<summary>
+			<div>
+				<h4>{ app.Company + " - " + app.Position }</h4>
+				<p>{ created } </p>
+			</div>
+			<div>
+				<p class={ "status " + app.Status }>{ app.Status }</p>
+			</div>
+		</summary>
+		<div>
+			<div class="details-row">
+				<span class="application-label">Applied:</span>
+				<span>{ created }</span>
+			</div>
+			<div class="details-row">
+				<span class="application-label">Last Updated:</span>
+				<span>{ updated }</span>
+			</div>
+			<form
+				hx-put={ fmt.Sprintf("/api/dev/%d/application/%d", app.UserID, app.ID) }
+				hx-swap="outerHTML"
+				hx-trigger="change"
+				hx-target={ "#" + id }
+			>
+				<div class="details-row">
+					<label for="status" class="application-label">Status:</label>
+					<span>
+						<select class="application-value status" selected={ app.Status } name="status">
+							<option value="pending">Pending</option>
+							<option value="interviewed">Interviewed</option>
+							<option value="rejected">Rejected</option>
+							<option value="accepted">Accepted</option>
+						</select>
+					</span>
+				</div>
+			</form>
+		</div>
+	</details>
+}

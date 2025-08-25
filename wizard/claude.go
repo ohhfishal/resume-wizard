@@ -12,7 +12,8 @@ import (
 	"text/template"
 )
 
-var DefaultModel = anthropic.ModelClaude3_5Haiku20241022
+// var DefaultModel = anthropic.ModelClaude3_5Haiku20241022
+var DefaultModel = anthropic.ModelClaudeOpus4_1_20250805
 
 type TailorPromptArgs struct {
 	JobDescription string
@@ -42,8 +43,12 @@ func (wizard *Wizard) annotateClaude(ctx context.Context, args AnnotationContext
 		slog.String("content", fmt.Sprintf("%s", message.Content[0].Text)),
 	)
 
+	input := strings.TrimPrefix(message.Content[0].Text, "```json")
+	input = strings.TrimPrefix(input, "```")
+	input = strings.TrimSpace(input)
+
 	var response promptResponse
-	if err = json.NewDecoder(strings.NewReader(message.Content[0].Text)).Decode(&response); err != nil {
+	if err = json.NewDecoder(strings.NewReader(input)).Decode(&response); err != nil {
 		return nil, fmt.Errorf("model return invalid data: %w", err)
 	}
 
@@ -104,30 +109,8 @@ Now, examine the provided JSON resume:
 {{.ResumeJSON}}
 </json_resume>
 
-To tailor the resume effectively, follow these steps:
+You may reword, add or remove bullet points as you see fit, but differ to the YAML and responses to questions you ask as the sources of truth.
 
-1. Analyze the job description to identify:
-   - Key skills and qualifications required
-   - Main responsibilities of the position
-   - Industry-specific keywords or phrases
-   - Any preferred experiences or certifications mentioned
-
-2. Review the JSON resume and determine which elements are most relevant to the job description. Consider:
-   - Work experiences that demonstrate required skills or responsibilities
-   - Educational background that aligns with the job requirements
-   - Skills that match those mentioned in the job description
-   - Projects or achievements that showcase relevant abilities
-
-3. Modify the JSON resume by:
-   - Reordering work experiences to prioritize the most relevant ones
-   - Adjusting skill descriptions to use keywords from the job description
-   - Highlighting educational qualifications that align with the job requirements
-   - Emphasizing achievements that demonstrate required competencies
-   - Removing or de-emphasizing information that is less relevant to this specific job
-
-4. Ensure that the modified resume maintains the original JSON structure and includes all necessary fields. You may omit fields that are empty.
-
-5. If the original resume lacks important elements mentioned in the job description, you may add placeholder sections or skills to the JSON structure, clearly marking them as "[Suggested Addition]" so the user knows to fill in the details.
 
 Present only valid json.
 

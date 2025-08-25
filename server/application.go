@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
+	"github.com/ohhfishal/resume-wizard/templates/card"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -62,5 +64,36 @@ func PostApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.Handle
 		}
 
 		w.Header().Set("HX-Redirect", "/home")
+	}
+}
+
+func PutApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		user, err := strconv.ParseInt(r.PathValue("user_id"), 10, 64)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("invalid user_id: %s", err.Error()), http.StatusBadRequest)
+			return
+		}
+		// TODO: Validate userID is who is asking
+
+		app, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("invalid application id: %s", err.Error()), http.StatusBadRequest)
+			return
+		}
+
+		status := r.FormValue("status")
+		row, err := database.SetApplicationStatus(r.Context(),
+			db.SetApplicationStatusParams{
+				Status: status,
+				UserID: user,
+				ID:     app,
+			},
+		)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("updating row: %s", err.Error()), http.StatusInternalServerError)
+			return
+		}
+		card.ApplicationsRow(row).Render(r.Context(), w)
 	}
 }

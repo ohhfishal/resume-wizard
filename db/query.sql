@@ -99,3 +99,8 @@ INSERT INTO applications_v2 (
 SELECT * from applications_v2
 WHERE user_id = ? AND deleted_at IS NULL;
 
+-- name: SetApplicationStatus :one
+UPDATE applications_v2 
+SET status = ?
+WHERE user_id = ? AND id = ? AND deleted_at IS NULL
+RETURNING *;

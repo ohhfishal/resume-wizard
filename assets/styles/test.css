@@ -1,3 +1,13 @@
+:root {
+    --status-pending-bg: rgba(251, 188, 4, 0.2);
+    --status-pending-text: #fbbc04;
+    --status-interviewed-bg: rgba(52, 168, 83, 0.2);
+    --status-interviewed-text: #34a853;
+    --status-rejected-bg: rgba(234, 67, 53, 0.2);
+    --status-rejected-text: #ea4335;
+    --status-accepted-bg: rgba(138, 180, 248, 0.2);
+    --status-accepted-text: #8ab4f8;
+
 * {
     margin: 0;
     padding: 0;
@@ -220,7 +230,7 @@ a {
     gap: 1rem;
 }
 
-.resume-item {
+.card-row, .resume-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -230,11 +240,11 @@ a {
     background: #0d1117;
 }
 
-.resume-info h4 {
+.card-row p, .resume-info h4 {
     margin-bottom: 0.25rem;
 }
 
-.resume-info p {
+.card-row p, .resume-info p {
     color: #8b949e;
     font-size: 0.9rem;
 }
@@ -640,4 +650,71 @@ input[type="range"]::-moz-range-thumb {
 }
 img {
  transition: opacity 300ms ease-in;
+}
+
+/* Applications dropdown */
+summary {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+}
+
+details:hover, details:hover * {
+    background-color: #21262d;
+    /* transition: background-color 0.15s ease; */
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    /* font-size: 13px; */
+}
+
+.details-row:last-child {
+    margin-bottom: 0;
+}
+
+.application-label {
+    color: #7d8590;
+    font-weight: 500;
+}
+
+select.status {
+  min-width: 8rem;
+}
+
+.status {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status.pending {
+    background: var(--status-pending-bg);
+    color: var(--status-pending-text);
+}
+
+.status.interviewed {
+    background: var(--status-interviewed-bg);
+    color: var(--status-interviewed-text);
+}
+
+.status.rejected {
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
+}
+
+.status.accepted {
+    background: var(--status-accepted-bg);
+    color: var(--status-accepted-text);
 }

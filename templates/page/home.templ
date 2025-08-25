@@ -3,7 +3,6 @@ package page
 import (
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/templates/card"
-	"time"
 )
 
 type HomeProps struct {
@@ -34,23 +33,7 @@ templ HomeBody(resumes []db.BaseResume, applications []db.ApplicationsV2) {
 			@card.BaseResumeCard(resumes)
 			// TODO: Clean this up?
 			if len(applications) > 0 {
-				@card.Card() {
-					<div class="card-header">
-						<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
-						<div class="card-meta">
-							<span class="count-badge">{ len(applications) } applications</span>
-						</div>
-					</div>
-					for _, app := range applications {
-						<div class="activity-item">
-							<div>
-								<h4>{ app.Company + " - " + app.Position }</h4>
-								<p>Tailored from TODO GET THIS</p>
-							</div>
-							<div style="color: #8b949e; font-size: 0.9rem;">{ app.CreatedAt.Format(time.DateOnly) }</div>
-						</div>
-					}
-				}
+				@card.ApplicationsCard(applications)
 			}
 			<div class="card">
 				<div class="card-header">

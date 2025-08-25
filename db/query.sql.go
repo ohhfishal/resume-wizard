@@ -441,6 +441,38 @@ func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (int
 	return id, err
 }
 
+const setApplicationStatus = `-- name: SetApplicationStatus :one
+UPDATE applications_v2 
+SET status = ?
+WHERE user_id = ? AND id = ? AND deleted_at IS NULL
+RETURNING id, user_id, base_resume_id, company, position, description, resume, status, created_at, updated_at, deleted_at
+`
+
+type SetApplicationStatusParams struct {
+	Status string `json:"status"`
+	UserID int64  `json:"user_id"`
+	ID     int64  `json:"id"`
+}
+
+func (q *Queries) SetApplicationStatus(ctx context.Context, arg SetApplicationStatusParams) (ApplicationsV2, error) {
+	row := q.db.QueryRowContext(ctx, setApplicationStatus, arg.Status, arg.UserID, arg.ID)
+	var i ApplicationsV2
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.BaseResumeID,
+		&i.Company,
+		&i.Position,
+		&i.Description,
+		&i.Resume,
+		&i.Status,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const softDeleteSession = `-- name: SoftDeleteSession :exec
 UPDATE sessions 
 SET deleted_at = CURRENT_TIMESTAMP,

@@ -71,6 +71,7 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(middleware.Timeout(server.config.RequestTimeout))
 
 	r.Post("/api/dev/application/{session_id}", PostApplicationHandlerNew(server.logger, server.database))
+	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandlerNew(server.logger, server.database))
 
 	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
 	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
