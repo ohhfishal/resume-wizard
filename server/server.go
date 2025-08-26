@@ -99,6 +99,35 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
 		page.Login(page.LoginProps{}).Render(r.Context(), w)
 	})
+	r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("invalid base resume id: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     id,
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		// NOTE: Probably not the best
+		if err := base.Resume.ToHTML(w); err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+	})
 	r.Get("/tailor", func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 		if err != nil {

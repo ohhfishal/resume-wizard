@@ -44,6 +44,7 @@ templ BaseResumeList(resumes []db.BaseResume) {
 		class="resume-list"
 		hx-get="/components/baseResumeList"
 		hx-swap="outerHTML"
+		hx-trigger="none"
 	>
 		for _, resume := range resumes {
 			@ResumeItem(resume)
@@ -53,7 +54,6 @@ templ BaseResumeList(resumes []db.BaseResume) {
 
 templ ResumeItem(resume db.BaseResume) {
 	{{
-
 	metadata := []string{
 		"Uploaded " + resume.CreatedAt.Format(time.DateOnly),
 	}
@@ -62,20 +62,26 @@ templ ResumeItem(resume db.BaseResume) {
 			fmt.Sprintf("%s%s", metadata, resume.LastUsed.Time),
 		)
 	}
-
-	info := map[string]any{
-		"id": resume.ID,
-	}
 	}}
 	<div class="resume-item">
 		<div class="resume-info">
 			<h4>{ resume.Name }</h4>
 			<p>{ strings.Join(metadata, " • ") }</p>
 		</div>
-		<div class="resume-actions" hx-boost="true">
-			<a href="/tailor" hx-vals={ templ.JSONString(info) } class="button btn-small">Tailor</a>
-			<a href="/todo" hx-vals={ templ.JSONString(info) } class="button btn-small">View</a>
-			<a href="/edit" hx-vals={ templ.JSONString(info) } class="button btn-small">Edit</a>
+		<div hx-boost="true" class="resume-actions">
+			<a
+				href={ fmt.Sprintf("/tailor?id=%d", resume.ID) }
+				class="button btn-small"
+			>Tailor</a>
+			<a
+				href={ fmt.Sprintf("/view/base?id=%d", resume.ID) }
+				hx-boost="false"
+				class="button btn-small"
+			>View</a>
+			<a
+				href="/edit"
+				class="button btn-small"
+			>Edit</a>
 			<button class="btn-small">Delete</button>
 		</div>
 	</div>
