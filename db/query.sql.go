@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/ohhfishal/resume-wizard/resume"
 )
@@ -40,7 +41,7 @@ INSERT INTO applications_v2 (
     status
 ) VALUES (
     ?, ?, ?, ?, ?, ?, 'pending'
-) RETURNING id, user_id, base_resume_id, company, position, description, resume, status, created_at, updated_at, deleted_at
+) RETURNING id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at
 `
 
 type CreateApplicationParams struct {
@@ -71,6 +72,7 @@ func (q *Queries) CreateApplication(ctx context.Context, arg CreateApplicationPa
 		&i.Description,
 		&i.Resume,
 		&i.Status,
+		&i.AppliedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.DeletedAt,
@@ -167,7 +169,7 @@ func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
 }
 
 const getApplicationsV2 = `-- name: GetApplicationsV2 :many
-SELECT id, user_id, base_resume_id, company, position, description, resume, status, created_at, updated_at, deleted_at from applications_v2
+SELECT id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at from applications_v2
 WHERE user_id = ? AND deleted_at IS NULL
 `
 
@@ -189,6 +191,7 @@ func (q *Queries) GetApplicationsV2(ctx context.Context, userID int64) ([]Applic
 			&i.Description,
 			&i.Resume,
 			&i.Status,
+			&i.AppliedAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
@@ -441,38 +444,6 @@ func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (int
 	return id, err
 }
 
-const setApplicationStatus = `-- name: SetApplicationStatus :one
-UPDATE applications_v2 
-SET status = ?
-WHERE user_id = ? AND id = ? AND deleted_at IS NULL
-RETURNING id, user_id, base_resume_id, company, position, description, resume, status, created_at, updated_at, deleted_at
-`
-
-type SetApplicationStatusParams struct {
-	Status string `json:"status"`
-	UserID int64  `json:"user_id"`
-	ID     int64  `json:"id"`
-}
-
-func (q *Queries) SetApplicationStatus(ctx context.Context, arg SetApplicationStatusParams) (ApplicationsV2, error) {
-	row := q.db.QueryRowContext(ctx, setApplicationStatus, arg.Status, arg.UserID, arg.ID)
-	var i ApplicationsV2
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.BaseResumeID,
-		&i.Company,
-		&i.Position,
-		&i.Description,
-		&i.Resume,
-		&i.Status,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
-}
-
 const softDeleteSession = `-- name: SoftDeleteSession :exec
 UPDATE sessions 
 SET deleted_at = CURRENT_TIMESTAMP,
@@ -490,21 +461,63 @@ func (q *Queries) SoftDeleteSession(ctx context.Context, arg SoftDeleteSessionPa
 	return err
 }
 
-const updateApplication = `-- name: UpdateApplication :exec
+const updateApplication = `-- name: UpdateApplication :one
+UPDATE applications_v2 
+SET 
+    applied_at = ?,
+    status = ?,
+    updated_at = CURRENT_TIMESTAMP
+WHERE user_id = ? AND id = ? AND deleted_at IS NULL
+RETURNING id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at
+`
+
+type UpdateApplicationParams struct {
+	AppliedAt time.Time `json:"applied_at"`
+	Status    string    `json:"status"`
+	UserID    int64     `json:"user_id"`
+	ID        int64     `json:"id"`
+}
+
+func (q *Queries) UpdateApplication(ctx context.Context, arg UpdateApplicationParams) (ApplicationsV2, error) {
+	row := q.db.QueryRowContext(ctx, updateApplication,
+		arg.AppliedAt,
+		arg.Status,
+		arg.UserID,
+		arg.ID,
+	)
+	var i ApplicationsV2
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.BaseResumeID,
+		&i.Company,
+		&i.Position,
+		&i.Description,
+		&i.Resume,
+		&i.Status,
+		&i.AppliedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const updateApplicationOld = `-- name: UpdateApplicationOld :exec
 UPDATE applications
 SET
   status = ?
 WHERE position = ? AND company = ?
 `
 
-type UpdateApplicationParams struct {
+type UpdateApplicationOldParams struct {
 	Status   string `json:"status"`
 	Position string `json:"position"`
 	Company  string `json:"company"`
 }
 
-func (q *Queries) UpdateApplication(ctx context.Context, arg UpdateApplicationParams) error {
-	_, err := q.db.ExecContext(ctx, updateApplication, arg.Status, arg.Position, arg.Company)
+func (q *Queries) UpdateApplicationOld(ctx context.Context, arg UpdateApplicationOldParams) error {
+	_, err := q.db.ExecContext(ctx, updateApplicationOld, arg.Status, arg.Position, arg.Company)
 	return err
 }
 

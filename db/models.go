@@ -30,6 +30,7 @@ type ApplicationsV2 struct {
 	Description  string         `json:"description"`
 	Resume       *resume.Resume `json:"resume"`
 	Status       string         `json:"status"`
+	AppliedAt    time.Time      `json:"applied_at"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 	DeletedAt    sql.NullTime   `json:"deleted_at"`

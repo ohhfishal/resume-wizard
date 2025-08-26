@@ -55,27 +55,27 @@ func Parse(r *http.Request) (*PostApplicationInput, error) {
 
 func PutApplicationHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		inputs, err := Parse(r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		if err := database.UpdateApplication(r.Context(), db.UpdateApplicationParams{
-			Status:   inputs.Status,
-			Company:  inputs.Company,
-			Position: inputs.Position,
-		}); err != nil {
-			http.Error(w,
-				fmt.Sprintf("could not insert into database: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-
-		w.Header().Set("HX-Trigger", templates.EventApplicationsUpdate)
-		w.Header().Set("Content-Type", "text/plain")
-		w.WriteHeader(http.StatusOK)
+		// inputs, err := Parse(r)
+		// if err != nil {
+		// 	http.Error(w, err.Error(), http.StatusBadRequest)
+		// 	return
+		// }
+		//
+		// if err := database.UpdateApplication(r.Context(), db.UpdateApplicationParams{
+		// 	Status:   inputs.Status,
+		// 	Company:  inputs.Company,
+		// 	Position: inputs.Position,
+		// }); err != nil {
+		// 	http.Error(w,
+		// 		fmt.Sprintf("could not insert into database: %s", err.Error()),
+		// 		http.StatusInternalServerError,
+		// 	)
+		// 	return
+		// }
+		//
+		// w.Header().Set("HX-Trigger", templates.EventApplicationsUpdate)
+		// w.Header().Set("Content-Type", "text/plain")
+		// w.WriteHeader(http.StatusOK)
 	}
 }
 

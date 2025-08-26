@@ -72,6 +72,10 @@ CREATE TABLE IF NOT EXISTS applications_v2 (
 
   status TEXT CHECK( status IN ('pending', 'interviewed', 'rejected', 'accepted') ) DEFAULT 'pending' NOT NULL,
 
+  -- User controls
+  applied_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+  -- User does not control
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   deleted_at DATETIME,

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func PostApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.HandlerFunc {
@@ -82,12 +83,19 @@ func PutApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.Handler
 			return
 		}
 
+		applied, err := time.Parse(time.DateOnly, r.FormValue("applied_at"))
+		if err != nil {
+			http.Error(w, fmt.Sprintf("invalid applied_at: %s", err.Error()), http.StatusBadRequest)
+			return
+		}
+
 		status := r.FormValue("status")
-		row, err := database.SetApplicationStatus(r.Context(),
-			db.SetApplicationStatusParams{
-				Status: status,
-				UserID: user,
-				ID:     app,
+		row, err := database.UpdateApplication(r.Context(),
+			db.UpdateApplicationParams{
+				Status:    status,
+				AppliedAt: applied,
+				UserID:    user,
+				ID:        app,
 			},
 		)
 		if err != nil {

@@ -23,6 +23,7 @@ templ ApplicationsCard(applications []db.ApplicationsV2) {
 templ ApplicationsRow(app db.ApplicationsV2) {
 	{{
 	created := app.CreatedAt.Format(time.DateOnly)
+	applied := app.AppliedAt.Format(time.DateOnly)
 	updated := app.UpdatedAt.Format(time.DateOnly)
 	id := fmt.Sprintf("row-%d", app.ID)
 	}}
@@ -30,7 +31,7 @@ templ ApplicationsRow(app db.ApplicationsV2) {
 		<summary>
 			<div>
 				<h4>{ app.Company + " - " + app.Position }</h4>
-				<p>{ created } </p>
+				<p>{ applied } </p>
 			</div>
 			<div>
 				<p class={ "status " + app.Status }>{ app.Status }</p>
@@ -38,7 +39,7 @@ templ ApplicationsRow(app db.ApplicationsV2) {
 		</summary>
 		<div>
 			<div class="details-row">
-				<span class="application-label">Applied:</span>
+				<span class="application-label">Created:</span>
 				<span>{ created }</span>
 			</div>
 			<div class="details-row">
@@ -48,9 +49,14 @@ templ ApplicationsRow(app db.ApplicationsV2) {
 			<form
 				hx-put={ fmt.Sprintf("/api/dev/%d/application/%d", app.UserID, app.ID) }
 				hx-swap="outerHTML"
-				hx-trigger="change"
 				hx-target={ "#" + id }
 			>
+				<div class="details-row">
+					<label for="applied_at" class="application-label">Applied:</label>
+					<span>
+						<input name="applied_at" class="application-value status" type="date" value={ applied }/>
+					</span>
+				</div>
 				<div class="details-row">
 					<label for="status" class="application-label">Status:</label>
 					<span>
@@ -62,6 +68,7 @@ templ ApplicationsRow(app db.ApplicationsV2) {
 						</select>
 					</span>
 				</div>
+				<button type="submit" class="btn btn-primary">Update</button>
 			</form>
 		</div>
 	</details>
