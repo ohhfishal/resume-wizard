@@ -15,7 +15,7 @@ import (
 type Wizard struct {
 	Backend string `enum:"disabled,anthropic,sleep" default:"sleep" help:"Wizard backend"`
 	Sleep   struct {
-		Duration time.Duration `default:"5s" help:"How long to sleep to mimic doing work"`
+		Duration time.Duration `default:"1s" help:"How long to sleep to mimic doing work"`
 	} `embed:""`
 	Claude struct {
 		ApiKey string            `help:"API Key to access LLM (KEEP SECRET!)" env:"API_KEY"`

@@ -12,6 +12,7 @@ templ ApplicationsCard(applications []db.ApplicationsV2) {
 			<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
 			<div class="card-meta">
 				<span class="count-badge">{ len(applications) } applications</span>
+				<a href="/export/csv" class="button btn-add" hx-boost="false">Export</a>
 			</div>
 		</div>
 		for _, app := range applications {

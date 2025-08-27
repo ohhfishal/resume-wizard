@@ -79,6 +79,8 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
 
+	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
+
 	// TODO: Remove old endpoints
 	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
 	r.Post("/resume", PostResumeHandler(server.logger, server.database))
