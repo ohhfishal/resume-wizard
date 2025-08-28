@@ -3,15 +3,18 @@
 Web app for converting YAML files to resume PDF's (Or html/markdown etc).
 
 
-## Roadmap
+## Roadmap - Close
 - [ ] Take PDF resumes as input (Easy onboarding)
-- [ ] Improvded base resumes UI
-    - [ ] Delete
-    - [ ] Edit
+- [ ] UI Improvements!
+    - [ ] Delete base resume
+    - [ ] Edit base resume
+    - [ ] Improved resume editor!!!
 - [ ] Activity Log (Currently a hardcoded example)
 - [ ] Seperate "pages" for viewing applications / metrics
 - [ ] Start working on metrics/analytics?
 - [ ] Store resumes as local files?
+
+## Roadmap - Far
 - [ ] Login and OAuth2 
     - [ ] Forgejo
     - [ ] LinkedIn?
