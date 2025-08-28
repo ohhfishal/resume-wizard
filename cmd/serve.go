@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/ohhfishal/resume-wizard/feature"
 	"github.com/ohhfishal/resume-wizard/server"
 )
 
@@ -17,6 +18,8 @@ func (cmd *ServeCmd) Run(ctx context.Context, logger *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("creating server: %w", err)
 	}
+
+	feature.SetFeatures(cmd.Config.Features)
 
 	if err := s.Run(ctx); err != nil {
 		logger.Error(

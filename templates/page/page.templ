@@ -1,5 +1,7 @@
 package page
 
+import "github.com/ohhfishal/resume-wizard/feature"
+
 type PageProps struct {
 	Title   string
 	Imports []templ.Component
@@ -36,6 +38,11 @@ templ Header() {
       */
 		</nav>
 	</div>
+	if feature.Features().Debug {
+		<div style="background-color: red; color: white; text-align: center; padding: 0.25rem;">
+			DEBUG MODE ENABLED
+		</div>
+	}
 }
 
 templ DefaultStyle() {

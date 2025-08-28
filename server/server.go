@@ -16,6 +16,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
+	"github.com/ohhfishal/resume-wizard/feature"
 	"github.com/ohhfishal/resume-wizard/templates/page"
 	"github.com/ohhfishal/resume-wizard/wizard"
 )
@@ -26,6 +27,7 @@ type Config struct {
 	RequestTimeout time.Duration `default:"30s" help:"How long to keep requests alive"`
 	Database       db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
 	Wizard         wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
+	Features       feature.Flags `embed:""`
 }
 
 type Server struct {
