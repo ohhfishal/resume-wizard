@@ -1,0 +1,26 @@
+package page
+
+import "github.com/ohhfishal/resume-wizard/templates/card"
+
+type LoginProps struct {
+}
+
+templ Login(props LoginProps) {
+	@Page(PageProps{
+		Title: "Login",
+		Imports: []templ.Component{
+			DefaultStyle(),
+			HTMX(),
+		},
+		Body: LoginBody(props),
+	})
+}
+
+templ LoginBody(props LoginProps) {
+	<body>
+		@Header()
+		<div class="container">
+			@card.Login(card.LoginProps{})
+		</div>
+	</body>
+}

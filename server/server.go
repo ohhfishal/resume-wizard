@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,23 +16,49 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates"
 	"github.com/ohhfishal/resume-wizard/templates/page"
+	"github.com/ohhfishal/resume-wizard/wizard"
 )
+
+type Config struct {
+	Port           string        `default:"8080" short:"P" help:"Port to serve on"`
+	Host           string        `default:"localhost" short:"H" help:"Address to serve from"`
+	RequestTimeout time.Duration `default:"30s" help:"How long to keep requests alive"`
+	Database       db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
+	Wizard         wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
+}
 
 type Server struct {
 	logger   *slog.Logger
-	database *db.Queries
-	host     string
-	port     string
+	database *db.DB
+	config   Config
+	wizard   *wizard.Wizard
 }
 
-func New(logger *slog.Logger, database *db.Queries) (*Server, error) {
+func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
+	if logger == nil {
+		logger = slog.New(slog.DiscardHandler)
+	}
+
+	if config.Database.Source == ":memory:" {
+		logger.Warn("using in-memory database")
+	}
+
+	database, err := config.Database.Open(context.WithValue(ctx, "logger", logger))
+	if err != nil {
+		return nil, fmt.Errorf("connecting to database: %w", err)
+	}
+
+	var model = config.Wizard
+	if err := model.Init(logger); err != nil {
+		return nil, fmt.Errorf("connecting to llm provider: %w", err)
+	}
+
 	return &Server{
 		database: database,
 		logger:   logger,
-		host:     "0.0.0.0", // TODO: Fix hardcoding
-		port:     "8080",    // TODO: Fix hardcoding
+		config:   config,
+		wizard:   &model,
 	}, nil
 }
 
@@ -40,13 +67,26 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Use(loggingMiddleware(server.logger))
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(server.config.RequestTimeout))
 
-	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
-	r.Post("/resume", PostResumeHandler(server.logger, server.database))
-	r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
-	r.Post("/application", PostApplicationHandler(server.logger, server.database))
-	r.Put("/application", PutApplicationHandler(server.logger, server.database))
+	r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
+	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
 
+	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
+	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
+	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
+
+	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
+
+	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
+
+	// TODO: Remove old endpoints
+	// r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
+	// r.Post("/resume", PostResumeHandler(server.logger, server.database))
+	// r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
+	// r.Post("/application", PostApplicationHandler(server.logger, server.database))
+	// r.Put("/application", PutApplicationHandler(server.logger, server.database))
+	//
 	r.Mount(
 		"/assets",
 		http.StripPrefix("/assets", http.FileServer(http.FS(assets.Assets))),
@@ -54,12 +94,90 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
-	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
-		page.Home().Render(r.Context(), w)
+	r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
+		page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
 	})
+	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+		page.Login(page.LoginProps{}).Render(r.Context(), w)
+	})
+	r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("invalid base resume id: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     id,
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		// NOTE: Probably not the best
+		if err := base.Resume.ToHTML(w); err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+	})
+	r.Get("/tailor", func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("invalid base resume id: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     id,
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("reading database for base resume: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		page.TailorResume(page.TailorResumeProps{
+			Base: base,
+		}).Render(r.Context(), w)
+	})
+	r.Get("/tailor/{uuid}", func(w http.ResponseWriter, r *http.Request) {
+		session, err := server.database.GetSession(r.Context(), db.GetSessionParams{
+			UserID: 0, /* TODO: Set to userID */
+			Uuid:   r.PathValue("uuid"),
+		})
+		if err != nil {
+			http.Error(w,
+				fmt.Sprintf("restoring session: %s", err.Error()),
+				http.StatusInternalServerError,
+			)
+			return
+		}
+		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+			UserID: 0, /* TODO: Set to userID */
+			ID:     session.BaseResumeID,
+		})
 
+		page.TailorResume(page.TailorResumeProps{
+			Base:            base,
+			Session:         session,
+			LockApplication: true,
+		}).Render(r.Context(), w)
+	})
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		resumes, err := server.database.GetResumes(r.Context())
+		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading database for names: %s", err.Error()),
@@ -68,7 +186,7 @@ func (server *Server) Run(ctx context.Context) error {
 			return
 		}
 
-		applications, err := server.database.GetApplications(r.Context())
+		applications, err := server.database.GetApplications(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading database for applications: %s", err.Error()),
@@ -76,19 +194,20 @@ func (server *Server) Run(ctx context.Context) error {
 			)
 			return
 		}
+		if len(applications) == 0 {
+			server.logger.Warn("NO APPLICATIONS")
+		}
 
-		server.logger.Debug(
-			"got from db",
-			"names", resumes,
-			"apps", applications,
-		)
-		templates.MainPage(resumes, applications).Render(r.Context(), w)
+		page.Home(page.HomeProps{
+			Resumes:      resumes,
+			Applications: applications,
+		}).Render(r.Context(), w)
 	})
 
 	r.NotFound(NotFoundHandler)
 
 	s := &http.Server{
-		Addr:         net.JoinHostPort(server.host, server.port),
+		Addr:         net.JoinHostPort(server.config.Host, server.config.Port),
 		Handler:      r,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
@@ -99,12 +218,16 @@ func (server *Server) Run(ctx context.Context) error {
 		server.logger.Info("shutting down")
 		if err := s.Shutdown(context.Background()); err != nil {
 			server.logger.Error("closing server",
-				"error", err,
+				slog.Any("error", err),
 			)
 		}
 	}()
 
-	server.logger.Info("starting server", "port", server.port, "host", server.host)
+	server.logger.Info(
+		"starting server",
+		slog.String("port", server.config.Port),
+		slog.String("host", server.config.Host),
+	)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}

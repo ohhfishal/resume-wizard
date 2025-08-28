@@ -1,0 +1,34 @@
+package card
+
+const (
+	SmallCard   = "card-sm"
+	LargeCard   = "card-lg"
+	DefaultCard = "card"
+)
+
+type CardProps struct {
+	Size string
+	ID   string
+}
+
+templ Card(props ...CardProps) {
+	{{
+	var prop = CardProps{}
+	if len(props) > 0 {
+		prop = props[0]
+	}
+
+	class := prop.Size
+	if class == "" {
+		class = DefaultCard
+	}
+	}}
+	<div
+		class={ class }
+		if prop.ID != "" {
+			id={ prop.ID }
+		}
+	>
+		{ children... }
+	</div>
+}

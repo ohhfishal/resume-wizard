@@ -7,17 +7,138 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/ohhfishal/resume-wizard/resume"
 )
 
-const getApplications = `-- name: GetApplications :many
-SELECT resume_id, company, position, created_at, updated_at, status from applications
-ORDER BY created_at
+const addResumeToSession = `-- name: AddResumeToSession :exec
+UPDATE sessions 
+SET resume = ?,
+    updated_at = CURRENT_TIMESTAMP
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL
 `
 
-func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
-	rows, err := q.db.QueryContext(ctx, getApplications)
+type AddResumeToSessionParams struct {
+	Resume *resume.Resume `json:"resume"`
+	Uuid   string         `json:"uuid"`
+	UserID int64          `json:"user_id"`
+}
+
+func (q *Queries) AddResumeToSession(ctx context.Context, arg AddResumeToSessionParams) error {
+	_, err := q.db.ExecContext(ctx, addResumeToSession, arg.Resume, arg.Uuid, arg.UserID)
+	return err
+}
+
+const createApplication = `-- name: CreateApplication :one
+INSERT INTO applications (
+    user_id,
+    base_resume_id,
+    company,
+    position,
+    description,
+    resume,
+    status
+) VALUES (
+    ?, ?, ?, ?, ?, ?, 'pending'
+) RETURNING id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at
+`
+
+type CreateApplicationParams struct {
+	UserID       int64          `json:"user_id"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+}
+
+func (q *Queries) CreateApplication(ctx context.Context, arg CreateApplicationParams) (Application, error) {
+	row := q.db.QueryRowContext(ctx, createApplication,
+		arg.UserID,
+		arg.BaseResumeID,
+		arg.Company,
+		arg.Position,
+		arg.Description,
+		arg.Resume,
+	)
+	var i Application
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.BaseResumeID,
+		&i.Company,
+		&i.Position,
+		&i.Description,
+		&i.Resume,
+		&i.Status,
+		&i.AppliedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const createSession = `-- name: CreateSession :one
+
+INSERT INTO sessions (
+  uuid,
+  base_resume_id,
+  user_id,
+  company,
+  position,
+  description,
+  resume -- TODO: Think this can be removed
+) VALUES (?, ?, ?, ?, ?, ?, ?)
+RETURNING uuid, base_resume_id, user_id, company, position, description, resume, created_at, updated_at, deleted_at
+`
+
+type CreateSessionParams struct {
+	Uuid         string         `json:"uuid"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	UserID       int64          `json:"user_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+}
+
+// Last used??
+// Create a session of a user working on an application
+func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
+	row := q.db.QueryRowContext(ctx, createSession,
+		arg.Uuid,
+		arg.BaseResumeID,
+		arg.UserID,
+		arg.Company,
+		arg.Position,
+		arg.Description,
+		arg.Resume,
+	)
+	var i Session
+	err := row.Scan(
+		&i.Uuid,
+		&i.BaseResumeID,
+		&i.UserID,
+		&i.Company,
+		&i.Position,
+		&i.Description,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const getApplications = `-- name: GetApplications :many
+SELECT id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at from applications
+WHERE user_id = ? AND deleted_at IS NULL
+`
+
+func (q *Queries) GetApplications(ctx context.Context, userID int64) ([]Application, error) {
+	rows, err := q.db.QueryContext(ctx, getApplications, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -26,12 +147,18 @@ func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
 	for rows.Next() {
 		var i Application
 		if err := rows.Scan(
-			&i.ResumeID,
+			&i.ID,
+			&i.UserID,
+			&i.BaseResumeID,
 			&i.Company,
 			&i.Position,
+			&i.Description,
+			&i.Resume,
+			&i.Status,
+			&i.AppliedAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Status,
+			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -46,62 +173,57 @@ func (q *Queries) GetApplications(ctx context.Context) ([]Application, error) {
 	return items, nil
 }
 
-const getNames = `-- name: GetNames :many
-SELECT name from resumes
-ORDER BY name
+const getBaseResume = `-- name: GetBaseResume :one
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from base_resumes
+WHERE user_id = ? AND id = ?
 `
 
-// TODO: Remove this
-func (q *Queries) GetNames(ctx context.Context) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, getNames)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []string{}
-	for rows.Next() {
-		var name string
-		if err := rows.Scan(&name); err != nil {
-			return nil, err
-		}
-		items = append(items, name)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+type GetBaseResumeParams struct {
+	UserID int64 `json:"user_id"`
+	ID     int64 `json:"id"`
 }
 
-const getResumeByID = `-- name: GetResumeByID :one
-SELECT id, name, body from resumes
-WHERE ID = ?
-`
-
-func (q *Queries) GetResumeByID(ctx context.Context, id int64) (Resume, error) {
-	row := q.db.QueryRowContext(ctx, getResumeByID, id)
-	var i Resume
-	err := row.Scan(&i.ID, &i.Name, &i.Body)
+func (q *Queries) GetBaseResume(ctx context.Context, arg GetBaseResumeParams) (BaseResume, error) {
+	row := q.db.QueryRowContext(ctx, getBaseResume, arg.UserID, arg.ID)
+	var i BaseResume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
 	return i, err
 }
 
-const getResumes = `-- name: GetResumes :many
-SELECT id, name, body from resumes
-ORDER BY name
+const getBaseResumes = `-- name: GetBaseResumes :many
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from base_resumes
+WHERE user_id = ?
+ORDER BY created_at
 `
 
-func (q *Queries) GetResumes(ctx context.Context) ([]Resume, error) {
-	rows, err := q.db.QueryContext(ctx, getResumes)
+func (q *Queries) GetBaseResumes(ctx context.Context, userID int64) ([]BaseResume, error) {
+	rows, err := q.db.QueryContext(ctx, getBaseResumes, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Resume{}
+	items := []BaseResume{}
 	for rows.Next() {
-		var i Resume
-		if err := rows.Scan(&i.ID, &i.Name, &i.Body); err != nil {
+		var i BaseResume
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Resume,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LastUsed,
+			&i.DeletedAt,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -115,82 +237,118 @@ func (q *Queries) GetResumes(ctx context.Context) ([]Resume, error) {
 	return items, nil
 }
 
-const insertLog = `-- name: InsertLog :one
-INSERT INTO applications (resume_id, company, position)
-VALUES (?, ?, ?)
-RETURNING resume_id, company, position, created_at, updated_at, status
+const getSession = `-- name: GetSession :one
+SELECT uuid, base_resume_id, user_id, company, position, description, resume, created_at, updated_at, deleted_at FROM sessions
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL
 `
 
-type InsertLogParams struct {
-	ResumeID int64  `json:"resume_id"`
-	Company  string `json:"company"`
-	Position string `json:"position"`
+type GetSessionParams struct {
+	Uuid   string `json:"uuid"`
+	UserID int64  `json:"user_id"`
 }
 
-func (q *Queries) InsertLog(ctx context.Context, arg InsertLogParams) (Application, error) {
-	row := q.db.QueryRowContext(ctx, insertLog, arg.ResumeID, arg.Company, arg.Position)
-	var i Application
+// Get a session (user space)
+func (q *Queries) GetSession(ctx context.Context, arg GetSessionParams) (Session, error) {
+	row := q.db.QueryRowContext(ctx, getSession, arg.Uuid, arg.UserID)
+	var i Session
 	err := row.Scan(
-		&i.ResumeID,
+		&i.Uuid,
+		&i.BaseResumeID,
+		&i.UserID,
 		&i.Company,
 		&i.Position,
+		&i.Description,
+		&i.Resume,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.Status,
+		&i.DeletedAt,
 	)
 	return i, err
 }
 
-const insertResume = `-- name: InsertResume :one
-INSERT INTO resumes (name, body)
-VALUES (?, ?)
-RETURNING id
+const insertBase = `-- name: InsertBase :one
+INSERT INTO base_resumes (user_id, name, resume)
+VALUES (?, ?, ?)
+RETURNING id, user_id, name, resume, created_at, updated_at, last_used, deleted_at
 `
 
-type InsertResumeParams struct {
-	Name string         `json:"name"`
-	Body *resume.Resume `json:"body"`
+type InsertBaseParams struct {
+	UserID int64          `json:"user_id"`
+	Name   string         `json:"name"`
+	Resume *resume.Resume `json:"resume"`
 }
 
-func (q *Queries) InsertResume(ctx context.Context, arg InsertResumeParams) (int64, error) {
-	row := q.db.QueryRowContext(ctx, insertResume, arg.Name, arg.Body)
-	var id int64
-	err := row.Scan(&id)
-	return id, err
+func (q *Queries) InsertBase(ctx context.Context, arg InsertBaseParams) (BaseResume, error) {
+	row := q.db.QueryRowContext(ctx, insertBase, arg.UserID, arg.Name, arg.Resume)
+	var i BaseResume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
-const updateApplication = `-- name: UpdateApplication :exec
-UPDATE applications
-SET
-  status = ?
-WHERE position = ? AND company = ?
+const softDeleteSession = `-- name: SoftDeleteSession :exec
+UPDATE sessions 
+SET deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL
+`
+
+type SoftDeleteSessionParams struct {
+	Uuid   string `json:"uuid"`
+	UserID int64  `json:"user_id"`
+}
+
+func (q *Queries) SoftDeleteSession(ctx context.Context, arg SoftDeleteSessionParams) error {
+	_, err := q.db.ExecContext(ctx, softDeleteSession, arg.Uuid, arg.UserID)
+	return err
+}
+
+const updateApplication = `-- name: UpdateApplication :one
+UPDATE applications 
+SET 
+    applied_at = ?,
+    status = ?,
+    updated_at = CURRENT_TIMESTAMP
+WHERE user_id = ? AND id = ? AND deleted_at IS NULL
+RETURNING id, user_id, base_resume_id, company, position, description, resume, status, applied_at, created_at, updated_at, deleted_at
 `
 
 type UpdateApplicationParams struct {
-	Status   string `json:"status"`
-	Position string `json:"position"`
-	Company  string `json:"company"`
+	AppliedAt time.Time `json:"applied_at"`
+	Status    string    `json:"status"`
+	UserID    int64     `json:"user_id"`
+	ID        int64     `json:"id"`
 }
 
-func (q *Queries) UpdateApplication(ctx context.Context, arg UpdateApplicationParams) error {
-	_, err := q.db.ExecContext(ctx, updateApplication, arg.Status, arg.Position, arg.Company)
-	return err
-}
-
-const updateResume = `-- name: UpdateResume :exec
-UPDATE resumes
-SET 
-  body = ?
-WHERE 
-  id = ?
-`
-
-type UpdateResumeParams struct {
-	Body *resume.Resume `json:"body"`
-	ID   int64          `json:"id"`
-}
-
-func (q *Queries) UpdateResume(ctx context.Context, arg UpdateResumeParams) error {
-	_, err := q.db.ExecContext(ctx, updateResume, arg.Body, arg.ID)
-	return err
+func (q *Queries) UpdateApplication(ctx context.Context, arg UpdateApplicationParams) (Application, error) {
+	row := q.db.QueryRowContext(ctx, updateApplication,
+		arg.AppliedAt,
+		arg.Status,
+		arg.UserID,
+		arg.ID,
+	)
+	var i Application
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.BaseResumeID,
+		&i.Company,
+		&i.Position,
+		&i.Description,
+		&i.Resume,
+		&i.Status,
+		&i.AppliedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }

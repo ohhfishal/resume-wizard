@@ -6,13 +6,19 @@ import (
 	"log/slog"
 
 	"github.com/alecthomas/kong"
+	kongyaml "github.com/alecthomas/kong-yaml"
 )
 
 type RootCmd struct {
-	Build  BuildCmd  `cmd:"" help:"Compile a resume from a input file."`
-	Log    LogCmd    `cmd:"" help:"Log usuage of resumes."`
-	Serve  ServeCmd  `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
-	Wizard WizardCmd `cmd:"" help:"Do some magic."`
+	// Root options
+	Config kong.ConfigFlag `short:"c" help:"Path to config file to load." type:"path"`
+	Logger struct {
+		Level string `default:"info" enum:"disabled,error,warn,info,debug" placeholder:"info" help:"Log level to use. ('disabled','error','warn','info','debug')"`
+	} `embed:"" prefix:"logger-"`
+
+	// Commands
+	Build BuildCmd `cmd:"" help:"Compile a resume from a input file."`
+	Serve ServeCmd `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {
@@ -23,6 +29,7 @@ func Run(ctx context.Context, stdout io.Writer, args []string) error {
 		cmd,
 		kong.Exit(func(_ int) { exit = true }),
 		kong.BindTo(ctx, new(context.Context)),
+		kong.Configuration(kongyaml.Loader),
 	)
 	if err != nil {
 		return err
@@ -31,18 +38,39 @@ func Run(ctx context.Context, stdout io.Writer, args []string) error {
 	parser.Stdout = stdout
 	parser.Stderr = stdout
 
-	context, err := parser.Parse(args)
+	context, err := parser.Parse(
+		args,
+	)
 	if err != nil || exit {
 		return err
 	}
 
-	logger := slog.New(slog.NewJSONHandler(stdout, &slog.HandlerOptions{
-		Level: slog.LevelInfo, // TODO: Make configurable
-	}))
+	logger := cmd.NewLogger(stdout)
 	slog.SetDefault(logger)
 
 	if err := context.Run(logger); err != nil {
 		return err
 	}
 	return nil
+}
+
+func (cmd RootCmd) NewLogger(stdout io.Writer) *slog.Logger {
+	var level slog.Level
+	switch cmd.Logger.Level {
+	case "disabled":
+		return slog.New(slog.DiscardHandler)
+	case "error":
+		level = slog.LevelError
+	case "warn":
+		level = slog.LevelWarn
+	case "debug":
+		level = slog.LevelDebug
+	case "info":
+		fallthrough
+	default:
+		level = slog.LevelInfo
+	}
+	return slog.New(slog.NewJSONHandler(stdout, &slog.HandlerOptions{
+		Level: level,
+	}))
 }

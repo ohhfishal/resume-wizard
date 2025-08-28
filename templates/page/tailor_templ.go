@@ -8,18 +8,11 @@ package page
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates/card"
-)
+import "github.com/ohhfishal/resume-wizard/templates/card"
 
-type HomeProps struct {
-	Resumes      []db.BaseResume
-	Applications []db.Application
-	// TODO: Feature flags / User info goes here
-}
+type TailorResumeProps card.TailorResumeCardProps
 
-func Home(props HomeProps) templ.Component {
+func TailorResume(prop TailorResumeProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -46,7 +39,7 @@ func Home(props HomeProps) templ.Component {
 				DefaultStyle(),
 				HTMX(),
 			},
-			Body: HomeBody(props.Resumes, props.Applications),
+			Body: TailorResumeBody(prop),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -55,7 +48,7 @@ func Home(props HomeProps) templ.Component {
 	})
 }
 
-func HomeBody(resumes []db.BaseResume, applications []db.Application) templ.Component {
+func TailorResumeBody(prop TailorResumeProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -84,34 +77,15 @@ func HomeBody(resumes []db.BaseResume, applications []db.Application) templ.Comp
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"container\"><div class=\"hero\"><h1>Home</h1><p>Put a search bar or something here.</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = card.BaseResumeCard(resumes).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = card.TailorResumeCard((card.TailorResumeCardProps)(prop)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(applications) > 0 {
-			templ_7745c5c3_Err = card.ApplicationsCard(applications).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"card\"><div class=\"card-header\"><h3>Recent Activity</h3><div class=\"card-meta\"><span class=\"count-badge\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(len(applications))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/page/home.templ`, Line: 42, Col: 51}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " applications</span></div></div><div class=\"activity-item\"><div><h4>Senior React Developer - TechCorp</h4><p>Tailored from Software Engineer Resume</p></div><div style=\"color: #8b949e; font-size: 0.9rem;\">Yesterday</div></div><div class=\"activity-item\"><div><h4>Frontend Lead - StartupXYZ</h4><p>Tailored from Frontend Developer Resume</p></div><div style=\"color: #8b949e; font-size: 0.9rem;\">3 days ago</div></div><div class=\"activity-item\"><div><h4>Full Stack Engineer - BigTech</h4><p>Tailored from Software Engineer Resume</p></div><div style=\"color: #8b949e; font-size: 0.9rem;\">1 week ago</div></div></div></div></body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

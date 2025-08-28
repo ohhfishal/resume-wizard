@@ -1,0 +1,88 @@
+package card
+
+import (
+	"fmt"
+	"github.com/ohhfishal/resume-wizard/db"
+	"strings"
+	"time"
+)
+
+// TODO: Make a feature flag
+const MAX_BASE_RESUMES = 3
+
+templ BaseResumeCard(resumes []db.BaseResume) {
+	{{
+	// TODO: Make a feature flag based on the user
+	var disabled = len(resumes) >= MAX_BASE_RESUMES
+	if disabled {
+		resumes = resumes[:MAX_BASE_RESUMES]
+	}
+	}}
+	@Card(CardProps{}) {
+		<div class="card-header">
+			<h3>{ "Base Resumes" }</h3>
+			<div class="card-meta">
+				<span class="count-badge">{ len(resumes) } Resumes</span>
+				if disabled {
+					<div class="tooltip-container">
+						// TODO: Have this not redirect the whole page
+						<button href="/base" class="button btn-add" hx-boost="true" disabled>+ Add New </button>
+						<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
+					</div>
+				} else {
+					<a href="/base" class="button btn-add" hx-boost="true">+ Add New </a>
+				}
+			</div>
+		</div>
+		@BaseResumeList(resumes)
+	}
+}
+
+templ BaseResumeList(resumes []db.BaseResume) {
+	// TODO: Update on deletes or adds or edits
+	<div
+		class="resume-list"
+		hx-get="/components/baseResumeList"
+		hx-swap="outerHTML"
+		hx-trigger="none"
+	>
+		for _, resume := range resumes {
+			@ResumeItem(resume)
+		}
+	</div>
+}
+
+templ ResumeItem(resume db.BaseResume) {
+	{{
+	metadata := []string{
+		"Uploaded " + resume.CreatedAt.Format(time.DateOnly),
+	}
+	if resume.LastUsed.Valid {
+		metadata = append(metadata,
+			fmt.Sprintf("%s%s", metadata, resume.LastUsed.Time),
+		)
+	}
+	}}
+	<div class="resume-item">
+		<div class="resume-info">
+			<h4>{ resume.Name }</h4>
+			<p>{ strings.Join(metadata, " • ") }</p>
+		</div>
+		<div hx-boost="true" class="resume-actions">
+			<a
+				href={ fmt.Sprintf("/tailor?id=%d", resume.ID) }
+				class="button btn-small"
+			>Tailor</a>
+			<a
+				href={ fmt.Sprintf("/view/base?id=%d", resume.ID) }
+				hx-boost="false"
+				class="button btn-small"
+			>View</a>
+			<a
+				href="/edit"
+				class="button btn-small"
+			>Edit</a>
+			<button class="btn-small">Delete</button>
+		</div>
+	</div>
+}

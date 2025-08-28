@@ -106,6 +106,13 @@ func (resume Resume) YAML() (string, error) {
 	}
 	return writer.String(), nil
 }
+func (resume Resume) JSON() (string, error) {
+	var writer strings.Builder
+	if err := resume.ToJSON(&writer); err != nil {
+		return "", err
+	}
+	return writer.String(), nil
+}
 
 func (resume Resume) ToYAML(w io.Writer) error {
 	encoder := yaml.NewEncoder(
@@ -202,6 +209,23 @@ func (resume *Resume) HidePersonalInfo() {
 			resume.Sections[i].Experience[j].Company = fmt.Sprintf("$REDACTED_COMPANY_%d", j)
 		}
 	}
+}
+
+func FromContentType(reader io.Reader, contentType string) (*Resume, error) {
+	var resume Resume
+	switch contentType {
+	case "application/json":
+		if err := FromJSON(reader, &resume); err != nil {
+			return nil, fmt.Errorf("parsing json: %w", err)
+		}
+	case "application/yaml":
+		if err := FromYAML(reader, &resume); err != nil {
+			return nil, fmt.Errorf("parsing yaml: %w", err)
+		}
+	default:
+		return nil, fmt.Errorf("invalid content type: %s", contentType)
+	}
+	return &resume, nil
 }
 
 // Implement methods to be used in a database

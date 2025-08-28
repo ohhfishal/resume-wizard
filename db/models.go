@@ -5,22 +5,53 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/ohhfishal/resume-wizard/resume"
 )
 
 type Application struct {
-	ResumeID  int64     `json:"resume_id"`
-	Company   string    `json:"company"`
-	Position  string    `json:"position"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Status    string    `json:"status"`
+	ID           int64          `json:"id"`
+	UserID       int64          `json:"user_id"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+	Status       string         `json:"status"`
+	AppliedAt    time.Time      `json:"applied_at"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    sql.NullTime   `json:"deleted_at"`
 }
 
-type Resume struct {
-	ID   int64          `json:"id"`
-	Name string         `json:"name"`
-	Body *resume.Resume `json:"body"`
+type BaseResume struct {
+	ID        int64          `json:"id"`
+	UserID    int64          `json:"user_id"`
+	Name      string         `json:"name"`
+	Resume    *resume.Resume `json:"resume"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	LastUsed  sql.NullTime   `json:"last_used"`
+	DeletedAt sql.NullTime   `json:"deleted_at"`
+}
+
+type Session struct {
+	Uuid         string         `json:"uuid"`
+	BaseResumeID int64          `json:"base_resume_id"`
+	UserID       int64          `json:"user_id"`
+	Company      string         `json:"company"`
+	Position     string         `json:"position"`
+	Description  string         `json:"description"`
+	Resume       *resume.Resume `json:"resume"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    sql.NullTime   `json:"deleted_at"`
+}
+
+type User struct {
+	ID        int64     `json:"id"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
 }

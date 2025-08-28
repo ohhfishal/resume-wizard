@@ -1,0 +1,18 @@
+package card
+
+type LoginProps struct {
+}
+
+templ Login(props ...LoginProps) {
+	@Card(CardProps{
+		Size: SmallCard,
+	}) {
+		<div class="card-header-centered">
+			<h3>Sign in</h3>
+		</div>
+		<hr class="login-spacer"/>
+		<div class="list">
+			<button class="btn-small">Continue with SERVICE</button>
+		</div>
+	}
+}
