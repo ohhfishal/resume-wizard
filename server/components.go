@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates"
-	"github.com/ohhfishal/resume-wizard/templates/card"
 	"github.com/ohhfishal/resume-wizard/templates/components"
 	"log/slog"
 	"net/http"
-	"strconv"
 )
 
 func componentError(w http.ResponseWriter, err error, status int) {
@@ -19,74 +16,6 @@ func componentError(w http.ResponseWriter, err error, status int) {
 
 func ComponentsHandler(logger *slog.Logger, database *db.DB) func(chi.Router) {
 	return func(r chi.Router) {
-		r.Get("/applicationsTable", func(w http.ResponseWriter, r *http.Request) {
-			resumes, err := database.GetResumes(r.Context())
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("reading database for names: %s", err),
-					http.StatusInternalServerError,
-				)
-				return
-			}
-
-			applications, err := database.GetApplications(r.Context())
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("reading database for applications: %s", err),
-					http.StatusInternalServerError,
-				)
-				return
-			}
-			templates.ApplicationsTable(resumes, applications).Render(r.Context(), w)
-		})
-		r.Get("/baseResumeList", func(w http.ResponseWriter, r *http.Request) {
-			resumes, err := database.GetBaseResumes(r.Context(), 0 /* TODO: SET userID */)
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("reading database for base resumes: %s", err),
-					http.StatusInternalServerError,
-				)
-				return
-			}
-			card.BaseResumeList(resumes).Render(r.Context(), w)
-		})
-		r.Get("/resumeDropdown", func(w http.ResponseWriter, r *http.Request) {
-			resumes, err := database.GetResumes(r.Context())
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("reading database for names: %s", err),
-					http.StatusInternalServerError,
-				)
-				return
-			}
-			listener := r.URL.Query().Get("listener")
-			templates.ResumeDropdown(resumes, listener).Render(r.Context(), w)
-		})
-		r.Get("/resumeEditor", func(w http.ResponseWriter, r *http.Request) {
-			id := r.URL.Query().Get("resume_id")
-			if id == "" {
-				templates.ResumeEditor(db.Resume{ID: -1}).Render(r.Context(), w)
-				return
-			}
-			intID, err := strconv.ParseInt(id, 10, 64)
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("could not conver id to int: %s", err),
-					http.StatusBadRequest,
-				)
-				return
-			}
-
-			resume, err := database.GetResumeByID(r.Context(), intID)
-			if err != nil {
-				componentError(w,
-					fmt.Errorf("reading database for resume: %s", err),
-					http.StatusInternalServerError,
-				)
-				return
-			}
-			templates.ResumeEditor(resume).Render(r.Context(), w)
-		})
 		r.Get("/tailoredResumeSection/{uuid}", func(w http.ResponseWriter, r *http.Request) {
 			session, err := database.GetSession(r.Context(), db.GetSessionParams{
 				Uuid:   r.PathValue("uuid"),

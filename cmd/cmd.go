@@ -19,7 +19,6 @@ type RootCmd struct {
 	// Commands
 	Build BuildCmd `cmd:"" help:"Compile a resume from a input file."`
 	Serve ServeCmd `cmd:"" help:"Run resume-wizard as a local HTTP serve."`
-	Log   LogCmd   `cmd:"" help:"Log usuage of resumes."`
 }
 
 func Run(ctx context.Context, stdout io.Writer, args []string) error {

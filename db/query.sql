@@ -1,43 +1,3 @@
--- TODO: Remove this
--- name: GetNames :many
-SELECT name from resumes
-ORDER BY name;
-
--- name: GetResumes :many
-SELECT * from resumes
-ORDER BY name;
-
--- name: GetResumeByID :one
-SELECT * from resumes
-WHERE ID = ?;
-
--- name: InsertResume :one
-INSERT INTO resumes (name, body)
-VALUES (?, ?)
-RETURNING id;
-
--- name: UpdateResume :exec
-UPDATE resumes
-SET 
-  body = ?
-WHERE 
-  id = ?;
-
--- name: GetApplications :many
-SELECT * from applications
-ORDER BY created_at;
-
--- name: UpdateApplicationOld :exec
-UPDATE applications
-SET
-  status = ?
-WHERE position = ? AND company = ?;
-
--- name: InsertLog :one
-INSERT INTO applications (resume_id, company, position)
-VALUES (?, ?, ?)
-RETURNING *;
-
 -- name: InsertBase :one
 INSERT INTO base_resumes (user_id, name, resume)
 VALUES (?, ?, ?)
@@ -83,7 +43,7 @@ SET deleted_at = CURRENT_TIMESTAMP,
 WHERE uuid = ? AND user_id = ? AND deleted_at IS NULL;
 
 -- name: CreateApplication :one
-INSERT INTO applications_v2 (
+INSERT INTO applications (
     user_id,
     base_resume_id,
     company,
@@ -95,12 +55,12 @@ INSERT INTO applications_v2 (
     ?, ?, ?, ?, ?, ?, 'pending'
 ) RETURNING *;
 
--- name: GetApplicationsV2 :many
-SELECT * from applications_v2
+-- name: GetApplications :many
+SELECT * from applications
 WHERE user_id = ? AND deleted_at IS NULL;
 
 -- name: UpdateApplication :one
-UPDATE applications_v2 
+UPDATE applications 
 SET 
     applied_at = ?,
     status = ?,

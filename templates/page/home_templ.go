@@ -15,7 +15,7 @@ import (
 
 type HomeProps struct {
 	Resumes      []db.BaseResume
-	Applications []db.ApplicationsV2
+	Applications []db.Application
 	// TODO: Feature flags / User info goes here
 }
 
@@ -55,7 +55,7 @@ func Home(props HomeProps) templ.Component {
 	})
 }
 
-func HomeBody(resumes []db.BaseResume, applications []db.ApplicationsV2) templ.Component {
+func HomeBody(resumes []db.BaseResume, applications []db.Application) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

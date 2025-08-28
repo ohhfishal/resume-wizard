@@ -7,7 +7,7 @@ import (
 
 type HomeProps struct {
 	Resumes      []db.BaseResume
-	Applications []db.ApplicationsV2
+	Applications []db.Application
 	// TODO: Feature flags / User info goes here
 }
 
@@ -22,7 +22,7 @@ templ Home(props HomeProps) {
 	})
 }
 
-templ HomeBody(resumes []db.BaseResume, applications []db.ApplicationsV2) {
+templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
 	<body>
 		@Header()
 		<div class="container">

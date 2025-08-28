@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func PostApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.HandlerFunc {
+func PostApplicationHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body := r.FormValue("resume")
 
@@ -64,11 +64,11 @@ func PostApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.Handle
 			http.Error(w, fmt.Sprintf("commit transaction: %s", err.Error()), http.StatusInternalServerError)
 		}
 
-		w.Header().Set("HX-Redirect", "/home")
+		w.Header().Set("HX-Redirect", "/")
 	}
 }
 
-func PutApplicationHandlerNew(logger *slog.Logger, database *db.DB) http.HandlerFunc {
+func PutApplicationHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, err := strconv.ParseInt(r.PathValue("user_id"), 10, 64)
 		if err != nil {

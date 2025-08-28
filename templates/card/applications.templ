@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-templ ApplicationsCard(applications []db.ApplicationsV2) {
+templ ApplicationsCard(applications []db.Application) {
 	@Card() {
 		<div class="card-header">
 			<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
@@ -21,7 +21,7 @@ templ ApplicationsCard(applications []db.ApplicationsV2) {
 	}
 }
 
-templ ApplicationsRow(app db.ApplicationsV2) {
+templ ApplicationsRow(app db.Application) {
 	{{
 	created := app.CreatedAt.Format(time.DateOnly)
 	applied := app.AppliedAt.Format(time.DateOnly)

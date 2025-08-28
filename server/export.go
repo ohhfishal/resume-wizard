@@ -14,7 +14,7 @@ func GetExportHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 		format := r.PathValue("format")
 		switch format {
 		case "csv":
-			applications, err := database.GetApplicationsV2(r.Context(), 0 /* TODO: Replace with userID */)
+			applications, err := database.GetApplications(r.Context(), 0 /* TODO: Replace with userID */)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("getting applications: %s", err.Error()), http.StatusInternalServerError)
 				return

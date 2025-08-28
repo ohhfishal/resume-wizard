@@ -12,16 +12,6 @@ import (
 )
 
 type Application struct {
-	ResumeID    int64     `json:"resume_id"`
-	Company     string    `json:"company"`
-	Position    string    `json:"position"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Status      string    `json:"status"`
-}
-
-type ApplicationsV2 struct {
 	ID           int64          `json:"id"`
 	UserID       int64          `json:"user_id"`
 	BaseResumeID int64          `json:"base_resume_id"`
@@ -45,12 +35,6 @@ type BaseResume struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	LastUsed  sql.NullTime   `json:"last_used"`
 	DeletedAt sql.NullTime   `json:"deleted_at"`
-}
-
-type Resume struct {
-	ID   int64          `json:"id"`
-	Name string         `json:"name"`
-	Body *resume.Resume `json:"body"`
 }
 
 type Session struct {

@@ -16,7 +16,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/templates"
 	"github.com/ohhfishal/resume-wizard/templates/page"
 	"github.com/ohhfishal/resume-wizard/wizard"
 )
@@ -70,8 +69,8 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(server.config.RequestTimeout))
 
-	r.Post("/api/dev/application/{session_id}", PostApplicationHandlerNew(server.logger, server.database))
-	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandlerNew(server.logger, server.database))
+	r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
+	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
 
 	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
 	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
@@ -82,12 +81,12 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
 
 	// TODO: Remove old endpoints
-	r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
-	r.Post("/resume", PostResumeHandler(server.logger, server.database))
-	r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
-	r.Post("/application", PostApplicationHandler(server.logger, server.database))
-	r.Put("/application", PutApplicationHandler(server.logger, server.database))
-
+	// r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
+	// r.Post("/resume", PostResumeHandler(server.logger, server.database))
+	// r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
+	// r.Post("/application", PostApplicationHandler(server.logger, server.database))
+	// r.Put("/application", PutApplicationHandler(server.logger, server.database))
+	//
 	r.Mount(
 		"/assets",
 		http.StripPrefix("/assets", http.FileServer(http.FS(assets.Assets))),
@@ -177,7 +176,7 @@ func (server *Server) Run(ctx context.Context) error {
 			LockApplication: true,
 		}).Render(r.Context(), w)
 	})
-	r.Get("/home", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
@@ -187,7 +186,7 @@ func (server *Server) Run(ctx context.Context) error {
 			return
 		}
 
-		applications, err := server.database.GetApplicationsV2(r.Context(), 0 /* TODO: Set to userID */)
+		applications, err := server.database.GetApplications(r.Context(), 0 /* TODO: Set to userID */)
 		if err != nil {
 			http.Error(w,
 				fmt.Sprintf("reading database for applications: %s", err.Error()),
@@ -203,33 +202,6 @@ func (server *Server) Run(ctx context.Context) error {
 			Resumes:      resumes,
 			Applications: applications,
 		}).Render(r.Context(), w)
-	})
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		resumes, err := server.database.GetResumes(r.Context())
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for names: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-
-		applications, err := server.database.GetApplications(r.Context())
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for applications: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-
-		server.logger.Debug(
-			"got from db",
-			"names", resumes,
-			"apps", applications,
-		)
-		templates.MainPage(resumes, applications).Render(r.Context(), w)
 	})
 
 	r.NotFound(NotFoundHandler)

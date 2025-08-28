@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
-	"github.com/ohhfishal/resume-wizard/templates"
 	"github.com/ohhfishal/resume-wizard/templates/card"
 	"log/slog"
 	"net/http"
 	"strings"
 )
 
+const MaxFileSize = 12_000 // 12KB
+
 func FormFileResume(r *http.Request, key string) (*resume.Resume, error) {
-	file, header, err := r.FormFile(templates.UploadFileKey)
+	file, header, err := r.FormFile("file")
 	if err != nil {
 		return nil, fmt.Errorf("parsing form: %w", err)
 	}
@@ -33,7 +34,7 @@ func GetBaseResumeForm(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 		var baseResume *resume.Resume
 		if r.Method == http.MethodPost {
 			var err error
-			baseResume, err = FormFileResume(r, templates.UploadFileKey)
+			baseResume, err = FormFileResume(r, "file")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
@@ -75,7 +76,7 @@ func PostBaseResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFun
 		}
 
 		w.Header().Set("Content-Type", "text/html")
-		w.Header().Set("HX-Redirect", "/home")
+		w.Header().Set("HX-Redirect", "/")
 		w.WriteHeader(http.StatusSeeOther)
 	}
 }
