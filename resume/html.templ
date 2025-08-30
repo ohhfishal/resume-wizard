@@ -45,22 +45,22 @@ templ Header(resume Resume) {
 			// TODO: Make more generic and formatted better
 			// TODO: Center elements in this ddiv
 			if resume.PersonalInfo.Email != "" {
-				<i class="fa fa-envelope"></i> { resume.PersonalInfo.Email }
+				{ resume.PersonalInfo.Email }
 			}
 			if phone := resume.PersonalInfo.Phone; phone != "" {
-				| <i class="fa fa-phone"></i> { phone }
+				| { phone }
 			}
 			if citizenship := resume.PersonalInfo.Citizenship; citizenship != "" {
-				| <i class="fa fa-globe"></i> { citizenship }
+				| { citizenship }
 			}
 			if link := resume.PersonalInfo.LinkedIn; link != "" {
-				| <i class="fa fa-linkedin"></i> <a href={ link }>LinkedIn</a>
+				| <a href={ link }>LinkedIn</a>
 			}
 			if link := resume.PersonalInfo.Github; link != "" {
-				| <i class="fa fa-github"></i> <a href={ link }>GitHub</a>
+				| <a href={ link }>GitHub</a>
 			}
 			if link := resume.PersonalInfo.Portfolio; link != "" {
-				| <i class="fa fa-paperclip"></i> <a href={ link }>Portfolio</a>
+				| <a href={ link }>Portfolio</a>
 			}
 		</p>
 	</div>
@@ -91,8 +91,16 @@ templ ResumeSection(section Section) {
 templ ExperienceSection(positions []Experience) {
 	<div>
 		if len(positions) > 0 {
-			for index, position := range positions {
-				<h3 id={ fmt.Sprintf("experience-%d", index) }><strong>{ position.Title }</strong> | <em>{ position.Company }</em> | <em>{ position.Duration }</em></h3>
+			for _, position := range positions {
+				{{
+	company := position.Company
+	if position.Location != "" {
+		company += ", " + position.Location
+	}
+				}}
+				<h3>
+					<strong>{ company }</strong> | { position.Title } | { position.Duration }
+				</h3>
 				<ul>
 					for _, description := range position.Responsibilities {
 						<li>{ description }</li>
@@ -124,29 +132,27 @@ templ SkillsSection(allSkills map[string][]string) {
 
 templ ProjectsSection(projects []Project) {
 	<div>
-		if len(projects) > 0 {
-			for index, project := range projects {
-				<h3 id={ fmt.Sprintf("projects-%d", index) }>
-					<strong>{ project.Name }</strong>
-				</h3>
-				// <p>{ project.Description }</p>
-				<ul>
-					for _, bullet := range strings.Split(project.Description, ". ") {
-						<li>
-							{ strings.TrimSuffix(bullet, ".") }.
-						</li>
-					}
-					if len(project.Technologies) > 0 {
-						<li>
-							Technologies: { strings.Join(project.Technologies, ", ") }
-						</li>
-					}
-				</ul>
+		for _, project := range projects {
+			if project.Link != "" {
+				<a href={ project.Link }><b>{ project.Name }</b></a>
+			} else {
+				<strong>{ project.Name }</strong>
 			}
-			//<p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
-		} else {
-			<span>No projects</span>
+			// <p>{ project.Description }</p>
+			<ul>
+				for _, bullet := range strings.Split(project.Description, ". ") {
+					<li>
+						{ strings.TrimSuffix(bullet, ".") }.
+					</li>
+				}
+				if len(project.Technologies) > 0 {
+					<li>
+						Technologies: { strings.Join(project.Technologies, ", ") }
+					</li>
+				}
+			</ul>
 		}
+		//<p>{{if $project.Technologies}}<strong>Technologies:</strong> {{range $i, $tech := $project.Technologies}}{{if $i}}, {{end}}{{$tech}}{{end}}{{end}}{{if $project.Github}}<br /><strong>GitHub:</strong> <a href="{{$project.Github}}">{{$project.Github}}</a>{{end}}{{if $project.Demo}}<br /><strong>Demo:</strong> <a href="{{$project.Demo}}">{{$project.Demo}}</a>{{end}}{{if $project.Npm}}<br /><strong>NPM:</strong> <a href="{{$project.Npm}}">{{$project.Npm}}</a>{{end}}</p>
 	</div>
 }
 
@@ -162,7 +168,9 @@ templ EducationSection(educations []Education) {
 					if education.GPA != "" {
 						| <em>GPA: { education.GPA }</em>
 					}
-					if education.Duration != "" {
+					if education.Graduation != "" {
+						| <em>Graduated: { education.Graduation }</em>
+					} else if education.Duration != "" {
 						| <em>{ education.Duration }</em>
 					}
 				</h3>

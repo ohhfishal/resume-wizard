@@ -70,6 +70,7 @@ type Experience struct {
 	Title            string   `yaml:"title" json:"title"`
 	Company          string   `yaml:"company" json:"company"`
 	Duration         string   `yaml:"duration" json:"duration"`
+	Location         string   `yaml:"location" json:"location"`
 	Responsibilities []string `yaml:"responsibilities" json:"responsibilities"`
 }
 
@@ -77,6 +78,7 @@ type Education struct {
 	Degree             string   `yaml:"degree" json:"degree"`
 	Institution        string   `yaml:"institution" json:"institution"`
 	Location           string   `yaml:"location" json:"location"`
+	Graduation         string   `yaml:"graduation" json:"graduation"`
 	Duration           string   `yaml:"duration" json:"duration"`
 	GPA                string   `yaml:"gpa" json:"gpa"`
 	Focus              string   `yaml:"focus" json:"focus"`
@@ -88,7 +90,7 @@ type Project struct {
 	Technologies []string `yaml:"technologies" json:"technologies"`
 	Duration     string   `yaml:"duration" json:"duration"`
 	Description  string   `yaml:"description" json:"description"`
-	Github       string   `yaml:"github" json:"github"`
+	Link         string   `yaml:"link" json:"link"`
 	Demo         string   `yaml:"demo" json:"demo"`
 	Npm          string   `yaml:"npm" json:"npm"`
 }
