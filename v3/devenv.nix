@@ -6,12 +6,14 @@
       enable = true;
     };
   };
+  languages.typescript.enable = true;
 
   env.HOST = "localhost";
   env.PORT = "8080";
 
   packages = with pkgs; [
     # sqlite
+
   ];
 
   processes = {
