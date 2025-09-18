@@ -1,0 +1,109 @@
+{"level":"error","process":"resume-wizard","replica":0,"message":"Running tasks     devenv:processes:resume-wizard"}
+{"level":"error","process":"resume-wizard","replica":0}
+{"level":"error","process":"resume-wizard","replica":0,"message":"Running           devenv:processes:resume-wizard"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] $ vite dev --host localhost --port \"8080\""}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]   VITE v7.1.6  ready in 602 ms"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]   ➜  Local:   http://localhost:8080/"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:43:52 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:43:52 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:00 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:00 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:18 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:18 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:30 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:30 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /view/base\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:51 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:44:51 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:46:14 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:46:14 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:46:47 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:46:47 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:46:52 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:06 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:06 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:24 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:24 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:48 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:48 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:47:55 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:48:32 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:48:32 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[404] GET /tailor\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:49:34 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:49:34 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:13 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:13 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:49 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:59 PM [vite] (ssr) Error when evaluating SSR module /src/routes/+page.svelte: /home/jg/dev/resume-wizard/v3/src/routes/+page.svelte:10:38 Unexpected token"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] https://svelte.dev/e/js_parse_error"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]   Plugin: vite-plugin-svelte:compile"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]   File: /home/jg/dev/resume-wizard/v3/src/routes/+page.svelte:10:38"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     8 |  "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     9 |    let resumes: Row[] = ["}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]    10 |      { id: 1, title: 'Software Engineer' date: new Date('September 17, 2025') },"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]                                                  ^"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]    11 |    ];"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]    12 |  "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[500] GET /\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:59 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:50:59 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:19 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:36 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:36 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[500] GET /\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] TypeError: Cannot read properties of undefined (reading 'toDateString')"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at /home/jg/dev/resume-wizard/v3/src/routes/+page.svelte:40:38"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.child (node_modules/svelte/src/internal/server/renderer.js:112:18)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.component (node_modules/svelte/src/internal/server/renderer.js:137:22)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at _page (src/routes/+page.svelte:10:14)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at eval (.svelte-kit/generated/root.svelte:71:7)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at /home/jg/dev/resume-wizard/v3/src/routes/+layout.svelte:12:18"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.child (node_modules/svelte/src/internal/server/renderer.js:112:18)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.component (node_modules/svelte/src/internal/server/renderer.js:137:22)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at _layout (src/routes/+layout.svelte:14:14)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] "}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] \u001b[1;31m[500] GET /\u001b[0m"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] TypeError: Cannot read properties of undefined (reading 'toDateString')"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at /home/jg/dev/resume-wizard/v3/src/routes/+page.svelte:40:38"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.child (node_modules/svelte/src/internal/server/renderer.js:112:18)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.component (node_modules/svelte/src/internal/server/renderer.js:137:22)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at _page (src/routes/+page.svelte:10:14)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at eval (.svelte-kit/generated/root.svelte:71:7)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at /home/jg/dev/resume-wizard/v3/src/routes/+layout.svelte:12:18"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.child (node_modules/svelte/src/internal/server/renderer.js:112:18)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at Renderer.component (node_modules/svelte/src/internal/server/renderer.js:137:22)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard]     at _layout (src/routes/+layout.svelte:14:14)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:46 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:46 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:52 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:52 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:58 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:51:58 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:52:53 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:52:53 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:53:17 PM [vite] (client) hmr update /src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"[devenv:processes:resume-wizard] 12:53:17 PM [vite] (ssr) page reload src/routes/+page.svelte"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"Received SIGTERM, shutting down gracefully..."}
+{"level":"error","process":"resume-wizard","replica":0,"message":"Task devenv:processes:resume-wizard received shutdown signal, terminating child process"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"Cancelled         devenv:processes:resume-wizard (681.37s)"}
+{"level":"error","process":"resume-wizard","replica":0,"message":"1 Cancelled"}

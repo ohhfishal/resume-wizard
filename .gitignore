@@ -1,3 +1,6 @@
 internal/*
 resume-wizard
 dev/*
+
+v3/.devenv/*
+v3/.devenv*
