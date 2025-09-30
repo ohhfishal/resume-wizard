@@ -1,3 +1,5 @@
 internal/*
 resume-wizard
 dev/*
+.pre*
+.dev*

@@ -82,19 +82,16 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
 
-	// TODO: Remove old endpoints
-	// r.Put("/resume/{id}", PutResumeHandler(server.logger, server.database))
-	// r.Post("/resume", PostResumeHandler(server.logger, server.database))
-	// r.Post("/compile/resume", PostCompileHandler(server.logger, server.database))
-	// r.Post("/application", PostApplicationHandler(server.logger, server.database))
-	// r.Put("/application", PutApplicationHandler(server.logger, server.database))
-	//
 	r.Mount(
 		"/assets",
 		http.StripPrefix("/assets", http.FileServer(http.FS(assets.Assets))),
 	)
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
+
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
 		page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
