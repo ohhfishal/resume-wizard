@@ -1,12 +1,16 @@
 package components
 
-import "github.com/ohhfishal/resume-wizard/db"
+// import "github.com/ohhfishal/resume-wizard/db"
 
 type TailoredResumeSectionProps struct {
-	Session db.Session
+	// Session db.Session
 }
 
 templ TailoredResumeSection(prop TailoredResumeSectionProps) {
+  <div>
+    Not implemented
+  </div>
+  <!-- 
 	if tailoredResume := prop.Session.Resume; tailoredResume != nil {
 		<div class="form-group">
 			<label for="resumeEditor">Tailored Resume</label>
@@ -23,4 +27,5 @@ templ TailoredResumeSection(prop TailoredResumeSectionProps) {
 			<img alt="Result loading..." width="150" src="/assets/img/bars.svg"/>
 		</div>
 	}
+  -->
 }

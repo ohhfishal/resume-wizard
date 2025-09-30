@@ -29,7 +29,7 @@ func FormFileResume(r *http.Request, key string) (*resume.Resume, error) {
 	return newResume, nil
 }
 
-func GetBaseResumeForm(logger *slog.Logger, database *db.DB) http.HandlerFunc {
+func GetResumeForm(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var baseResume *resume.Resume
 		if r.Method == http.MethodPost {
@@ -43,11 +43,11 @@ func GetBaseResumeForm(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusOK)
-		card.BaseResumeReviewForm(baseResume).Render(r.Context(), w)
+		card.ResumeReviewForm(baseResume).Render(r.Context(), w)
 	}
 }
 
-func PostBaseResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
+func PostResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("name")
 		if title == "" {
@@ -66,10 +66,10 @@ func PostBaseResumeHandler(logger *slog.Logger, database *db.DB) http.HandlerFun
 			return
 		}
 
-		if _, err := database.InsertBase(r.Context(), db.InsertBaseParams{
+		if _, err := database.InsertResume(r.Context(), db.InsertResumeParams{
 			UserID: 0, // TODO: Grab this from somewhere (Probably the context?)
 			Name:   title,
-			Resume: &baseResume,
+			Resume: baseResume,
 		}); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

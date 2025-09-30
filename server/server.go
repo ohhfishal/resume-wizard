@@ -8,7 +8,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
-	"strconv"
+	// "strconv"
 	"strings"
 	"time"
 
@@ -74,10 +74,6 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
 	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
 
-	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
-	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
-	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
-
 	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
 
 	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
@@ -93,115 +89,73 @@ func (server *Server) Run(ctx context.Context) error {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
-		page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
-	})
+	// r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
+	// 	page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
+	// })
 	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
 		page.Login(page.LoginProps{}).Render(r.Context(), w)
 	})
-	r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("invalid base resume id: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     id,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		// NOTE: Probably not the best
-		if err := base.Resume.ToHTML(w); err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-	})
-	r.Get("/tailor", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("invalid base resume id: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     id,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		page.TailorResume(page.TailorResumeProps{
-			Base: base,
-		}).Render(r.Context(), w)
-	})
-	r.Get("/tailor/{uuid}", func(w http.ResponseWriter, r *http.Request) {
-		session, err := server.database.GetSession(r.Context(), db.GetSessionParams{
-			UserID: 0, /* TODO: Set to userID */
-			Uuid:   r.PathValue("uuid"),
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("restoring session: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     session.BaseResumeID,
-		})
+	// r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
+	// 	id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+	// 	if err != nil {
+	// 		http.Error(w,
+	// 			fmt.Sprintf("invalid base resume id: %s", err.Error()),
+	// 			http.StatusInternalServerError,
+	// 		)
+	// 		return
+	// 	}
+	// 	base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+	// 		UserID: 0, /* TODO: Set to userID */
+	// 		ID:     id,
+	// 	})
+	// 	if err != nil {
+	// 		http.Error(w,
+	// 			fmt.Sprintf("reading database for base resume: %s", err.Error()),
+	// 			http.StatusInternalServerError,
+	// 		)
+	// 		return
+	// 	}
+	// 	// NOTE: Probably not the best
+	// 	if err := base.Resume.ToHTML(w); err != nil {
+	// 		http.Error(w,
+	// 			fmt.Sprintf("reading database for base resume: %s", err.Error()),
+	// 			http.StatusInternalServerError,
+	// 		)
+	// 		return
+	// 	}
+	// })
+	// r.Get("/tailor/{uuid}", func(w http.ResponseWriter, r *http.Request) {
+	// 	session, err := server.database.GetSession(r.Context(), db.GetSessionParams{
+	// 		UserID: 0, /* TODO: Set to userID */
+	// 		Uuid:   r.PathValue("uuid"),
+	// 	})
+	// 	if err != nil {
+	// 		http.Error(w,
+	// 			fmt.Sprintf("restoring session: %s", err.Error()),
+	// 			http.StatusInternalServerError,
+	// 		)
+	// 		return
+	// 	}
+	// 	base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
+	// 		UserID: 0, /* TODO: Set to userID */
+	// 		ID:     session.BaseResumeID,
+	// 	})
+	//
+	// 	page.TailorResume(page.TailorResumeProps{
+	// 		Base:            base,
+	// 		Session:         session,
+	// 		LockApplication: true,
+	// 	}).Render(r.Context(), w)
+	// })
 
-		page.TailorResume(page.TailorResumeProps{
-			Base:            base,
-			Session:         session,
-			LockApplication: true,
-		}).Render(r.Context(), w)
-	})
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for names: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
+	r.Get("/", MainPage(server.logger, server.database))
+	r.Get("/resume", ResumeFormPage())
+	r.Get("/apply/{id}", ApplyPage(server.database))
+	r.Post("/resume/upload", GetResumeForm(server.logger, server.database))
+	// TODO: Implement
+	// r.Get("/resume/new", GetBaseResumeForm(server.logger, server.database))
 
-		applications, err := server.database.GetApplications(r.Context(), 0 /* TODO: Set to userID */)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for applications: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		if len(applications) == 0 {
-			server.logger.Warn("NO APPLICATIONS")
-		}
-
-		page.Home(page.HomeProps{
-			Resumes:      resumes,
-			Applications: applications,
-		}).Render(r.Context(), w)
-	})
+	r.Post("/api/dev/resume", PostResumeHandler(server.logger, server.database))
 
 	r.NotFound(NotFoundHandler)
 

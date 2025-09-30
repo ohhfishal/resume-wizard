@@ -7,38 +7,21 @@ import (
 	"time"
 )
 
-// TODO: Make a feature flag
-const MAX_BASE_RESUMES = 3
 
-templ BaseResumeCard(resumes []db.BaseResume) {
-	{{
-	// TODO: Make a feature flag based on the user
-	var disabled = len(resumes) >= MAX_BASE_RESUMES
-	if disabled {
-		resumes = resumes[:MAX_BASE_RESUMES]
-	}
-	}}
+templ ResumeCard(resumes []db.Resume) {
 	@Card(CardProps{}) {
 		<div class="card-header">
-			<h3>{ "Base Resumes" }</h3>
+			<h3>{ "Resumes" }</h3>
 			<div class="card-meta">
 				<span class="count-badge">{ len(resumes) } Resumes</span>
-				if disabled {
-					<div class="tooltip-container">
-						// TODO: Have this not redirect the whole page
-						<button href="/base" class="button btn-add" hx-boost="true" disabled>+ Add New </button>
-						<span class="tooltip-text">Reached max resume limit of { MAX_BASE_RESUMES }</span>
-					</div>
-				} else {
-					<a href="/base" class="button btn-add" hx-boost="true">+ Add New </a>
-				}
+        <a href="/resume" class="button btn-add" hx-boost="true">+ Add New </a>
 			</div>
 		</div>
-		@BaseResumeList(resumes)
+		@ResumeList(resumes)
 	}
 }
 
-templ BaseResumeList(resumes []db.BaseResume) {
+templ ResumeList(resumes []db.Resume) {
 	// TODO: Update on deletes or adds or edits
 	<div
 		class="resume-list"
@@ -52,7 +35,7 @@ templ BaseResumeList(resumes []db.BaseResume) {
 	</div>
 }
 
-templ ResumeItem(resume db.BaseResume) {
+templ ResumeItem(resume db.Resume) {
 	{{
 	metadata := []string{
 		"Uploaded " + resume.CreatedAt.Format(time.DateOnly),
@@ -70,16 +53,17 @@ templ ResumeItem(resume db.BaseResume) {
 		</div>
 		<div hx-boost="true" class="resume-actions">
 			<a
-				href={ fmt.Sprintf("/tailor?id=%d", resume.ID) }
+				href={ fmt.Sprintf("/apply/%d", resume.ID) }
 				class="button btn-small"
-			>Tailor</a>
+			>Apply</a>
 			<a
-				href={ fmt.Sprintf("/view/base?id=%d", resume.ID) }
+				href={ fmt.Sprintf("/resume/view?id=%d", resume.ID) }
 				hx-boost="false"
 				class="button btn-small"
 			>View</a>
 			<a
-				href="/edit"
+				href={ fmt.Sprintf("/resume/edit?id=%d", resume.ID) }
+				hx-boost="false"
 				class="button btn-small"
 			>Edit</a>
 			<button class="btn-small">Delete</button>

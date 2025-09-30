@@ -6,8 +6,8 @@ import (
 )
 
 type TailorResumeCardProps struct {
-	Base            db.BaseResume
-	Session         db.Session
+	Base            db.Resume
+	// Session         db.Session
 	LockApplication bool
 }
 
@@ -31,7 +31,7 @@ templ TailorResumeCard(props ...TailorResumeCardProps) {
 			// That way we can store it and let the user continue later!
 			<form
 				if locked {
-					hx-post={ "/api/dev/application/" + prop.Session.Uuid }
+					hx-post={ "/api/dev/application/NOTIMPLEMENTED" }
 				} else {
 					hx-post="/api/dev/generate"
 				}
@@ -49,7 +49,7 @@ templ TailorResumeCard(props ...TailorResumeCardProps) {
 							type="text"
 							required
 							disabled?={ locked }
-							value={ prop.Session.Company }
+							value={ "NOT IMPLEMENTED" }
 						/>
 					</div>
 					<div class="form-group">
@@ -60,7 +60,7 @@ templ TailorResumeCard(props ...TailorResumeCardProps) {
 							type="text"
 							required
 							disabled?={ locked }
-							value={ prop.Session.Position }
+							value="prop.Session.Position"
 						/>
 					</div>
 				</div>
@@ -74,13 +74,12 @@ templ TailorResumeCard(props ...TailorResumeCardProps) {
 						placeholder="Paste the job description here."
 						disabled?={ locked }
 					>
-						{ prop.Session.Description }
+						prop.Session.Description
 					</textarea>
 					<small>TODO: Maximum XXX characters.</small>
 				</div>
 				if locked {
 					@components.TailoredResumeSection(components.TailoredResumeSectionProps{
-						Session: prop.Session,
 					})
 				}
 				<div class="btn-container">

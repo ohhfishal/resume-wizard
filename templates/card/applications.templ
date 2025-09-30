@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-templ ApplicationsCard(applications []db.Application) {
+templ ApplicationsCard(applications []db.ApplicationHistory) {
 	@Card() {
 		<div class="card-header">
 			<h3>Applications (TODO MOVE SOMEWHERE ELSE)</h3>
@@ -21,18 +21,16 @@ templ ApplicationsCard(applications []db.Application) {
 	}
 }
 
-templ ApplicationsRow(app db.Application) {
+templ ApplicationsRow(app db.ApplicationHistory) {
 	{{
 	created := app.CreatedAt.Format(time.DateOnly)
-	applied := app.AppliedAt.Format(time.DateOnly)
-	updated := app.UpdatedAt.Format(time.DateOnly)
 	id := fmt.Sprintf("row-%d", app.ID)
 	}}
 	<details id={ id } class="card-row">
 		<summary>
 			<div>
 				<h4>{ app.Company + " - " + app.Position }</h4>
-				<p>{ applied } </p>
+				<p>NOT IMPLEMENTED </p>
 			</div>
 			<div>
 				<p class={ "status " + app.Status }>{ app.Status }</p>
@@ -45,7 +43,7 @@ templ ApplicationsRow(app db.Application) {
 			</div>
 			<div class="details-row">
 				<span class="application-label">Last Updated:</span>
-				<span>{ updated }</span>
+				<span>NOT IMPLEENTED</span>
 			</div>
 			<form
 				hx-put={ fmt.Sprintf("/api/dev/%d/application/%d", app.UserID, app.ID) }
@@ -55,7 +53,7 @@ templ ApplicationsRow(app db.Application) {
 				<div class="details-row">
 					<label for="applied_at" class="application-label">Applied:</label>
 					<span>
-						<input name="applied_at" class="application-value status" type="date" value={ applied }/>
+						<input name="applied_at" class="application-value status" type="date" value="NOT IMPLEMMENTED"/>
 					</span>
 				</div>
 				<div class="details-row">

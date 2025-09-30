@@ -11,11 +11,12 @@ in
   env.HOST = "localhost";
   env.PORT = "8080";
 
-  # packages = [
+  packages = [
   #   pkgs.gnumake
   #   pkgs.jq
   #   pkgs.yamllint
-  # ];
+    pkgs.sqlc
+  ];
 
   git-hooks.hooks = {
     # Shell
@@ -25,16 +26,6 @@ in
     govet.enable = true;
     gotest.enable = true;
     gofmt.enable = true;
-  };
-
-  tasks = {
-    "go:templ" = {
-      exec = "go tool templ generate";
-      execIfModified = [
-        "*.templ"
-      ];
-      cwd = "./templates";
-    };
   };
 
   processes = {

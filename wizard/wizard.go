@@ -3,10 +3,10 @@ package wizard
 import (
 	"context"
 	"errors"
-	"fmt"
+	// "fmt"
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
-	"github.com/ohhfishal/resume-wizard/db"
+	// "github.com/ohhfishal/resume-wizard/db"
 	"github.com/ohhfishal/resume-wizard/resume"
 	"log/slog"
 	"time"
@@ -41,36 +41,37 @@ func (wizard *Wizard) Init(logger *slog.Logger) error {
 }
 
 type AnnotationContext struct {
-	Base        db.BaseResume
+	// Base        db.BaseResume
 	Company     string
 	Position    string
 	Description string
 }
 
 func (wizard *Wizard) Annotate(ctx context.Context, args AnnotationContext) (*resume.Resume, error) {
-	start := time.Now()
-	wizard.logger.Info("creating annotation",
-		slog.String("base", args.Base.Name),
-		slog.String("position", args.Position),
-		slog.Time("start", time.Now()),
-	)
-
-	defer func() {
-		wizard.logger.Info("returning",
-			slog.Time("start", start),
-			slog.Time("end", time.Now()),
-			slog.Duration("duration", time.Since(start)),
-		)
-	}()
-	switch wizard.Backend {
-	case "anthropic":
-		return wizard.annotateClaude(ctx, args)
-	case "sleep":
-		time.Sleep(wizard.Sleep.Duration)
-		fallthrough
-	case "disabled":
-		return args.Base.Resume, nil
-	default:
-		return nil, fmt.Errorf("unknown backend: %s", wizard.Backend)
-	}
+	return nil, errors.New("Not implemented: Annotation")
+	// start := time.Now()
+	// wizard.logger.Info("creating annotation",
+	// 	slog.String("base", args.Base.Name),
+	// 	slog.String("position", args.Position),
+	// 	slog.Time("start", time.Now()),
+	// )
+	//
+	// defer func() {
+	// 	wizard.logger.Info("returning",
+	// 		slog.Time("start", start),
+	// 		slog.Time("end", time.Now()),
+	// 		slog.Duration("duration", time.Since(start)),
+	// 	)
+	// }()
+	// switch wizard.Backend {
+	// case "anthropic":
+	// 	return wizard.annotateClaude(ctx, args)
+	// case "sleep":
+	// 	time.Sleep(wizard.Sleep.Duration)
+	// 	fallthrough
+	// case "disabled":
+	// 	return args.Base.Resume, nil
+	// default:
+	// 	return nil, fmt.Errorf("unknown backend: %s", wizard.Backend)
+	// }
 }

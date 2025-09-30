@@ -14,7 +14,7 @@ func GetExportHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 		format := r.PathValue("format")
 		switch format {
 		case "csv":
-			applications, err := database.GetApplications(r.Context(), 0 /* TODO: Replace with userID */)
+			applications, err := database.GetApplicationHistory(r.Context(), 0 /* TODO: Replace with userID */)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("getting applications: %s", err.Error()), http.StatusInternalServerError)
 				return
@@ -24,28 +24,27 @@ func GetExportHandler(logger *slog.Logger, database *db.DB) http.HandlerFunc {
 			defer writer.Flush()
 
 			if err := writer.Write([]string{
-				"Base Resume ID",
+				"Resume ID",
 				"Company",
 				"Position",
 				"Description",
 				"Status",
-				"Applied At",
 				"Created At",
-				"Updated At",
 			}); err != nil {
 				http.Error(w, fmt.Sprintf("writing application: %s", err.Error()), http.StatusInternalServerError)
 				return
 			}
 			for _, app := range applications {
+				var description string
+				// TODO: Set the description
+				description = "TODO"
 				if err := writer.Write([]string{
-					fmt.Sprintf("%d", app.BaseResumeID),
+					fmt.Sprintf("%d", app.ResumeID),
 					app.Company,
 					app.Position,
-					app.Description,
+					description,
 					app.Status,
-					app.AppliedAt.Format(time.DateOnly),
 					app.CreatedAt.Format(time.DateOnly),
-					app.UpdatedAt.Format(time.DateOnly),
 				}); err != nil {
 					http.Error(w, fmt.Sprintf("writing application: %s", err.Error()), http.StatusInternalServerError)
 					return

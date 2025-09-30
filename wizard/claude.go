@@ -68,23 +68,24 @@ func (wizard *Wizard) annotateClaude(ctx context.Context, args AnnotationContext
 }
 
 func promptFrom(ctx AnnotationContext) (string, error) {
-	if ctx.Base.Resume == nil {
-		return "", errors.New("missing field: Base.Resume")
-	}
-
-	resumeContent, err := ctx.Base.Resume.JSON()
-	if err != nil {
-		return "", fmt.Errorf("converting base resume to json: %w", err)
-	}
-
-	var writer strings.Builder
-	if err := tailorTemplate.Execute(&writer, TailorPromptArgs{
-		JobDescription: ctx.Description,
-		ResumeJSON:     resumeContent,
-	}); err != nil {
-		return "", fmt.Errorf("templating: %w", err)
-	}
-	return writer.String(), nil
+	return "", errors.New("Not implemented")
+	// if ctx.Base.Resume == nil {
+	// 	return "", errors.New("missing field: Base.Resume")
+	// }
+	//
+	// resumeContent, err := ctx.Base.Resume.JSON()
+	// if err != nil {
+	// 	return "", fmt.Errorf("converting base resume to json: %w", err)
+	// }
+	//
+	// var writer strings.Builder
+	// if err := tailorTemplate.Execute(&writer, TailorPromptArgs{
+	// 	JobDescription: ctx.Description,
+	// 	ResumeJSON:     resumeContent,
+	// }); err != nil {
+	// 	return "", fmt.Errorf("templating: %w", err)
+	// }
+	// return writer.String(), nil
 }
 
 type promptResponse struct {

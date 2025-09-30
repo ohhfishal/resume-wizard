@@ -6,8 +6,8 @@ import (
 )
 
 type HomeProps struct {
-	Resumes      []db.BaseResume
-	Applications []db.Application
+	Resumes      []db.Resume
+	Applications []db.ApplicationHistory
 	// TODO: Feature flags / User info goes here
 }
 
@@ -22,7 +22,7 @@ templ Home(props HomeProps) {
 	})
 }
 
-templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
+templ HomeBody(resumes []db.Resume, applications []db.ApplicationHistory) {
 	<body>
 		@Header()
 		<div class="container">
@@ -30,7 +30,7 @@ templ HomeBody(resumes []db.BaseResume, applications []db.Application) {
 				<h1>Home</h1>
 				<p>Put a search bar or something here.</p>
 			</div>
-			@card.BaseResumeCard(resumes)
+			@card.ResumeCard(resumes)
 			// TODO: Clean this up?
 			if len(applications) > 0 {
 				@card.ApplicationsCard(applications)
