@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/ohhfishal/resume-wizard/templates/card"
 
-type ApplyProps card.TailorResumeCardProps
+type ApplyProps card.ApplyCardProps
 
 func Apply(prop ApplyProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -81,7 +81,7 @@ func ApplyBody(prop ApplyProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = card.TailorResumeCard((card.TailorResumeCardProps)(prop)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = card.ApplyCard((card.ApplyCardProps)(prop)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

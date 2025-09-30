@@ -71,10 +71,10 @@ func (server *Server) Run(ctx context.Context) error {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(server.config.RequestTimeout))
 
-	r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
-	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
+	// r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
+	// r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
 
-	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
+	// r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
 
 	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
 
@@ -85,16 +85,26 @@ func (server *Server) Run(ctx context.Context) error {
 
 	r.Route("/components", ComponentsHandler(server.logger, server.database))
 
+	// Route Web Pages
+	r.Get("/", MainPage(server.logger, server.database))
+	r.Get("/resume", ResumeFormPage())
+	r.Get("/apply/{id}", ApplyPage(server.database))
+	r.Post("/resume/upload", GetResumeForm(server.logger, server.database))
+	// TODO: Implement
+	// r.Get("/resume/new", GetBaseResumeForm(server.logger, server.database))
+	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+		page.Login(page.LoginProps{}).Render(r.Context(), w)
+	})
+
+	// API
+	r.Post("/api/dev/resume", PostResumeHandler(server.logger, server.database))
+	r.Post("/api/dev/application", PostApplicationHandler(server.logger, server.database))
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	// r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
-	// 	page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
-	// })
-	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
-		page.Login(page.LoginProps{}).Render(r.Context(), w)
-	})
+	r.NotFound(NotFoundHandler)
+
 	// r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
 	// 	id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 	// 	if err != nil {
@@ -147,17 +157,6 @@ func (server *Server) Run(ctx context.Context) error {
 	// 		LockApplication: true,
 	// 	}).Render(r.Context(), w)
 	// })
-
-	r.Get("/", MainPage(server.logger, server.database))
-	r.Get("/resume", ResumeFormPage())
-	r.Get("/apply/{id}", ApplyPage(server.database))
-	r.Post("/resume/upload", GetResumeForm(server.logger, server.database))
-	// TODO: Implement
-	// r.Get("/resume/new", GetBaseResumeForm(server.logger, server.database))
-
-	r.Post("/api/dev/resume", PostResumeHandler(server.logger, server.database))
-
-	r.NotFound(NotFoundHandler)
 
 	s := &http.Server{
 		Addr:         net.JoinHostPort(server.config.Host, server.config.Port),

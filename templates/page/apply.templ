@@ -2,7 +2,7 @@ package page
 
 import "github.com/ohhfishal/resume-wizard/templates/card"
 
-type ApplyProps card.TailorResumeCardProps
+type ApplyProps card.ApplyCardProps
 
 templ Apply(prop ApplyProps) {
 	@Page(PageProps{
@@ -19,7 +19,7 @@ templ ApplyBody(prop ApplyProps) {
 	<body>
 		@Header()
 		<div class="container">
-			@card.TailorResumeCard((card.TailorResumeCardProps)(prop))
+			@card.ApplyCard((card.ApplyCardProps)(prop))
 		</div>
 	</body>
 }
