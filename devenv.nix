@@ -11,11 +11,9 @@ in
   env.HOST = "localhost";
   env.PORT = "8080";
 
-  # packages = [
-  #   pkgs.gnumake
-  #   pkgs.jq
-  #   pkgs.yamllint
-  # ];
+  packages = [
+    pkgs.sqlc
+  ];
 
   git-hooks.hooks = {
     # Shell

@@ -55,8 +55,11 @@ func (server *Server) Run(ctx context.Context) error {
 	)
 
 	mux.Handle("GET /health", HandleHealth())
+	mux.Handle("POST /api/register", Chain(
+		RegisterUser(server.database),
+	))
 	mux.Handle("POST /api/match", Chain(
-		WithBearerAuth(nil),
+		WithBearerAuth(server.database),
 		HandlePostMatch(),
 	))
 

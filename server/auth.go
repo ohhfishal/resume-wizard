@@ -2,14 +2,17 @@ package server
 
 import (
 	"context"
+	"fmt"
+	"github.com/google/uuid"
+	"github.com/ohhfishal/resume-wizard/db"
 	"net/http"
 )
 
-type User struct {
-}
+type User db.User
 
 type UserStore interface {
-	LookupUser(ctx context.Context, user string) (*User, error)
+	GetUser(ctx context.Context, id string) (db.User, error)
+	CreateUser(ctx context.Context, id string) (db.User, error)
 }
 
 func WithBearerAuth(store UserStore) Handler {
@@ -23,7 +26,7 @@ func WithBearerAuth(store UserStore) Handler {
 			return Text("Empty Auth", http.StatusUnauthorized)
 		}
 
-		user, err := store.LookupUser(r.Context(), token)
+		user, err := store.GetUser(r.Context(), token)
 		if err != nil {
 			return TextStatus(http.StatusUnauthorized)
 		}
@@ -31,5 +34,18 @@ func WithBearerAuth(store UserStore) Handler {
 		ctx := context.WithValue(r.Context(), "user", user)
 		*r = *r.WithContext(ctx)
 		return Next
+	})
+}
+
+func RegisterUser(store UserStore) Handler {
+	return Handler(func(w http.ResponseWriter, r *http.Request) Handler {
+		user, err := store.CreateUser(r.Context(), uuid.NewString())
+		if err != nil {
+			return Text(
+				fmt.Errorf("could not create user: %w", err).Error(),
+				http.StatusInternalServerError,
+			)
+		}
+		return JSON(user, http.StatusCreated)
 	})
 }
