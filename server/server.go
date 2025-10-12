@@ -2,23 +2,13 @@ package server
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"net"
 	"net/http"
-	"strconv"
-	"strings"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/ohhfishal/resume-wizard/assets"
 	"github.com/ohhfishal/resume-wizard/db"
-	"github.com/ohhfishal/resume-wizard/feature"
-	"github.com/ohhfishal/resume-wizard/templates/page"
-	"github.com/ohhfishal/resume-wizard/wizard"
 )
 
 type Config struct {
@@ -26,15 +16,12 @@ type Config struct {
 	Host           string        `default:"localhost" short:"H" help:"Address to serve from"`
 	RequestTimeout time.Duration `default:"30s" help:"How long to keep requests alive"`
 	Database       db.Config     `embed:"" prefix:"database-" envprefix:"DATABASE_"`
-	Wizard         wizard.Wizard `embed:"" prefix:"wizard-" envprefix:"WIZARD_"`
-	Features       feature.Flags `embed:""`
 }
 
 type Server struct {
 	logger   *slog.Logger
 	database *db.DB
 	config   Config
-	wizard   *wizard.Wizard
 }
 
 func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, error) {
@@ -51,163 +38,33 @@ func New(ctx context.Context, config Config, logger *slog.Logger) (*Server, erro
 		return nil, fmt.Errorf("connecting to database: %w", err)
 	}
 
-	var model = config.Wizard
-	if err := model.Init(logger); err != nil {
-		return nil, fmt.Errorf("connecting to llm provider: %w", err)
-	}
-
 	return &Server{
 		database: database,
 		logger:   logger,
 		config:   config,
-		wizard:   &model,
 	}, nil
 }
 
 func (server *Server) Run(ctx context.Context) error {
-	r := chi.NewRouter()
+	mux := http.NewServeMux()
 
-	r.Use(loggingMiddleware(server.logger))
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(server.config.RequestTimeout))
-
-	r.Post("/api/dev/application/{session_id}", PostApplicationHandler(server.logger, server.database))
-	r.Put("/api/dev/{user_id}/application/{id}", PutApplicationHandler(server.logger, server.database))
-
-	r.Post("/api/dev/base", PostBaseResumeHandler(server.logger, server.database))
-	r.Post("/base/upload", GetBaseResumeForm(server.logger, server.database))
-	r.Get("/base/new", GetBaseResumeForm(server.logger, server.database))
-
-	r.Post("/api/dev/generate", GenerateHandler(server.logger, server.database, server.wizard))
-
-	r.Get("/export/{format}", GetExportHandler(server.logger, server.database))
-
-	r.Mount(
-		"/assets",
-		http.StripPrefix("/assets", http.FileServer(http.FS(assets.Assets))),
+	handler := loggingMiddleware(server.logger)(
+		timeoutMiddleware(server.config.RequestTimeout)(
+			recoveryMiddleware()(mux),
+		),
 	)
 
-	r.Route("/components", ComponentsHandler(server.logger, server.database))
+	mux.Handle("GET /health", HandleHealth())
+	mux.Handle("POST /api/match", Chain(
+		WithBearerAuth(nil),
+		HandlePostMatch(),
+	))
 
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
-
-	r.Get("/base", func(w http.ResponseWriter, r *http.Request) {
-		page.BaseResume(page.BaseResumeProps{}).Render(r.Context(), w)
-	})
-	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
-		page.Login(page.LoginProps{}).Render(r.Context(), w)
-	})
-	r.Get("/view/base", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("invalid base resume id: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     id,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		// NOTE: Probably not the best
-		if err := base.Resume.ToHTML(w); err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-	})
-	r.Get("/tailor", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("invalid base resume id: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     id,
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for base resume: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		page.TailorResume(page.TailorResumeProps{
-			Base: base,
-		}).Render(r.Context(), w)
-	})
-	r.Get("/tailor/{uuid}", func(w http.ResponseWriter, r *http.Request) {
-		session, err := server.database.GetSession(r.Context(), db.GetSessionParams{
-			UserID: 0, /* TODO: Set to userID */
-			Uuid:   r.PathValue("uuid"),
-		})
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("restoring session: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		base, err := server.database.GetBaseResume(r.Context(), db.GetBaseResumeParams{
-			UserID: 0, /* TODO: Set to userID */
-			ID:     session.BaseResumeID,
-		})
-
-		page.TailorResume(page.TailorResumeProps{
-			Base:            base,
-			Session:         session,
-			LockApplication: true,
-		}).Render(r.Context(), w)
-	})
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		resumes, err := server.database.GetBaseResumes(r.Context(), 0 /* TODO: Set to userID */)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for names: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-
-		applications, err := server.database.GetApplications(r.Context(), 0 /* TODO: Set to userID */)
-		if err != nil {
-			http.Error(w,
-				fmt.Sprintf("reading database for applications: %s", err.Error()),
-				http.StatusInternalServerError,
-			)
-			return
-		}
-		if len(applications) == 0 {
-			server.logger.Warn("NO APPLICATIONS")
-		}
-
-		page.Home(page.HomeProps{
-			Resumes:      resumes,
-			Applications: applications,
-		}).Render(r.Context(), w)
-	})
-
-	r.NotFound(NotFoundHandler)
+	mux.Handle("/", HandleNotFound())
 
 	s := &http.Server{
 		Addr:         net.JoinHostPort(server.config.Host, server.config.Port),
-		Handler:      r,
+		Handler:      handler,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 	}
@@ -233,26 +90,6 @@ func (server *Server) Run(ctx context.Context) error {
 	return nil
 }
 
-func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	accept := r.Header.Get("Accept")
-	err := errors.New("Page Not Found")
-
-	w.WriteHeader(http.StatusNotFound)
-	switch {
-	case strings.Contains(accept, "text/html"):
-		w.Header().Set("Content-Type", "text/html")
-		page.Error(err).Render(r.Context(), w)
-	case strings.Contains(accept, "text/plain"):
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte(err.Error()))
-	case strings.Contains(accept, "application/json"):
-		fallthrough
-	default:
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{"error": err})
-	}
-}
-
 func loggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -267,6 +104,26 @@ func loggingMiddleware(logger *slog.Logger) func(http.Handler) http.Handler {
 				"status", ww.statusCode,
 				"duration", time.Since(start).String(),
 			)
+		})
+	}
+}
+
+func timeoutMiddleware(timeout time.Duration) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.TimeoutHandler(next, timeout, "timeout")
+	}
+}
+
+func recoveryMiddleware() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if err := recover(); err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte("Internal Server Error"))
+				}
+			}()
+			next.ServeHTTP(w, r)
 		})
 	}
 }
