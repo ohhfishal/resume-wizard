@@ -18,6 +18,31 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
         contexts: ["selection"],
         // parentId: rootId
       });
+
+      chrome.storage.local.get(["user_id"]).then((result) => {
+        if (result.key === undefined) {
+          console.log("Getting new user_id");
+          fetch('http://localhost:8080/api/register', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('registering: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(user => {
+            chrome.storage.local.set({ user_id: user.id }) .then(() => {
+              console.log("Stored value:", user);
+            });
+          })
+          .catch(error => console.error('Error:', error));
+        }
+      });
+
       return
     default:
       console.log("unknown reason being handed:", reason)
@@ -25,21 +50,28 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   switch (info.menuItemId) {
     case rootId:
       console.log("ROOT")
       return
     case findResumeId:
-      fetch('http://localhost:8080/health')
+      let store = await chrome.storage.local.get(["user_id"]);
+      fetch('http://localhost:8080/api/match', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${store.user_id}`
+        },
+      })
         .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
           console.log(response)
-          // return response.json();
+          if (!response.ok) {
+            throw new Error('requesting match: ' + response.statusText);
+          }
+          return response.json();
         })
-        // .then(data => console.log(data))
+        .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
       return
     default:
