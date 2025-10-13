@@ -60,7 +60,11 @@ func (server *Server) Run(ctx context.Context) error {
 	))
 	mux.Handle("POST /api/match", Chain(
 		WithBearerAuth(server.database),
-		HandlePostMatch(),
+		HandlePostMatch(server.database),
+	))
+	mux.Handle("POST /api/resume", Chain(
+		WithBearerAuth(server.database),
+		HandlePostResume(server.database),
 	))
 
 	mux.Handle("/", HandleNotFound())

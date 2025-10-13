@@ -7,7 +7,37 @@ package db
 
 import (
 	"context"
+
+	"github.com/ohhfishal/resume-wizard/resume"
 )
+
+const createResume = `-- name: CreateResume :one
+INSERT INTO resumes (user_id, name, resume)
+VALUES (?, ?, ?)
+RETURNING id, user_id, name, resume, created_at, updated_at, last_used, deleted_at
+`
+
+type CreateResumeParams struct {
+	UserID string         `json:"user_id"`
+	Name   string         `json:"name"`
+	Resume *resume.Resume `json:"resume"`
+}
+
+func (q *Queries) CreateResume(ctx context.Context, arg CreateResumeParams) (Resume, error) {
+	row := q.db.QueryRowContext(ctx, createResume, arg.UserID, arg.Name, arg.Resume)
+	var i Resume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
+	return i, err
+}
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (id)
@@ -20,6 +50,69 @@ func (q *Queries) CreateUser(ctx context.Context, id string) (User, error) {
 	var i User
 	err := row.Scan(&i.ID, &i.CreatedAt)
 	return i, err
+}
+
+const getResume = `-- name: GetResume :one
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from resumes
+WHERE user_id = ? AND name = ?
+`
+
+type GetResumeParams struct {
+	UserID string `json:"user_id"`
+	Name   string `json:"name"`
+}
+
+func (q *Queries) GetResume(ctx context.Context, arg GetResumeParams) (Resume, error) {
+	row := q.db.QueryRowContext(ctx, getResume, arg.UserID, arg.Name)
+	var i Resume
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Resume,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.LastUsed,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const getResumes = `-- name: GetResumes :many
+SELECT id, user_id, name, resume, created_at, updated_at, last_used, deleted_at from resumes
+WHERE user_id = ?
+`
+
+func (q *Queries) GetResumes(ctx context.Context, userID string) ([]Resume, error) {
+	rows, err := q.db.QueryContext(ctx, getResumes, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Resume{}
+	for rows.Next() {
+		var i Resume
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Resume,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.LastUsed,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getUser = `-- name: GetUser :one

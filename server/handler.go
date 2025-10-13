@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -39,6 +40,18 @@ func Text(body string, status int) Handler {
 		w.Write([]byte(body))
 		return nil
 	}
+}
+
+func InternalServerError(err error) Handler {
+	return Text(err.Error(), http.StatusInternalServerError)
+}
+
+func Decode[T any](r *http.Request) (T, error) {
+	var v T
+	if err := json.NewDecoder(r.Body).Decode(&v); err != nil {
+		return v, fmt.Errorf("decode json: %w", err)
+	}
+	return v, nil
 }
 
 func JSON(data any, status int) Handler {

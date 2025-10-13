@@ -11,7 +11,7 @@ sql:
         emit_enum_valid_method: true
         overrides:
           # NOTE: Types must implement interfaces database/sql/driver and sql.Scanner
-          - column: "base_resumes.resume"
+          - column: "resumes.resume"
             go_type:
               type: "Resume"
               import: "github.com/ohhfishal/resume-wizard/resume"
