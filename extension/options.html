@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Wizard Options</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    
+    form {
+      margin-bottom: 20px;
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    label {
+      display: block;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+      box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
+    }
+    
+    p {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    
+    .button-group {
+      margin-top: 30px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    
+    button[type="reset"] {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    button[type="reset"]:hover {
+      background-color: #da190b;
+    }
+
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+    }
+    
+    #status.success {
+      background-color: #d4edda;
+      color: #155724;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resume Wizard Settings</h1>
+  
+  <form id="form">
+    <label for="server_url">Server URL:</label>
+    <input required type="text" id="server_url" placeholder="Enter URL to server">
+    <p>The base URL of your backend server</p>
+
+    <label for="user_id">User ID:</label>
+    <input required type="text" id="user_id" placeholder="Enter your user ID">
+    <p>Your unique user identifier</p>
+
+    <div class="button-group">
+      <button type="reset">Reset to Defaults</button>
+      <button type="submit">Save</button>
+    </div>
+  </form>
+  <div id="status"></div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

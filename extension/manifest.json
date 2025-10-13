@@ -3,6 +3,10 @@
   "description": "Perform magic!",
   "version": "0.1.0",
   "manifest_version": 3,
+  "options_ui": {
+     "page": "options.html",
+     "open_in_tab": true
+  },
   "permissions": [
     "contextMenus",
     "storage"
